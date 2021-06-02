@@ -3,18 +3,19 @@ from .car import Car
 
 class Board():
     def __init__(self, source_file):
+        self.board_len = 0
         self.matrix = self.load_matrix(source_file)
-    
+        
 
     def load_matrix(self, source_file):
         """
         Load all vehicles into the board.
         """
         # get board length
-        board_length = int(source_file.strip("./data/Rushhour").split('x')[0])
+        self.board_len = int(source_file.strip("./data/Rushhour").split('x')[0])
 
         # fill board with None
-        matrix = [[None for i in range(board_length)] for j in range(board_length)]
+        matrix = [[None for i in range(self.board_len)] for j in range(self.board_len)]
 
         # for all cars in the csv file create the car and put on board
         with open(source_file, 'r') as file:
@@ -33,11 +34,13 @@ class Board():
                     matrix[vehicle.row + 1][vehicle.column] = vehicle.car_id
                     if vehicle.length == 3:
                         matrix[vehicle.row  + 2][vehicle.column] = vehicle.car_id
-
-        for row in matrix:
-            print(row)
-
+                
         return matrix
+
+        
+    def print(self):    
+        for row in self.matrix:
+            print(row)
 
 
     def is_solution(self):
