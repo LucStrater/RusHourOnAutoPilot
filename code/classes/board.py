@@ -23,15 +23,22 @@ class Board():
 
             for row in reader:
                 vehicle = Car(row[0], row[1], int(row[2]) - 1, int(row[3]) - 1, int(row[4]))
-                matrix[vehicle.row][vehicle.column] = vehicle.car_id 
 
-        # with open(source_file, 'r') as in_file:
-        #     reader = csv.DictReader(in_file)
+                matrix[vehicle.row][vehicle.column] = vehicle.car_id
+                # print(vehicle.orientation)
+                if vehicle.orientation == "H":
+                    matrix[vehicle.row][vehicle.column + 1] = vehicle.car_id
+                    if vehicle.length == 3:
+                        matrix[vehicle.row][vehicle.column + 2] = vehicle.car_id
+                else:
+                    matrix[vehicle.row + 1][vehicle.column] = vehicle.car_id
+                    if vehicle.length == 3:
+                        matrix[vehicle.row  + 2][vehicle.column] = vehicle.car_id
 
-        #     for row in reader:
-        #         nodes[row['id']] = Node(row['id'], row['id'])
 
-        print(matrix)
+
+        for row in matrix:
+            print(row)
         return matrix
 
 
