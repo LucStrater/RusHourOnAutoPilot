@@ -8,14 +8,14 @@ class Car():
         self.row = row
         self.length = length
 
-    def load_car():
+    def load_car(self):
         pass
 
-    def move_car():
+    def move_car(self):
         pass
 
-    def is_valid():
+    def is_valid(self):
         pass
 
-    def get_possibilities():
+    def get_possibilities(self):
         pass
