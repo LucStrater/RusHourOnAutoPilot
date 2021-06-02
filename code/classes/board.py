@@ -25,7 +25,6 @@ class Board():
                 vehicle = Car(row[0], row[1], int(row[2]) - 1, int(row[3]) - 1, int(row[4]))
 
                 matrix[vehicle.row][vehicle.column] = vehicle.car_id
-                # print(vehicle.orientation)
                 if vehicle.orientation == "H":
                     matrix[vehicle.row][vehicle.column + 1] = vehicle.car_id
                     if vehicle.length == 3:
@@ -35,10 +34,9 @@ class Board():
                     if vehicle.length == 3:
                         matrix[vehicle.row  + 2][vehicle.column] = vehicle.car_id
 
-
-
         for row in matrix:
             print(row)
+
         return matrix
 
 
