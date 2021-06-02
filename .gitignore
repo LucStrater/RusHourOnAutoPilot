@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 # don't update the gameboards in git
+data/
