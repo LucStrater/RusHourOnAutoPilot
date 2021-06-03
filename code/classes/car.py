@@ -26,31 +26,37 @@ class Car():
         # horizontal left
         print(f'orientation: {self.orientation}, column: {self.column}, row: {self.row}')
         if self.orientation == 'H' and self.column != 0:
-            for i in range(1, 1 + 1):
-                if board[self.row][self.column - i] == None:
+            for i in range(1, self.column + 1):
+                print(board)
+                if board.matrix[self.row][self.column - i] == None:
                     possibilities.add(-i)
-                break
+                else:
+                    break
 
         # horizontal right
         elif self.orientation == 'H' and self.column != board.board_len:
             for i in range(self.length, board.board_len - self.column):
-                if board[self.row][self.column + i] == None:
+                if board.matrix[self.row][self.column + i] == None:
                     possibilities.add(i)
-                break
+                else:
+                    break
 
         # vertical up
         elif self.orientation == 'V' and self.row != 0:
             for i in range(1, self.row + 1):
-                if board[self.row - i][self.column] == None:
+                if board.matrix[self.row - i][self.column] == None:
                     possibilities.add(-i)
-                break
+                    print(i)
+                else:
+                    break
 
         # vertical down
         elif self.orientation == 'V' and self.row != board.board_len:
             for i in range(self.length, board.board_len - self.row):
-                if board[self.row + i][self.column] == None:
+                if board.matrix[self.row + i][self.column] == None:
                     possibilities.add(i)
-                break
+                else:
+                    break
 
         
         return possibilities
