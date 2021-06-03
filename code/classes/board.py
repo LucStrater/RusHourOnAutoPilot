@@ -2,6 +2,7 @@ import csv
 from .car import Car
 
 class Board():
+    
     def __init__(self, source_file):
         self.board_len = 0
         self.cars = {}
@@ -10,9 +11,8 @@ class Board():
 
     def load_matrix(self, source_file):
         """
-        Load all vehicles into the board.
+        Initialize the board by loading all vehicles from source file.
         """
-
         # get board length
         self.board_len = int(source_file.strip("./data/Rushhour").split('x')[0])
 
@@ -40,21 +40,28 @@ class Board():
                 
         return matrix
 
+
     def update_matrix(self, move, car):
+        """
+        Move car and update the board accordingly.
+        """
         # update car 
         car.move_car(move)
 
-        # car plekken naar None
+        # replace car spaces with None, remove car from board
         for i in range(self.board_len):
             for j in range(self.board_len):
                 if self.matrix[i][j] == car.car_id:
                     self.matrix[i][j] = None
 
-        # Nieuwe plekken van car op board vullen
+        # fill up the cars new spaces on board, place car back on board
         self.place_car(car)
 
     
     def place_car(self, car):
+        """
+        Place car on board according to it's current position.
+        """
         self.matrix[car.row][car.column] = car.car_id
         if car.orientation == "H":
             self.matrix[car.row][car.column + 1] = car.car_id
@@ -66,8 +73,10 @@ class Board():
                 self.matrix[car.row  + 2][car.column] = car.car_id
 
 
-        
-    def print(self): 
+    def print(self):
+        """
+        Print board. 
+        """ 
         for row in self.matrix:
             print(row)
 

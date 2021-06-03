@@ -1,6 +1,6 @@
 
 class Car():
-
+    
     def __init__(self, car_id, orientation, column, row, length):
         self.car_id = car_id
         self.orientation = orientation
@@ -8,7 +8,11 @@ class Car():
         self.row = row
         self.length = length
 
+
     def move_car(self, move):
+        """
+        Check car orientation and move it the given amount in that direction.
+        """
         # if H then self.column new
         if self.orientation == "H":
             self.column += move
@@ -19,10 +23,14 @@ class Car():
         
 
     def is_valid(self, move, board):
+        """ 
+        Check validity of move on the current board configuration.
+        """
         if move in get_possibilities(board):
             return True
 
         return False
+
 
     def get_possibilities(self, board):
         """
@@ -68,12 +76,15 @@ class Car():
         return list(possibilities)
 
 
-
     def has_legal_moves(self):
+        """
+        Check if car has legal moves
+        """
         if len(self.get_possibilities()) == 0:
             return False
 
         return True
+
 
     def __repr__(self):
         """
