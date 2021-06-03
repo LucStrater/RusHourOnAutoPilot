@@ -8,9 +8,7 @@ def main():
     rushHourBoard = Board('./data/Rushhour6x6_3.csv')
     rushHourBoard.print()
 
-    # print(rushHourBoard.cars['A'].get_possibilities(rushHourBoard))
-
-    rushHourBoard.get_options_all_cars()
+    print(rushHourBoard.cars['F'].get_possibilities(rushHourBoard))
     
 
 if __name__ == "__main__":
