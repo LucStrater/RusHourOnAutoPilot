@@ -4,6 +4,7 @@ from .car import Car
 class Board():
     def __init__(self, source_file):
         self.board_len = 0
+        self.cars = {}
         self.matrix = self.load_matrix(source_file)
         
 
@@ -11,6 +12,7 @@ class Board():
         """
         Load all vehicles into the board.
         """
+
         # get board length
         self.board_len = int(source_file.strip("./data/Rushhour").split('x')[0])
 
@@ -24,6 +26,7 @@ class Board():
 
             for row in reader:
                 vehicle = Car(row[0], row[1], int(row[2]) - 1, int(row[3]) - 1, int(row[4]))
+                self.cars[vehicle.car_id] = vehicle
 
                 matrix[vehicle.row][vehicle.column] = vehicle.car_id
                 if vehicle.orientation == "H":
@@ -38,9 +41,12 @@ class Board():
         return matrix
 
         
-    def print(self):    
+    def print(self): 
         for row in self.matrix:
             print(row)
+
+        for car in self.cars:
+            print(car)
 
 
     def is_solution(self):
