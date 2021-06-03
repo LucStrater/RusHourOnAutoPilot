@@ -1,6 +1,6 @@
 
 class Car():
-    
+
     def __init__(self, car_id, orientation, column, row, length):
         self.car_id = car_id
         self.orientation = orientation
@@ -39,7 +39,7 @@ class Car():
         possibilities = set()
 
         # horizontal left
-        print(f'car {self.car_id}. orientation: {self.orientation}, column: {self.column}, row: {self.row}')
+        #print(f'car {self.car_id}. orientation: {self.orientation}, column: {self.column}, row: {self.row}')
         if self.orientation == 'H' and self.column != 0:
             for i in range(1, self.column + 1):
                 if board.matrix[self.row][self.column - i] == None:
@@ -71,7 +71,7 @@ class Car():
                 else:
                     break
 
-        print(f'possibilities for car {self.car_id}: {possibilities}')
+        #print(f'possibilities for car {self.car_id}: {possibilities}')
         
         return list(possibilities)
 

@@ -1,16 +1,24 @@
 from code.classes.board import Board
 from code.classes.car import Car
-from code.algorithms import randomise
+from code.algorithms import randomise, greedy
 from code.output import output
 # from code.algorithms import greedy as gr
 # from code.visualisation import visualise as vis
 
 def main():
-    rushHourBoard = Board('./data/input/Rushhour6x6_1.csv')
+    
+    total_moves = 0
 
-    all_moves = randomise.run(rushHourBoard)
+    for i in range(100):
+        rushHourBoard = Board('./data/input/Rushhour6x6_1.csv')
+        move_count = greedy.run(rushHourBoard)
+        total_moves += move_count
 
-    output.export_to_csv(all_moves, './data/output/output.csv')
+    print(total_moves/100)
+
+    # all_moves = randomise.run(rushHourBoard)
+
+    # output.export_to_csv(all_moves, './data/output/output.csv')
     
     # rushHourBoard.update_matrix(-1,rushHourBoard.cars['A'])
 
