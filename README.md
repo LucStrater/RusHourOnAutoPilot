@@ -13,6 +13,8 @@ Dit project is op dit moment nog een "work-in-progress" en dit valt soms te zien
 - renew doc
 - write readme
 
+## Uitleg
+
 ### Vereisten
 
 Deze codebase is deels geschreven in Python 3.7 en deels in JavaScript. Voor de python code zijn de packages in requirements.txt nodig. Deze kan je installeren via pip dmv. de volgende instructie:
