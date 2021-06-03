@@ -5,6 +5,7 @@ class Board():
     def __init__(self, source_file):
         self.board_len = 0
         self.cars = {}
+        self.autos = []
         self.matrix = self.load_matrix(source_file)
         
 
@@ -45,8 +46,8 @@ class Board():
         for row in self.matrix:
             print(row)
 
-        for car in self.cars:
-            print(car)
+        # for car in self.cars:
+        #     print(car)
 
 
     def is_solution(self):
