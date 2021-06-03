@@ -5,10 +5,10 @@ from code.classes.car import Car
 # from code.visualisation import visualise as vis
 
 def main():
-    rushHourBoard = Board('./data/Rushhour6x6_3.csv')
+    rushHourBoard = Board('./data/Rushhour12x12_7.csv')
     rushHourBoard.print()
 
-    print(rushHourBoard.cars['F'].get_possibilities(rushHourBoard))
+    rushHourBoard.cars['P'].get_possibilities(rushHourBoard)
     
 
 if __name__ == "__main__":

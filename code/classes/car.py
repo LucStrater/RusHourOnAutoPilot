@@ -8,9 +8,6 @@ class Car():
         self.row = row
         self.length = length
 
-    def load_car(self):
-        pass
-
     def move_car(self):
         pass
 
@@ -24,40 +21,39 @@ class Car():
         possibilities = set()
 
         # horizontal left
-        print(f'orientation: {self.orientation}, column: {self.column}, row: {self.row}')
+        print(f'car {self.car_id}. orientation: {self.orientation}, column: {self.column}, row: {self.row}')
         if self.orientation == 'H' and self.column != 0:
             for i in range(1, self.column + 1):
-                print(board)
                 if board.matrix[self.row][self.column - i] == None:
                     possibilities.add(-i)
                 else:
                     break
 
         # horizontal right
-        elif self.orientation == 'H' and self.column != board.board_len:
+        if self.orientation == 'H' and self.column != board.board_len:
             for i in range(self.length, board.board_len - self.column):
                 if board.matrix[self.row][self.column + i] == None:
-                    possibilities.add(i)
+                    possibilities.add(i - self.length + 1)
                 else:
                     break
 
         # vertical up
-        elif self.orientation == 'V' and self.row != 0:
+        if self.orientation == 'V' and self.row != 0:
             for i in range(1, self.row + 1):
                 if board.matrix[self.row - i][self.column] == None:
                     possibilities.add(-i)
-                    print(i)
                 else:
                     break
 
         # vertical down
-        elif self.orientation == 'V' and self.row != board.board_len:
+        if self.orientation == 'V' and self.row != board.board_len:
             for i in range(self.length, board.board_len - self.row):
                 if board.matrix[self.row + i][self.column] == None:
-                    possibilities.add(i)
+                    possibilities.add(i - self.length + 1)
                 else:
                     break
 
+        print(f'possibilities for car {self.car_id}: {possibilities}')
         
         return possibilities
 
