@@ -8,15 +8,25 @@ class Car():
         self.row = row
         self.length = length
 
-    def move_car(self):
-        pass
+    def move_car(self, move):
+        # if H then self.column new
+        if self.orientation == "H":
+            self.column += move
 
-    def is_valid(self):
-        pass
+        # if V than self.row new
+        elif self.orientation == "V":
+            self.row += move
+        
+
+    def is_valid(self, move, board):
+        if move in get_possibilities(board):
+            return True
+
+        return False
 
     def get_possibilities(self, board):
         """
-        Return set with legal moves.
+        Return list with legal moves.
         """
         possibilities = set()
 
@@ -55,7 +65,9 @@ class Car():
 
         print(f'possibilities for car {self.car_id}: {possibilities}')
         
-        return possibilities
+        return list(possibilities)
+
+
 
     def has_legal_moves(self):
         if len(self.get_possibilities()) == 0:

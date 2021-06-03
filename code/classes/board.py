@@ -5,7 +5,6 @@ class Board():
     def __init__(self, source_file):
         self.board_len = 0
         self.cars = {}
-        self.autos = []
         self.matrix = self.load_matrix(source_file)
         
 
@@ -41,17 +40,43 @@ class Board():
                 
         return matrix
 
+    def update_matrix(self, move, car):
+        # update car 
+        car.move_car(move)
+
+        # car plekken naar None
+        for i in range(self.board_len):
+            for j in range(self.board_len):
+                if self.matrix[i][j] == car.car_id:
+                    self.matrix[i][j] = None
+
+        # Nieuwe plekken van car op board vullen
+        self.place_car(car)
+
+    
+    def place_car(self, car):
+        self.matrix[car.row][car.column] = car.car_id
+        if car.orientation == "H":
+            self.matrix[car.row][car.column + 1] = car.car_id
+            if car.length == 3:
+                self.matrix[car.row][car.column + 2] = car.car_id
+        else:
+            self.matrix[car.row + 1][car.column] = car.car_id
+            if car.length == 3:
+                self.matrix[car.row  + 2][car.column] = car.car_id
+
+
         
     def print(self): 
         for row in self.matrix:
             print(row)
-
-        # for car in self.cars:
-        #     print(car)
 
 
     def is_solution(self):
         """
         Check if the current configuration is a solution. 
         """
-        pass
+        if self.matrix[self.cars['X'].row][self.board_len] == 'X':
+            return True
+        
+        return False
