@@ -2,7 +2,7 @@ import csv
 from .car import Car
 
 class Board():
-    
+
     def __init__(self, source_file):
         self.board_len = 0
         self.cars = {}
@@ -14,7 +14,7 @@ class Board():
         Initialize the board by loading all vehicles from source file.
         """
         # get board length
-        self.board_len = int(source_file.strip("./data/Rushhour").split('x')[0])
+        self.board_len = int(source_file.strip("./data/input/Rushhour").split('x')[0])
 
         # fill board with None
         matrix = [[None for i in range(self.board_len)] for j in range(self.board_len)]
@@ -85,7 +85,7 @@ class Board():
         """
         Check if the current configuration is a solution. 
         """
-        if self.matrix[self.cars['X'].row][self.board_len] == 'X':
+        if self.matrix[self.cars['X'].row][self.board_len - 1] == 'X':
             return True
         
         return False

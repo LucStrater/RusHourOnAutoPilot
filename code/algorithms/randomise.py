@@ -1,6 +1,7 @@
 import random
 import time
 
+
 def random_move(board):
     """
     Pick random car and make a legal move.
@@ -18,17 +19,26 @@ def random_move(board):
     random_move = random.choice(random_car_possibilities)
     board.update_matrix(random_move, random_car)
     
+    return [random_car.car_id, random_move]
+
 
 def run(board):
     """
     Make random moves until the board is solved.
     """
-    print('In run')
+    moves_made = [['car', 'move']]
+    
+    counter = 0
 
-    while board.is_solution:
-        print("In loop")
-        random_move(board)
+    while not board.is_solution() and counter < 3:
+        move = random_move(board)
+        moves_made.append(move)
+        print(moves_made)
+        print('')
         board.print()
-        time.sleep(5)
-
+        print('')
+        counter += 1
+        time.sleep(1)
+    
+    return moves_made
  
