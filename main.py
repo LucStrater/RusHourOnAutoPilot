@@ -5,8 +5,10 @@ from code.classes.car import Car
 # from code.visualisation import visualise as vis
 
 def main():
-    appel = Board('./data/Rushhour6x6_1.csv')
-    appel.print()
+    rushHourBoard = Board('./data/Rushhour6x6_1.csv')
+    rushHourBoard.print()
+
+    print(rushHourBoard.cars['A'].get_possibilities(rushHourBoard))
     
 
 if __name__ == "__main__":
