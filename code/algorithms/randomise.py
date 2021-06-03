@@ -34,15 +34,13 @@ def run(board):
     
     counter = 0
 
-    while not board.is_solution() and counter < 3:
+    while not board.is_solution():
         move = random_move(board)
         moves_made.append(move)
-        print(moves_made)
-        print('')
-        board.print()
-        print('')
         counter += 1
-        time.sleep(1)
     
-    return moves_made
+    # print(counter)
+    # board.print()
+
+    return counter
  
