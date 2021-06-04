@@ -10,7 +10,7 @@ def main():
     total_moves = 0
 
     for i in range(100):
-        rushHourBoard = Board('./data/input/Rushhour6x6_1.csv')
+        rushHourBoard = Board('./data/input/Rushhour6x6_3.csv')
         move_count = greedy.run(rushHourBoard)
         total_moves += move_count
 
