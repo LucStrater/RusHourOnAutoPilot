@@ -10,7 +10,7 @@ def main():
 
     counters = 0
     maximum = 0 
-    for i in range(100):
+    for i in range(10):
         rushHourBoard = Board('./data/input/Rushhour6x6_1.csv')
         counter = randomise.run(rushHourBoard)
         if counter > maximum:
@@ -18,8 +18,8 @@ def main():
 
         counters += counter
         
-    print(f"The average amount of steps of 100 iterations is: {counters/100}")
-    print(f"The maximum steps of 100 iterations is: {maximum}")
+    print(f"The average amount of steps of 10 iterations is: {counters/10}")
+    print(f"The maximum steps of 10 iterations is: {maximum}")
     # all_moves = randomise.run(rushHourBoard)
 
     # output.export_to_csv(all_moves, './data/output/output.csv')

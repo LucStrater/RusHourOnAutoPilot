@@ -80,7 +80,7 @@ class Car():
         """
         Check if car has legal moves
         """
-        if len(self.get_possibilities(board)) == 0:
+        if not self.get_possibilities(board): 
             return False
 
         return True
