@@ -6,10 +6,10 @@ class Board():
     def __init__(self, source_file):
         self.board_len = 0
         self.cars = {}
-        self.matrix = self.load_matrix(source_file)
         self.previous_states = []
+        self.matrix = self.load_matrix(source_file)
         
-
+       
     def load_matrix(self, source_file):
         """
         Initialize the board by loading all vehicles from source file.
@@ -74,7 +74,6 @@ class Board():
             self.matrix[car.row + 1][car.column] = car.car_id
             if car.length == 3:
                 self.matrix[car.row  + 2][car.column] = car.car_id
-
 
     def print(self):
         """

@@ -1,6 +1,7 @@
 from code.classes.board import Board
 from code.classes.car import Car
 from code.algorithms import randomise
+from code.algorithms import backtracking
 from code.output import output
 # from code.algorithms import greedy as gr
 # from code.visualisation import visualise as vis
@@ -10,17 +11,17 @@ def main():
 
     counters = 0
     maximum = 0 
-    for i in range(10):
+    for i in range(1):
         rushHourBoard = Board('./data/input/Rushhour6x6_1.csv')
-        counter = randomise.run(rushHourBoard)
+        counter = backtracking.run(rushHourBoard)
         if counter > maximum:
             maximum = counter
 
         counters += counter
         
-    print(f"The average amount of steps of 10 iterations is: {counters/10}")
-    print(f"The maximum steps of 10 iterations is: {maximum}")
-    # all_moves = randomise.run(rushHourBoard)
+    print(f"The average amount of steps of 1 iterations is: {counters/1}")
+    print(f"The maximum steps of 1 iterations is: {maximum}")
+    # all_moves = backtracking.run(rushHourBoard)
 
     # output.export_to_csv(all_moves, './data/output/output.csv')
     

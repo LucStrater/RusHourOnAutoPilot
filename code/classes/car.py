@@ -26,7 +26,7 @@ class Car():
         """ 
         Check validity of move on the current board configuration.
         """
-        if move in get_possibilities(board):
+        if move in self.get_possibilities(board):
             return True
 
         return False
