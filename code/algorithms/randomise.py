@@ -26,7 +26,7 @@ def random_move(board):
     return [random_car.car_id, random_move]
 
 
-def run(board):
+def run_milestone1(board, print_check):
     """
     Make random moves until the board is solved.
     """
@@ -35,12 +35,15 @@ def run(board):
     counter = 0
 
     while not board.is_solution():
+        if counter < 10 and print_check:
+            print(f"Step {counter}")
+            board.print()
+            print()
+            time.sleep(1)
+
         move = random_move(board)
         moves_made.append(move)
         counter += 1
-    
-    # print(counter)
-    # board.print()
 
-    return counter
+    return [moves_made, counter]
  
