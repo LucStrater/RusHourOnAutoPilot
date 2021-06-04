@@ -2,7 +2,10 @@
 
 Rush Hour is een ogenschijnlijk eenvoudig puzzeltje met een verrassend uitdagend karakter. In een veld van 6 hoog en 6 breed staat een rode auto, de jouwe, en die moet naar de uitgang. die recht voor je ligt. Maar andere voertuigen versperren de weg; auto’s van twee eenheden lang en trucks van drie eenheden lang, die alleen in hun rijrichting bewogen mogen worden. Ze mogen niet draaien. De opdracht is simpel: beweeg je auto naar buiten, of beter: schrijf een computerprogramma om dat voor je te doen.
 
+<<<<<<< HEAD
 ## Status
+=======
+>>>>>>> greedy_tryout
 
 Dit project is op dit moment nog een "work-in-progress" en dit valt soms te zien aan de geschreven code. 
 
@@ -10,6 +13,7 @@ Dit project is op dit moment nog een "work-in-progress" en dit valt soms te zien
 
 - Visualisation (matplotlib / js?)
 - Make game playable
+<<<<<<< HEAD
 - renew doc
 - write readme
 
@@ -62,3 +66,9 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 
 
 
+=======
+- improve README
+- write random algorithm
+- write cost function
+- write 
+>>>>>>> greedy_tryout

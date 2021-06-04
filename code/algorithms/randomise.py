@@ -35,6 +35,7 @@ def run_milestone1(board, print_check):
     counter = 0
 
     while not board.is_solution():
+<<<<<<< HEAD
         if counter < 10 and print_check:
             print(f"Step {counter}")
             board.print()
@@ -46,4 +47,18 @@ def run_milestone1(board, print_check):
         counter += 1
 
     return [moves_made, counter]
+=======
+        move = random_move(board)
+        moves_made.append(move)
+        # print(moves_made)
+        # print('')
+        # board.print()
+        # print('')
+        counter += 1   
+    
+    # print(counter)
+    # board.print()
+
+    return moves_made
+>>>>>>> greedy_tryout
  
