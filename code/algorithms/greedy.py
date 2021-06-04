@@ -2,7 +2,6 @@ import random
 from code.algorithms import randomise
 
 
-
 # def red_car(board):
 #     """
 #     Check if red car can be moved right.
@@ -27,6 +26,7 @@ from code.algorithms import randomise
 
 #     board.update_matrix(max(possibilities), red_car)
 
+######################################### FINISH THE BOARD ####################################################################
 
 def finish(board):
     """
@@ -60,10 +60,132 @@ def finish_move(board):
         print('')
         return randomise.random_move(board)
 
+######################################### MOVE A CAR BLOCKING THE RED #########################################################
 
-# def blocking_car_move(board):
-#     pass
+def blocking(board):
+    """
+    Return list of cars that can be moved away from the row of the red car.
+    """
+    red_car = board.cars['X']
+    red_car_row = red_car.row
+
+    row_cars = set()
+    for car in board.matrix[red_car_row]:
+        if car != None and car != red_car.car_id:
+            row_cars.add(board.cars[car])
     
+    blocking_cars = []
+    for car in row_cars:
+        if car.column > red_car.column:
+            blocking_cars.append(car)
+
+    movable_cars = []
+    for car in blocking_cars:
+        possibilities = car.get_possibilities(board)
+        if len(possibilities) == 0:
+            continue
+        else:
+            for move in possibilities:
+                new_pos = car.row + move
+                # moving down
+                if new_pos > red_car_row:
+                    movable_cars.append(car)
+                # moving up
+                elif new_pos + car.length - 1 < red_car_row:
+                    movable_cars.append(car)
+
+    return movable_cars
+
+
+def blocking_move(board, cars):
+    """
+    Moves car away from the row of the red car. Picks random if multiple cars are available.
+    """
+    red_car = board.cars['X']
+    red_car_row = red_car.row
+
+    if len(cars) == 1:
+        car = cars[0]
+    else:
+        car = random.choice(cars)
+    
+    for move in car.get_possibilities(board):
+        new_pos = car.column + move
+        # moving down
+        if new_pos > red_car_row:
+            board.update_matrix(move, car)
+            return [car, move]
+        # moving up
+        elif new_pos + car.length - 1 < red_car_row:
+            board.update_matrix(move, car)
+            return[car, move]
+
+######################################### MOVE ALL CARS BLOCKING RED ##########################################################  
+
+def blocking_cars(board):
+    red_car = board.cars['X']
+    red_car_row = red_car.row
+
+    row_cars = set()
+    for car in board.matrix[red_car_row]:
+        if car != None and car != red_car.car_id:
+            row_cars.add(board.cars[car])
+    
+    blocking_cars = []
+    for car in row_cars:
+        if car.column > red_car.column:
+            blocking_cars.append(car)
+    
+    return blocking_cars
+
+
+def movable_cars(board, blocking_cars):
+    """
+    Return list of cars that can be moved away from the row of the red car.
+    """
+    red_car = board.cars['X']
+    red_car_row = red_car.row
+
+    row_cars = set()
+    for car in board.matrix[red_car_row]:
+        if car != None and car != red_car.car_id:
+            row_cars.add(board.cars[car])
+    
+    blocking_cars = []
+    for car in row_cars:
+        if car.column > red_car.column:
+            blocking_cars.append(car)
+
+    movable_cars = []
+    for car in blocking_cars:
+        possibilities = car.get_possibilities(board)
+        if len(possibilities) == 0:
+            continue
+        else:
+            for move in possibilities:
+                new_pos = car.row + move
+                # moving down
+                if new_pos > red_car_row:
+                    movable_cars.append(car)
+                # moving up
+                elif new_pos + car.length - 1 < red_car_row:
+                    movable_cars.append(car)
+
+    return movable_cars
+
+
+def if_finishable(blocking_cars, movable_cars):
+    if len(blocking_cars) == len(movable_cars):
+        return True
+    return False
+
+
+def execute_blocked_moves(board, movable_cars):
+
+    for car in movable_cars:
+        for move in car.get_possibili
+
+###################################################################################################################
 
 def run(board):
     """
@@ -75,14 +197,23 @@ def run(board):
     counter = 0
 
     while not board.is_solution():
+        block_cars = blocking_cars(board)
+        move_cars = movable_cars(board, block_cars)
 
         if finish(board):
             move = finish_move(board)
+        # elif counter % 10 == 0 and len(blocking_car(board)) > 0:
+        #     move = blocking_car_move(board, blocking_car(board))
+        elif if_finishable(block_cars, move_cars):
+            # execute all the possible moves for cars to right of red car
         else:
             move = randomise.random_move(board)
 
         moves_made.append(move)
-        counter += 1   
+        counter += 1
+
+        # if counter % 10000 == 0:
+        #     print(counter)   
 
     # return moves_made
     return counter
