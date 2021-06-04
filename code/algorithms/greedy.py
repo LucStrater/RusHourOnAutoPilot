@@ -195,7 +195,71 @@ def execute_blocked_moves(board, movable_cars):
 
 ######################################### SOLVE THE BOARD ##############################################################################
 
-def run(board):
+def run_1(board):
+    """
+    Check if greedy move is available and perform it if possible. Otherwhise make random move. 
+    Continue until the board is solved.
+    """
+    moves_made = [['car', 'move']]
+    
+    counter = 0
+
+    while not board.is_solution():
+        block_cars = blocking_cars(board)
+        move_cars = movable_cars(board, block_cars)
+
+        ### 1.
+        if finish(board):
+            move = finish_move(board)
+        else:
+            move = randomise.random_move(board)
+
+        moves_made.append(move)
+        counter += 1
+
+        # if counter % 10000 == 0:
+        #     print(counter)   
+
+    # return moves_made
+    return counter
+
+
+def run_2(board):
+    """
+    Check if greedy move is available and perform it if possible. Otherwhise make random move. 
+    Continue until the board is solved.
+    """
+    moves_made = [['car', 'move']]
+    
+    counter = 0
+
+    while not board.is_solution():
+        block_cars = blocking_cars(board)
+        move_cars = movable_cars(board, block_cars)
+
+        ### 1.
+        if finish(board):
+            move = finish_move(board)
+        ### 3.
+        elif if_finishable(block_cars, move_cars):
+            # execute all the possible moves for cars to right of red car
+            moves = execute_blocked_moves(board, move_cars)
+            # print(moves)
+            for i in moves:
+                moves_made.append(i)
+        else:
+            move = randomise.random_move(board)
+
+        moves_made.append(move)
+        counter += 1
+
+        # if counter % 10000 == 0:
+        #     print(counter)   
+
+    # return moves_made
+    return counter
+
+def run_3(board):
     """
     Check if greedy move is available and perform it if possible. Otherwhise make random move. 
     Continue until the board is solved.
