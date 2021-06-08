@@ -7,6 +7,8 @@ class Board():
         self.board_len = 0
         self.cars = {}
         self.matrix = self.load_matrix(source_file)
+        self.id = None
+        self.depth = 0
         
 
     def load_matrix(self, source_file):
@@ -77,8 +79,11 @@ class Board():
         """
         Print board. 
         """ 
+        print(f'ID: {self.id}')
+        print(f'depth: {self.depth}')
         for row in self.matrix:
             print(row)
+        print()
 
 
     def is_solution(self):
