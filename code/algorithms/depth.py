@@ -4,10 +4,11 @@ import time
 def depth_run(board):
 
     # add current board to list
-    depth = 14
+    depth = 137
     stack = []
     stack.append(board)
-
+    archive = []
+    archiveX = []
     solutions = []
     while len(stack) > 0:
         state = stack.pop()
@@ -33,8 +34,34 @@ def depth_run(board):
                     
                     # append move made to list of moves to get to incumbent (new) board
                     new_board.add_move(new_board.cars[car.car_id].car_id, move)
-                    stack.append(new_board)
+
+                    # proofed working but needs to append matrices below
+                    if new_board.matrix not in archive:
+                        stack.append(new_board)
+
+                    if new_board.matrix in archive:
+                        if len(new_board.moves) < len(archiveX[new_board.matrix in archive].moves):
+                            
+
+                        elif len(new_board.moves) > len(old_board.moves):
+
+
+                    # all_matrices = list(map((lambda x: x.matrix), archive))
+                    # print(all_matrices)
+                    
+                    if new_board in archive:      
+                        for board in archiveX:
+                            if new_board.matrix == board.matrix:
+                                if len(new_board.matrix) < len(board.matrix):
+                                    if new_board.moves == board.moves[:len(new_board.moves) + 1]:
+                                        
+                                        
+                            
+
+            archive.append(state.matrix)
+            # archiveX.append(state)
 
     solutions.sort(key=len)
 
-    return solutions[0]
+    # print(solutions[0])
+    return solutions[0] 
