@@ -4,7 +4,7 @@ from .car import Car
 class Board():
 
     def __init__(self, source_file):
-        self.board_len = 0
+        self.board_len = 0  
         self.cars = {}
         self.previous_states = []
         self.matrix = self.load_matrix(source_file)
