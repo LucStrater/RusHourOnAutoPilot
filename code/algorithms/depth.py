@@ -14,6 +14,7 @@ def depth_run(board):
 
         if state.is_solution():
             solutions.append(state.moves)
+            print(state.moves)
 
         # if length of list of moves is smaller than depth, create new boards at deeper level 
         if len(state.moves) < depth:
