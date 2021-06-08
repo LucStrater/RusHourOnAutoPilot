@@ -6,8 +6,8 @@ class Board():
     def __init__(self, source_file):
         self.board_len = 0  
         self.cars = {}
-        self.previous_states = []
         self.matrix = self.load_matrix(source_file)
+        self.moves = [('car', 'move')]
         
        
     def load_matrix(self, source_file):
@@ -39,7 +39,6 @@ class Board():
                     if vehicle.length == 3:
                         matrix[vehicle.row  + 2][vehicle.column] = vehicle.car_id
 
-        self.previous_states.append(matrix)        
         return matrix
 
 
@@ -58,7 +57,6 @@ class Board():
 
         # fill up the cars new spaces on board, place car back on board
         self.place_car(car)
-        self.previous_states.append(self.matrix)  
 
     
     def place_car(self, car):
@@ -82,6 +80,8 @@ class Board():
         for row in self.matrix:
             print(row)
 
+    def add_move(self, id, move):
+        self.moves.append((id, move))
 
     def is_solution(self):
         """
