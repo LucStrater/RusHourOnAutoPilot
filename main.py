@@ -12,7 +12,7 @@ import timeit
 # from code.visualisation import visualise as vis
 
 def main():
-    rushHourBoard = Board('./data/input/Rushhour6x6_1.csv')
+    rushHourBoard = Board('./data/input/Rushhour6x6_2.csv')
 
     depth = df.DepthFirst(rushHourBoard)
     all_moves = depth.run()
