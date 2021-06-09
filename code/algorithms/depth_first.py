@@ -47,9 +47,6 @@ class DepthFirst():
                 elif matrix_tuple in self.archive.keys() and len(new_board.moves) < self.archive.get(matrix_tuple, None):
                     self.stack.append(new_board)
 
-        # save states to archive
-        self.archive[tuple([tuple(i) for i in state.matrix])] = len(state.moves)
-
 
     def run(self):
         # repeat untill the stack is empty
@@ -66,6 +63,9 @@ class DepthFirst():
             # if length of list of moves is smaller than depth, create new boards at deeper level 
             if len(state.moves) < depth:
                 self.create_children(state)
+
+                # save states to archive
+                self.archive[tuple([tuple(i) for i in state.matrix])] = len(state.moves)
 
         # solutions sorted 
         self.solutions.sort(key=len)
