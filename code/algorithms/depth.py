@@ -39,21 +39,21 @@ def depth_run(board):
                     if new_board.matrix not in archive:
                         stack.append(new_board)
 
-                    if new_board.matrix in archive:
-                        if len(new_board.moves) < len(archiveX[new_board.matrix in archive].moves):
+                    # if new_board.matrix in archive:
+                    #     if len(new_board.moves) < len(archiveX[new_board.matrix in archive].moves):
                             
 
-                        elif len(new_board.moves) > len(old_board.moves):
+                    #     elif len(new_board.moves) > len(old_board.moves):
 
 
-                    # all_matrices = list(map((lambda x: x.matrix), archive))
-                    # print(all_matrices)
+                    # # all_matrices = list(map((lambda x: x.matrix), archive))
+                    # # print(all_matrices)
                     
-                    if new_board in archive:      
-                        for board in archiveX:
-                            if new_board.matrix == board.matrix:
-                                if len(new_board.matrix) < len(board.matrix):
-                                    if new_board.moves == board.moves[:len(new_board.moves) + 1]:
+                    # if new_board in archive:      
+                    #     for board in archiveX:
+                    #         if new_board.matrix == board.matrix:
+                    #             if len(new_board.matrix) < len(board.matrix):
+                    #                 if new_board.moves == board.moves[:len(new_board.moves) + 1]:
                                         
                                         
                             
