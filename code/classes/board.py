@@ -7,6 +7,9 @@ class Board():
         self.board_len = 0
         self.cars = {}
         self.matrix = self.load_matrix(source_file)
+
+        # for BFS
+        self.moves = [['car','move']]
         self.id = None
         self.depth = 0
         
@@ -79,8 +82,6 @@ class Board():
         """
         Print board. 
         """ 
-        print(f'ID: {self.id}')
-        print(f'depth: {self.depth}')
         for row in self.matrix:
             print(row)
         print()

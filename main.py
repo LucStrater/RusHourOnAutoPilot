@@ -1,13 +1,14 @@
 from code.classes.board import Board
 from code.classes.car import Car
-from code.algorithms import randomise, greedy, breadth
+from code.algorithms import randomise, greedy
+from code.algorithms import breadth as bf
 from code.output import output
 from sys import argv
 import time
 
 def main():
     # get board title from the terminal
-    if len(argv) not in [1, 2]:
+    if len(argv) not in [1, 2, 3]:
         print("Usage: python3 main.py [filename (example: <6x6_1>)]")
         exit(1)
     
@@ -19,8 +20,10 @@ def main():
 
     board = Board(board_title)
 
+    breadth_first = bf.Breadth_first(board)
+
     start = time.perf_counter()
-    breadth.run(board)
+    breadth_first.run()
     finish = time.perf_counter()
 
     print(f'runtime: {round(finish - start, 2)} seconds')
