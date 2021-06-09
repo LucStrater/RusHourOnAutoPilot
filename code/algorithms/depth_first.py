@@ -1,6 +1,5 @@
 import copy
 
-
 class DepthFirst():
     """
     A Depth First algorithm that builds a stack of boards.
@@ -13,7 +12,7 @@ class DepthFirst():
 
         self.archive = []
         self.solutions = []
-        
+
     def get_next_state(self):
         """
         Method that gets the next state from the list of states.
@@ -38,18 +37,17 @@ class DepthFirst():
                 new_board.add_move(new_board.cars[car.car_id].car_id, move)
 
                 # proofed working but needs to append matrices below
-                if new_board.matrix not in self.archive:
+                if new_board.matrix not in self.archive or len(new_board.moves) <  :
                     self.stack.append(new_board)
 
         self.archive.append(state.matrix)
 
     def run(self):
-
         # repeat untill the stack is empty
         while len(self.stack) > 0:
             # take the board at the top of the stack
             state = self.get_next_state()
-            depth = 137
+            depth = 14
 
             # if the current board is a solution save it
             if state.is_solution():
@@ -60,7 +58,8 @@ class DepthFirst():
             if len(state.moves) < depth:
                 self.create_children(state)
 
+        # solutions sorted 
         self.solutions.sort(key=len)
 
         # return the best solution found
-        return self.solutions[0] 
+        return self.solutions[0]
