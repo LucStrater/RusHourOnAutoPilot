@@ -88,7 +88,7 @@ class Breadth_first:
 
             if state.depth > depth:
                 depth = state.depth
-                print(f'ID: {state.id}\nDepth: {depth}')
+                print(f'ID: {state.id}\nDepth: {depth}\n')
 
             if self.max_depth_reached(state):
                 break
@@ -101,7 +101,7 @@ class Breadth_first:
                 break
 
         if winner != None:
-            self.start_board.print()
+            #self.start_board.print()
             print(f'ID: {winner.id}')
             print(f'depth: {winner.depth}')
             print()
