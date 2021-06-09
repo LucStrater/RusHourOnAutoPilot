@@ -29,9 +29,13 @@ def main():
     # average amount of steps for 100 iterations of randomise to solve the board
     counters = 0
     maximum = 0 
+    minimum = float('inf')
+
     for i in range(100):
         rushHourBoard = Board(board_title)
         counter = randomise.run_milestone1(rushHourBoard, False)[1]
+        if counter < minimum:
+            minimum = counter
         if counter > maximum:
             maximum = counter
 
@@ -40,14 +44,18 @@ def main():
     print("[Baseline: make random moves until solved]")
     print(f"The average amount of steps of 100 iterations is: {counters/100}")
     print(f"The maximum steps of 100 iterations is: {maximum}")
+    print(f"The minimum steps of 100 iterations is: {minimum}")
     print()
 
     # average amount of steps for 100 iterations of greedy 1 to solve the board
     counters_greedy_1 = 0
     maximum_greedy_1 = 0 
+    minimum_greedy_1 = float('inf')
     for i in range(100):
         rushHourBoard = Board(board_title)
         counter_greedy_1 = greedy.run_1(rushHourBoard)
+        if counter_greedy_1 < maximum_greedy_1:
+            minimum_greedy_1 = counter_greedy_1
         if counter_greedy_1 > maximum_greedy_1:
             maximum_greedy_1 = counter_greedy_1
 
@@ -56,15 +64,19 @@ def main():
     print("[Greedy 1: if row of car X is empty -> finish]")
     print(f"The average amount of steps of 100 iterations is: {counters_greedy_1/100}")
     print(f"The maximum steps of 100 iterations is: {maximum_greedy_1}")
+    print(f"The minimum steps of 100 iterations is: {minimum_greedy_1}")
     print(f"That is {round(- (counters_greedy_1/counters - 1) * 100)}% better than the baseline")
     print()
 
     # average amount of steps for 100 iterations of greedy 2 to solve the board
     counters_greedy_2 = 0
     maximum_greedy_2 = 0 
+    minimum_greedy_2 = float('inf')
     for i in range(100):
         rushHourBoard = Board(board_title)
         counter_greedy_2 = greedy.run_2(rushHourBoard)
+        if counter_greedy_2 < maximum_greedy_2:
+            minimum_greedy_2 = counter_greedy_2
         if counter_greedy_2 > maximum_greedy_2:
             maximum_greedy_2 = counter_greedy_2
 
@@ -73,6 +85,7 @@ def main():
     print("[Greedy 2: if cars on row of car X can all be moved -> move them + Greedy 1]")
     print(f"The average amount of steps of 100 iterations is: {counters_greedy_2/100}")
     print(f"The maximum steps of 100 iterations is: {maximum_greedy_2}")
+    print(f"The minimum steps of 100 iterations is: {minimum_greedy_2}")
     print(f"That is {round(- (counters_greedy_2/counters - 1) * 100)}% better than the baseline")
     print()
 
@@ -80,9 +93,12 @@ def main():
     # average amount of steps for 100 iterations of greedy 3 to solve the board
     counters_greedy_3 = 0
     maximum_greedy_3 = 0 
+    minimum_greedy_3 = float('inf')
     for i in range(100):
         rushHourBoard = Board(board_title)
         counter_greedy_3 = greedy.run_3(rushHourBoard)
+        if counter_greedy_3 < minimum_greedy_3:
+            minimum_greedy_3 = counter_greedy_3
         if counter_greedy_3 > maximum_greedy_3:
             maximum_greedy_3 = counter_greedy_3
 
@@ -91,6 +107,7 @@ def main():
     print("[Greedy 3: if Greedy 1 & 2 not possible, try randomly move a car that blocks road for car X]")
     print(f"The average amount of steps of 100 iterations is: {counters_greedy_3/100}")
     print(f"The maximum steps of 100 iterations is: {maximum_greedy_3}")
+    print(f"The minimum steps of 100 iterations is: {minimum_greedy_3}")
     print(f"That is {round(- (counters_greedy_3/counters - 1) * 100)}% better than the baseline")
 
 
