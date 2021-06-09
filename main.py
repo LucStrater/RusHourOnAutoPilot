@@ -16,6 +16,7 @@ def main():
 
     depth = df.DepthFirst(rushHourBoard)
     all_moves = depth.run()
+    print(f"best solution: {all_moves}. This takes {len(all_moves) - 1} moves.")
 
     output.export_to_csv(all_moves, './data/output/output.csv')
 
