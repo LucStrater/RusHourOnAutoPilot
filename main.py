@@ -1,8 +1,11 @@
 from code.classes.board import Board
 from code.classes.car import Car
 from code.algorithms import randomise, greedy
-from code.output import output
 from sys import argv
+from code.algorithms import depth_first as df
+from code.algorithms import iterative_deepening as id
+from code.output import output
+import timeit
 
 def main():
     # get board title from the terminal
@@ -15,16 +18,33 @@ def main():
     else:
         board_title = './data/input/Rushhour6x6_1.csv'
 
-    board_title = './data/input/Rushhour6x6_1.csv'
-
     # init the board
     rushHourBoard = Board(board_title)
 
+
+    ########################### Depth first ###########################
+    
+    depth = df.DepthFirst(rushHourBoard)
+    all_moves = depth.run()
+    print(f"best solution for depth first: {all_moves}. This takes {len(all_moves) - 1} moves.")
+
+    # output.export_to_csv(all_moves, './data/output/output.csv')
+
+    ######################## Iterative deepening #####################
+
+    depth = id.Iterative_deepening(rushHourBoard)
+    all_moves = depth.run()
+    print(f"best solution for iterative deepening: {all_moves}. This takes {len(all_moves) - 1} moves.")
+
+    # output.export_to_csv(all_moves, './data/output/output.csv')
+
+    ############################# Random ################################
+
     # solve the board using random moves and print first 10 moves
-    all_moves = randomise.run_milestone1(rushHourBoard, True)[0]
+    # all_moves = randomise.run_milestone1(rushHourBoard, True)[0]
 
     # save moves to output file
-    output.export_to_csv(all_moves, './data/output/output.csv')
+    # output.export_to_csv(all_moves, './data/output/output.csv')
 
     # average amount of steps for 100 iterations of randomise to solve the board
     counters = 0
@@ -46,6 +66,8 @@ def main():
     print(f"The maximum steps of 100 iterations is: {maximum}")
     print(f"The minimum steps of 100 iterations is: {minimum}")
     print()
+
+    ####################### Greedy ####################################
 
     # average amount of steps for 100 iterations of greedy 1 to solve the board
     counters_greedy_1 = 0
@@ -112,4 +134,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    
+    execution_time = timeit.timeit(main, number=1)
+    print(f"Runtime of algorithm: {round(execution_time, 2)} seconds")

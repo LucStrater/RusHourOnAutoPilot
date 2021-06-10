@@ -4,11 +4,12 @@ from .car import Car
 class Board():
 
     def __init__(self, source_file):
-        self.board_len = 0
+        self.board_len = 0  
         self.cars = {}
         self.matrix = self.load_matrix(source_file)
+        self.moves = [('car', 'move')]
         
-
+       
     def load_matrix(self, source_file):
         """
         Initialize the board by loading all vehicles from source file.
@@ -37,7 +38,7 @@ class Board():
                     matrix[vehicle.row + 1][vehicle.column] = vehicle.car_id
                     if vehicle.length == 3:
                         matrix[vehicle.row  + 2][vehicle.column] = vehicle.car_id
-                
+
         return matrix
 
 
@@ -72,7 +73,6 @@ class Board():
             if car.length == 3:
                 self.matrix[car.row  + 2][car.column] = car.car_id
 
-
     def print(self):
         """
         Print board. 
@@ -80,6 +80,8 @@ class Board():
         for row in self.matrix:
             print(row)
 
+    def add_move(self, id, move):
+        self.moves.append((id, move))
 
     def is_solution(self):
         """

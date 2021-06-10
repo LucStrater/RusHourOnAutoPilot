@@ -26,7 +26,7 @@ class Car():
         """ 
         Check validity of move on the current board configuration.
         """
-        if move in get_possibilities(board):
+        if move in self.get_possibilities(board):
             return True
 
         return False
@@ -80,7 +80,7 @@ class Car():
         """
         Check if car has legal moves
         """
-        if len(self.get_possibilities(board)) == 0:
+        if not self.get_possibilities(board): 
             return False
 
         return True
