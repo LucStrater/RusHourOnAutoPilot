@@ -27,7 +27,7 @@ class Iterative_deepening(DepthFirst):
                     # save states to archive
                     self.archive[tuple([tuple(i) for i in state.matrix])] = len(state.moves)
             
-            print(f"Depth {depth} is done")
+            # print(f"Depth {depth} is done")
             depth += 1
 
         # return the best solution found

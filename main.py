@@ -5,7 +5,7 @@ from sys import argv
 from code.algorithms import depth_first as df
 from code.algorithms import iterative_deepening as id
 from code.output import output
-import timeit
+import time
 
 def main():
     # get board title from the terminal
@@ -24,19 +24,28 @@ def main():
 
     ########################### Depth first ###########################
     
+    start = time.perf_counter()
+
     depth = df.DepthFirst(rushHourBoard)
     all_moves = depth.run()
     print(f"best solution for depth first: {all_moves}. This takes {len(all_moves) - 1} moves.")
 
     # output.export_to_csv(all_moves, './data/output/output.csv')
 
+    finish = time.perf_counter()
+    print(f'runtime depth first: {round(finish - start, 2)} seconds')
+
     ######################## Iterative deepening #####################
+    start = time.perf_counter()
 
     depth = id.Iterative_deepening(rushHourBoard)
     all_moves = depth.run()
     print(f"best solution for iterative deepening: {all_moves}. This takes {len(all_moves) - 1} moves.")
 
     # output.export_to_csv(all_moves, './data/output/output.csv')
+
+    finish = time.perf_counter()
+    print(f'runtime iterative deepening: {round(finish - start, 2)} seconds')
 
     ############################# Random ################################
 
@@ -135,5 +144,4 @@ def main():
 
 if __name__ == "__main__":
     
-    execution_time = timeit.timeit(main, number=1)
-    print(f"Runtime of algorithm: {round(execution_time, 2)} seconds")
+    main()
