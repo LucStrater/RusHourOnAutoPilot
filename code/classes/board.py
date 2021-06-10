@@ -10,7 +10,7 @@ class Board():
         self.moves = [('car', 'move')]
 
         # for BFS
-        # self.bf_moves = [['car','move']]
+        self.bf_moves = [['car','move']]
         self.id = None
         self.depth = 0
         

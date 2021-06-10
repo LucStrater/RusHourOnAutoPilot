@@ -22,6 +22,16 @@ def main():
     # init the board
     rushHourBoard = Board(board_title)
 
+    ########################### Breadth first ###########################    
+    bf_start = time.perf_counter()
+
+    breadth_first = bf.Breadth_first(rushHourBoard)
+    bf_moves = breadth_first.run()
+    print(f"best solution for breadth first: {bf_moves}. This takes {len(bf_moves) - 1} moves.")
+
+    bf_finish = time.perf_counter()
+
+    print(f'runtime: {round(bf_finish - bf_start, 2)} seconds')
 
     ########################### Depth first ###########################
     

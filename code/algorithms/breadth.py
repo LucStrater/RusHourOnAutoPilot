@@ -15,18 +15,18 @@ class Breadth_first:
         self.archive[self.start_board.id] = self.start_board.matrix
 
         self.matrix_id = 1
-        self.max_depth = 1000
+        # self.max_depth = 1000
     
 
-    def max_depth_reached(self, state):
-        """
-        Terminates run if maximum depth is reached.
-        """
-        if state.depth == self.max_depth:
-            print(f'No solution in {max_depth - 1} moves.')
-            return True
+    # def max_depth_reached(self, state):
+    #     """
+    #     Terminates run if maximum depth is reached.
+    #     """
+    #     if state.depth == self.max_depth:
+    #         print(f'No solution in {max_depth - 1} moves.')
+    #         return True
 
-        return False
+    #     return False
     
 
     def found_solution(self, state):
@@ -35,7 +35,7 @@ class Breadth_first:
         """
         print('SOLUTION FOUND!!')
         state.print()
-        for move in state.moves:
+        for move in state.bf_moves:
             print(move)
 
 
@@ -49,7 +49,7 @@ class Breadth_first:
                 child = copy.deepcopy(state)
                 child.update_matrix(move, child.cars[car.car_id])
                 child.depth = state.depth + 1
-                child.moves.append([car,move])
+                child.bf_moves.append([car,move])
                 children.append(child)
         
         return children
@@ -86,26 +86,30 @@ class Breadth_first:
         while not self.q.empty():
             state = self.q.get()
 
-            if state.depth > depth:
-                depth = state.depth
-                print(f'ID: {state.id}\nDepth: {depth}\n')
+            # track the depth your currently on
+            # if state.depth > depth:
+            #     depth = state.depth
+            #     print(f'ID: {state.id}\nDepth: {depth}\n')
 
-            if self.max_depth_reached(state):
-                break
+            # if self.max_depth_reached(state):
+            #     break
 
             children = self.make_children(state)
             winner = self.log_children(children)
 
             if winner != None:
-                print('SOLUTION FOUND!!')
+                #print('SOLUTION FOUND!!')
                 break
 
-        if winner != None:
-            #self.start_board.print()
-            print(f'ID: {winner.id}')
-            print(f'depth: {winner.depth}')
-            print()
 
-            for move in winner.moves:
-                print(move)
+        return winner.bf_moves
+
+        # if winner != None:
+        #     #self.start_board.print()
+        #     print(f'ID: {winner.id}')
+        #     print(f'depth: {winner.depth}')
+        #     print()
+
+        #     for move in winner.bf_moves:
+        #         print(move)
 
