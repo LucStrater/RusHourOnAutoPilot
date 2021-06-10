@@ -53,7 +53,7 @@ class DepthFirst():
         while len(self.stack) > 0:
             # take the board at the top of the stack
             state = self.get_next_state()
-            depth = 16
+            depth = 22
 
             # if the current board is a solution save it
             if state.is_solution():
@@ -71,4 +71,8 @@ class DepthFirst():
         self.solutions.sort(key=len)
 
         # return the best solution found
-        return self.solutions[0]
+        if self.solutions:
+            return self.solutions[0]
+        else:
+            print("This depth is not sufficient")
+            return []

@@ -5,7 +5,6 @@ from code.algorithms import backtracking
 from code.algorithms import depth
 from code.algorithms import depth_first as df
 from code.algorithms import iterative_deepening as id
-from code.algorithms import iterative_deepening as id
 from code.output import output
 
 import timeit
@@ -14,11 +13,10 @@ import timeit
 # from code.visualisation import visualise as vis
 
 def main():
-
-    depth = id.Iterative_deepening(rushHourBoard)    rushHourBoard = Board('./data/input/Rushhour6x6_1.csv')
-# 
-    # depth = df.DepthFirst(rushHourBoard)
-    depth = id.Iterative_deepening(rushHourBoard)
+    rushHourBoard = Board('./data/input/Rushhour6x6_1.csv')
+    
+    depth = df.DepthFirst(rushHourBoard)
+    # depth = id.Iterative_deepening(rushHourBoard)
     all_moves = depth.run()
     print(f"best solution: {all_moves}. This takes {len(all_moves) - 1} moves.")
 
