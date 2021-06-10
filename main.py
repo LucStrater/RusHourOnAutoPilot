@@ -1,22 +1,28 @@
 from code.classes.board import Board
 from code.classes.car import Car
 from code.algorithms import randomise, greedy
+<<<<<<< HEAD
 from sys import argv
 from code.algorithms import depth_first as df
 from code.algorithms import iterative_deepening as id
 from code.output import output
+=======
+from code.algorithms import breadth as bf
+from code.output import output
+from sys import argv
+>>>>>>> breadth_first
 import time
 
 def main():
     # get board title from the terminal
-    if len(argv) not in [1, 2]:
+    if len(argv) not in [1, 2, 3]:
         print("Usage: python3 main.py [filename (example: <6x6_1>)]")
         exit(1)
     
-    if len(argv) == 2 and len(argv[1]) != 5:
+    if len(argv) == 2:
         board_title = f"./data/input/Rushhour{argv[1]}.csv"
     else:
-        board_title = './data/input/Rushhour6x6_1.csv'
+        board_title = './data/input/Rushhour4x4_0.csv'
 
     # init the board
     rushHourBoard = Board(board_title)
@@ -68,7 +74,7 @@ def main():
         if counter > maximum:
             maximum = counter
 
-        counters += counter
+    #     counters += counter
         
     print("[Baseline: make random moves until solved]")
     print(f"The average amount of steps of 100 iterations is: {counters/100}")

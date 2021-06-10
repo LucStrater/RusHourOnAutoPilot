@@ -8,6 +8,11 @@ class Board():
         self.cars = {}
         self.matrix = self.load_matrix(source_file)
         self.moves = [('car', 'move')]
+
+        # for BFS
+        # self.bf_moves = [['car','move']]
+        self.id = None
+        self.depth = 0
         
        
     def load_matrix(self, source_file):
@@ -79,6 +84,7 @@ class Board():
         """ 
         for row in self.matrix:
             print(row)
+        print()
 
     def add_move(self, id, move):
         self.moves.append((id, move))
