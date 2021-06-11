@@ -74,9 +74,7 @@ class A_star():
             elif test == score and len(board.moves) < len_board:
                 next_state = tuple([tuple(i) for i in board.matrix])
                 len_board = len(board.moves)
-                
 
-        # sorted_list = list(self.open.values()).sort(key=self.calculate_h1_score)
         return self.open.pop(next_state)
 
 
