@@ -44,10 +44,12 @@
 
 import copy
 
-class A_star():
+
+class A_star:
     """
     An A* algorithm that finds the optimal solution of a rush hour board.
     """
+
     def __init__(self, board):
         self.board = board
 
@@ -62,11 +64,12 @@ class A_star():
         """
         Method that gets the board with the lowest score from open
         """
-        score = float('inf') 
-        len_board = float('inf') 
+        score = float("inf")
+        len_board = float("inf")
         next_state = None
         for board in self.open.values():
-            test = self.calculate_h1_score(board)
+            # h1 is okay, h2 is bad, h3 is
+            test = self.calculate_h2_score(board)
             if test < score:
                 score = test
                 next_state = tuple([tuple(i) for i in board.matrix])
@@ -77,16 +80,36 @@ class A_star():
 
         return self.open.pop(next_state)
 
-
     def calculate_h1_score(self, state):
-        return state.board_len - 2 - state.cars['X'].column
+        return state.board_len - 2 - state.cars["X"].column
 
+    def calculate_h2_score(self, state):
+        filled_spots = 0
+
+        # for each spot on the row of car X, check if it is filled
+        for i in range(state.board_len):
+            if state.matrix[state.cars["X"].row][i] is not None:
+                filled_spots += 1
+
+        return filled_spots
+
+    def calculate_h3_score(self, state):
+        score = 0
+        len_board = range(state.board_len)
+        # for each spot on the row of car X, check if it is filled
+        for i in len_board:
+            if (state.matrix[state.cars["X"].row][i] is not None and state.matrix[i][state.cars["X"].row] != "X"):
+                for j in len_board:
+                    if state.matrix[j][i] is not None:
+                        score += 1
+
+        return score
 
     def create_children(self, state):
         # get current possibilities of all cars on board
         for car in state.cars.values():
             car_possibilities = car.get_possibilities(state)
-            
+
             # for every car loop over its possible moves
             for move in car_possibilities:
                 # copy the board of the previous board
@@ -94,7 +117,7 @@ class A_star():
 
                 # update new board with chosen move
                 new_board.update_matrix(move, new_board.cars[car.car_id])
-                
+
                 # append move made to list of moves to get to incumbent (new) board
                 new_board.add_move(new_board.cars[car.car_id].car_id, move)
 
@@ -102,9 +125,9 @@ class A_star():
                 matrix_tuple = tuple([tuple(i) for i in new_board.matrix])
 
                 # if this state has not been reached put it on the stack
-                if matrix_tuple not in self.closed.keys() and matrix_tuple not in self.open.keys():
+                if (matrix_tuple not in self.closed.keys() and matrix_tuple not in self.open.keys()):
                     self.open[matrix_tuple] = new_board
-                    
+
                 # if current matrix exists in archive, and moves to get to current matrix is shorter, add current matrix to archive
                 elif matrix_tuple in self.closed.keys():
                     # print(self.closed[matrix_tuple])
@@ -115,7 +138,6 @@ class A_star():
                     if len(new_board.moves) < len(self.open[matrix_tuple].moves):
                         self.open[matrix_tuple] = new_board
 
-
     def move_backtracking(self, solution_state):
         optimal_moveset = []
         while True:
@@ -124,7 +146,7 @@ class A_star():
             if solution_state.matrix == self.board.matrix:
                 break
 
-            move = - optimal_moveset[0][1]
+            move = -optimal_moveset[0][1]
             car = solution_state.cars[optimal_moveset[0][0]]
             solution_state.update_matrix(move, car)
             solution_state.moves = self.closed[tuple([tuple(i) for i in solution_state.matrix])].moves
@@ -150,4 +172,5 @@ class A_star():
         solution = self.move_backtracking(state)
 
         # return the best solution found
+        # return solution
         return solution
