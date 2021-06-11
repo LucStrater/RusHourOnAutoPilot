@@ -69,7 +69,7 @@ class A_star:
         next_state = None
         for board in self.open.values():
             # h1 is okay, h2 is bad, h3 is
-            test = self.calculate_h2_score(board)
+            test = self.calculate_h3_score(board)
             if test < score:
                 score = test
                 next_state = tuple([tuple(i) for i in board.matrix])
@@ -98,10 +98,27 @@ class A_star:
         len_board = range(state.board_len)
         # for each spot on the row of car X, check if it is filled
         for i in len_board:
-            if (state.matrix[state.cars["X"].row][i] is not None and state.matrix[i][state.cars["X"].row] != "X"):
+            unique = []
+            if (state.matrix[state.cars["X"].row][i] is not None and state.matrix[state.cars["X"].row][i] != "X"):
                 for j in len_board:
                     if state.matrix[j][i] is not None:
-                        score += 1
+                    # if state.matrix[j][i] is not None and state.matrix[j][i] not in unique:
+                        # score += 1
+                        # unique.append(state.matrix[j][i])
+
+
+                        blocking_car = state.matrix[state.cars["X"].row][i]
+                        if state.matrix[j][i] == blocking_car:
+                            continue
+                        elif state.cars[state.matrix[j][i]].orientation == 'V':
+                          if state.cars[state.matrix[j][i]].length == 2:
+                              j += 2
+                              score += 1
+                          else:
+                              j += 3
+                              score += 1
+                        else:
+                            score += 1
 
         return score
 
