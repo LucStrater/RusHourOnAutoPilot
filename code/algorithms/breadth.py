@@ -1,5 +1,7 @@
 from code.classes.board import Board
 from code.classes.car import Car
+from code.classes.board_BF2 import Board_BF2
+from code.classes.car_BF2 import Car_BF2
 import queue
 import copy
 
@@ -101,7 +103,6 @@ class Breadth_first:
                 #print('SOLUTION FOUND!!')
                 break
 
-
         return winner.bf_moves
 
         # if winner != None:
@@ -112,4 +113,81 @@ class Breadth_first:
 
         #     for move in winner.bf_moves:
         #         print(move)
+
+#########################################################################################################################
+
+class Breadth_first_V2:
+
+    def __init__(self, board):
+        self.start_board = board
+        self.q = queue.Queue()
+        self.archive = {}
+
+        self.start_board.id = 0
+        self.q.put(self.start_board)
+        self.archive[self.start_board.id] = self.start_board.matrix
+
+        self.matrix_id = 1
+
+
+    def make_children(self, state):
+        """
+        Makes all possible children of a board.
+        """
+        children = []
+        for car in list(state.cars.values()):
+            for move in state.get_possibilities(car):
+                child = state.copy()
+                child.update_matrix(car, move)
+                child.moves.append((car,move))
+                children.append(child)
+        
+        return children
+    
+
+    def log_children(self, children):
+        """
+        Logs all children whose matrix is not in the archive. Returns True if a child is a solution.
+        """
+        for child in children:
+            if child.matrix in self.archive.values():
+                continue
+
+            child.id = self.matrix_id
+            self.matrix_id += 1
+
+            if child.is_solution():
+                return child
+
+            self.q.put(child)
+            self.archive[child.id] = child.matrix
+        
+        return None
+
+
+    def run(self):
+        """
+        Goes breadth first through all possible moves until a solution was found or the maximum depth was reached.
+        """
+        #depth = 0
+        while not self.q.empty():
+            state = self.q.get()
+
+            # track the depth your currently on
+            # if len(state.moves) - 1 > depth:
+            #     depth = state.depth
+            #     print(f'ID: {state.id}\nDepth: {depth}\n')
+
+            # if self.max_depth_reached(state):
+            #     break
+
+            children = self.make_children(state)
+            winner = self.log_children(children)
+
+            if winner != None:
+                #print('SOLUTION FOUND!!')
+                break
+
+        return winner.moves
+
 
