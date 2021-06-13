@@ -7,6 +7,7 @@ from sys import argv
 from code.algorithms import depth_first as df
 from code.algorithms import iterative_deepening as id
 from code.algorithms import breadth as bf
+from code.algorithms import hillclimber as hc
 from code.output import output
 import time
 
@@ -23,34 +24,47 @@ def main():
         board_title = './data/input/Rushhour4x4_0.csv'
 
     # init the board
-    rushHourBoard_V1 = Board(board_title)
+    #rushHourBoard_V1 = Board(board_title)
     rushHourBoard_V2 = Board_BF2(board_title)
 
-    ########################### Breadth first ###########################
+    ########################### Hillclimber ###########################
 
-    ### V1 ###    
-    bf_start = time.perf_counter()
+    hc_start = time.perf_counter()
 
-    breadth_first = bf.Breadth_first(rushHourBoard_V1)
-    bf_moves = breadth_first.run()
-    #print(f"best solution for breadth first: {bf_moves}. This takes {len(bf_moves) - 1} moves.")
-    print(f'V1 found a solution in {len(bf_moves) - 1} moves.')
+    hillclimber = hc.Hillclimber(rushHourBoard_V2)
+    hc_moves = hillclimber.run()
+    print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
 
-    bf_finish = time.perf_counter()
+    hc_finish = time.perf_counter()
     
-    print(f'runtime V1: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
+    print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
 
 
-    ### V2 ###
-    bf_start = time.perf_counter()
+    # ########################### Breadth first ###########################
 
-    breadth_first_V2 = bf.Breadth_first_V2(rushHourBoard_V2)
-    bf_moves = breadth_first_V2.run()
-    print(f'V2 found a solution in {len(bf_moves) - 1} moves.')
+    # ### V1 ###    
+    # bf_start = time.perf_counter()
 
-    bf_finish = time.perf_counter()
+    # breadth_first = bf.Breadth_first(rushHourBoard_V1)
+    # bf_moves = breadth_first.run()
+    # #print(f"best solution for breadth first: {bf_moves}. This takes {len(bf_moves) - 1} moves.")
+    # print(f'V1 found a solution in {len(bf_moves) - 1} moves.')
+
+    # bf_finish = time.perf_counter()
     
-    print(f'runtime V2: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
+    # print(f'runtime V1: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
+
+
+    # ### V2 ###
+    # bf_start = time.perf_counter()
+
+    # breadth_first_V2 = bf.Breadth_first_V2(rushHourBoard_V2)
+    # bf_moves = breadth_first_V2.run()
+    # print(f'V2 found a solution in {len(bf_moves) - 1} moves.')
+
+    # bf_finish = time.perf_counter()
+    
+    # print(f'runtime V2: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
 
 
 #     ########################### Depth first ###########################

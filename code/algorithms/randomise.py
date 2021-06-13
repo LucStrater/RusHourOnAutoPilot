@@ -1,5 +1,7 @@
 import random
 import time
+# from code.classes.board_BF2 import Board_BF2
+# from code.classes.car_BF2 import Car_BF2
 
 
 def random_move(board):
@@ -46,4 +48,44 @@ def run_milestone1(board, print_check):
         counter += 1
 
     return [moves_made, counter]
- 
+
+###############################################################################################################################
+
+class Randomize_Hillclimber:
+    """
+    Randomly makes legal moves until the board is solved. Designed for the V2 data structure BF2.
+    """
+
+    def __init__(self, board):
+        self.board = board
+
+
+    def random_choice(self):
+        """
+        Randomly selects car and returns legal move.
+        """
+        # select car
+        while True:
+            car = random.choice(list(self.board.cars.values()))
+            car_moves = self.board.get_possibilities(car)
+
+            if len(car_moves) > 0:
+                break
+        
+        move = random.choice(car_moves)
+
+        return (car, move)
+    
+
+    def run(self):
+        """
+        Make random moves until the board is solved.
+        """
+        while not self.board.is_solution():
+            car_move = self.random_choice()
+
+            self.board.update_matrix(car_move[0], car_move[1])
+
+            self.board.moves.append(car_move)
+        
+        return self.board.moves

@@ -191,3 +191,66 @@ class Breadth_first_V2:
         return winner.moves
 
 
+#########################################################################################################################
+
+class Breadth_first_Hillclimber(Breadth_first_V2):
+
+    def __init__(self, start_board, finish_matrix):
+        self.start_board = start_board
+        self.finish_matrix = finish_matrix
+        self.q = queue.Queue()
+        self.archive = {}
+
+        self.start_board.id = 0
+        self.q.put(self.start_board)
+        self.archive[self.start_board.id] = self.start_board.matrix
+
+        self.matrix_id = 1
+    
+
+    def log_children(self, children):
+        """
+        Logs all children whose matrix is not in the archive. Returns child if it is the solution.
+        """
+        for child in children:
+            if child.matrix in self.archive.values():
+                continue
+
+            child.id = self.matrix_id
+            self.matrix_id += 1
+
+            if self.check_finish(child.matrix):
+                return child
+
+            self.q.put(child)
+            self.archive[child.id] = child.matrix
+        
+        return None
+
+    
+    def check_finish(self, matrix):
+        """
+        Checks if finish matrix has been found.
+        """
+        if matrix == self.finish_matrix:
+            return True
+        
+        return False
+
+
+    def run(self):
+        """
+        Goes breadth first through all possible moves until a solution was found or the maximum depth was reached.
+        """
+        while not self.q.empty():
+            state = self.q.get()
+
+            children = self.make_children(state)
+            winner = self.log_children(children)
+
+            if winner != None:
+                break
+
+        del winner.moves[0]
+
+        return winner.moves
