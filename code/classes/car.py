@@ -70,8 +70,6 @@ class Car():
                     possibilities.add(i - self.length + 1)
                 else:
                     break
-
-        # print(f'possibilities for car {self.car_id}: {possibilities}')
         
         return list(possibilities)
 

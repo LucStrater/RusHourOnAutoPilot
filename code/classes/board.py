@@ -8,12 +8,15 @@ class Board():
         self.cars = {}
         self.matrix = self.load_matrix(source_file)
         self.moves = [('car', 'move')]
+        self.car_possibilities = self.load_possibilities()
 
-        # for BFS
-        self.bf_moves = [['car','move']]
-        self.id = None
-        self.depth = 0
-        
+    def load_possibilities(self):
+        # get starting possibilities of all cars on the initial board
+        for car in self.cars.values():
+            car_possibilities = car.get_possibilities(self)
+
+            # for every car loop over its possible moves
+            for move in car_possibilities:        
        
     def load_matrix(self, source_file):
         """
@@ -51,19 +54,31 @@ class Board():
         """
         Move car and update the board accordingly.
         """
-        # update car 
-        car.move_car(move)
 
         # replace car spaces with None, remove car from board
-        for i in range(self.board_len):
-            for j in range(self.board_len):
-                if self.matrix[i][j] == car.car_id:
-                    self.matrix[i][j] = None
+        self.remove_car(car)
+
+        # update car 
+        car.move_car(move)
 
         # fill up the cars new spaces on board, place car back on board
         self.place_car(car)
 
-    
+    def remove_car(self, car):
+        """
+        Remove car on board from it's previous position.
+        """
+        self.matrix[car.row][car.column] = None
+        if car.orientation == "H":
+            self.matrix[car.row][car.column + 1] = None
+            if car.length == 3:
+                self.matrix[car.row][car.column + 2] = None
+        else:
+            self.matrix[car.row + 1][car.column] = None
+            if car.length == 3:
+                self.matrix[car.row  + 2][car.column] = None
+
+
     def place_car(self, car):
         """
         Place car on board according to it's current position.
@@ -93,7 +108,7 @@ class Board():
         """
         Check if the current configuration is a solution. 
         """
-        if self.matrix[self.cars['X'].row][self.board_len - 1] == 'X':
+        if self.matrix[self.cars['X'].row][-1] == 'X':
             return True
         
         return False

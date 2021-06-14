@@ -1,47 +1,3 @@
-"""
-
-// A* Search Algorithm
-1.  Initialize the open list
-2.  Initialize the closed list
-    put the starting node on the open 
-    list (you can leave its f at zero)
-
-3.  while the open list is not empty
-    a) find the node with the least f on 
-       the open list, call it "q"
-
-    b) pop q off the open list
-  
-    c) generate q's 8 successors and set their 
-       parents to q
-   
-    d) for each successor
-        i) if successor is the goal, stop search
-          successor.g = q.g + distance between 
-                              successor and q
-          successor.h = distance from goal to 
-          successor (This can be done using many 
-          ways, we will discuss three heuristics- 
-          Manhattan, Diagonal and Euclidean 
-          Heuristics)
-          
-          successor.f = successor.g + successor.h
-
-        ii) if a node with the same position as 
-            successor is in the OPEN list which has a 
-           lower f than successor, skip this successor
-
-        iii) if a node with the same position as 
-            successor  is in the CLOSED list which has
-            a lower f than successor, skip this successor
-            otherwise, add  the node to the open list
-     end (for loop)
-  
-    e) push q on the closed list
-    end (while loop)
-
-    """
-
 import copy
 
 
@@ -64,65 +20,62 @@ class A_star:
         """
         Method that gets the board with the lowest score from open
         """
-        score = float("inf")
+        lowest_score = float("inf")
         len_board = float("inf")
         next_state = None
         for board in self.open.values():
-            # h1 is okay, h2 is bad, h3 is
-            test = self.calculate_h3_score(board)
-            if test < score:
-                score = test
+            current_score = self.calculate_h2_score(board)
+            if current_score > lowest_score:
+                continue
+            elif current_score < lowest_score:
+                lowest_score = current_score
                 next_state = tuple([tuple(i) for i in board.matrix])
                 len_board = len(board.moves)
-            elif test == score and len(board.moves) < len_board:
+            elif current_score == lowest_score and len(board.moves) < len_board:
                 next_state = tuple([tuple(i) for i in board.matrix])
                 len_board = len(board.moves)
 
         return self.open.pop(next_state)
 
     def calculate_h1_score(self, state):
+        """
+        Heuristic based on the distance of the red car to the exit
+        """
         return state.board_len - 2 - state.cars["X"].column
 
     def calculate_h2_score(self, state):
+        """
+        Heuristic based on the number of cars in the row of the winning car
+        """
         filled_spots = 0
 
-        # for each spot on the row of car X, check if it is filled
-        for i in range(state.board_len):
-            if state.matrix[state.cars["X"].row][i] is not None:
+        for column in state.matrix[state.cars["X"].row]:
+            if  column is not None:
                 filled_spots += 1
 
         return filled_spots
 
     def calculate_h3_score(self, state):
+        """
+        Heuristic based on the number of cars blocking the red car and the cars blocking those
+        """
         score = 0
         len_board = range(state.board_len)
-        # for each spot on the row of car X, check if it is filled
+
+        # check for cars in the row of the red car and cars blocking those cars
         for i in len_board:
             unique = []
             if (state.matrix[state.cars["X"].row][i] is not None and state.matrix[state.cars["X"].row][i] != "X"):
                 for j in len_board:
-                    if state.matrix[j][i] is not None:
-                    # if state.matrix[j][i] is not None and state.matrix[j][i] not in unique:
-                        # score += 1
-                        # unique.append(state.matrix[j][i])
-
-
-                        blocking_car = state.matrix[state.cars["X"].row][i]
-                        if state.matrix[j][i] == blocking_car:
-                            continue
-                        elif state.cars[state.matrix[j][i]].orientation == 'V':
-                          if state.cars[state.matrix[j][i]].length == 2:
-                              j += 2
-                              score += 1
-                          else:
-                              j += 3
-                              score += 1
-                        else:
-                            score += 1
-
+                    if state.matrix[j][i] is not None and state.matrix[j][i] not in unique:
+                        score += 1
+                        unique.append(state.matrix[j][i])
         return score
 
     def create_children(self, state):
+        """
+        Create the children of the current state
+        """
         # get current possibilities of all cars on board
         for car in state.cars.values():
             car_possibilities = car.get_possibilities(state)
@@ -145,24 +98,30 @@ class A_star:
                 if (matrix_tuple not in self.closed.keys() and matrix_tuple not in self.open.keys()):
                     self.open[matrix_tuple] = new_board
 
-                # if current matrix exists in archive, and moves to get to current matrix is shorter, add current matrix to archive
+                # if current matrix exists in archive, and moves to get to current matrix is shorter, replace board in archive
                 elif matrix_tuple in self.closed.keys():
-                    # print(self.closed[matrix_tuple])
                     if len(new_board.moves) < len(self.closed[matrix_tuple].moves):
                         self.closed[matrix_tuple] = new_board
 
+                # saem as above, but for open
                 elif matrix_tuple in self.open.keys():
                     if len(new_board.moves) < len(self.open[matrix_tuple].moves):
                         self.open[matrix_tuple] = new_board
 
     def move_backtracking(self, solution_state):
+        # list with the solution
         optimal_moveset = []
+
+        # do while loop
         while True:
+            # take the last element of the move and save it to the solution
             optimal_moveset.insert(0, solution_state.moves.pop())
 
+            # stop if start board is reached
             if solution_state.matrix == self.board.matrix:
                 break
 
+            # take the new last move and look if there is a faster route to get there in the archive
             move = -optimal_moveset[0][1]
             car = solution_state.cars[optimal_moveset[0][0]]
             solution_state.update_matrix(move, car)
@@ -172,11 +131,12 @@ class A_star:
 
     def run(self):
 
-        # repeat untill the stack is empty
+        # repeat untill a solution is found or no solution is possible
         while True:
             # take the board at the top of the stack
             state = self.get_next_state()
 
+            # stop loop if a solution is found
             if state.is_solution():
                 break
 
@@ -186,8 +146,7 @@ class A_star:
             # create children
             self.create_children(state)
 
+        # check if a faster set of moves was possible to get to states in the solution
         solution = self.move_backtracking(state)
 
-        # return the best solution found
-        # return solution
         return solution
