@@ -28,11 +28,13 @@ def main():
     rushHourBoard_V2 = Board_BF2(board_title)
 
     ########################### Hillclimber ###########################
+    hc_random_nr = 10
+    hc_bf_division = 5
 
     hc_start = time.perf_counter()
 
     hillclimber = hc.Hillclimber(rushHourBoard_V2)
-    hc_moves = hillclimber.run()
+    hc_moves = hillclimber.run(hc_random_nr, hc_bf_division)
     print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
 
     hc_finish = time.perf_counter()
@@ -61,6 +63,23 @@ def main():
     # breadth_first_V2 = bf.Breadth_first_V2(rushHourBoard_V2)
     # bf_moves = breadth_first_V2.run()
     # print(f'V2 found a solution in {len(bf_moves) - 1} moves.')
+
+    # bf_finish = time.perf_counter()
+    
+    # print(f'runtime V2: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
+
+    # ### Beam ###
+    # beam_width = 3
+
+    # bf_start = time.perf_counter()
+
+    # breadth_first_beam = bf.Breadth_first_beam(rushHourBoard_V2)
+    # bf_moves = breadth_first_beam.run(3)
+
+    # if bf_moves == None:
+    #     print('no solution found')
+    # else:
+    #     print(f'BF beam found a solution in {len(bf_moves) - 1} moves.')
 
     # bf_finish = time.perf_counter()
     

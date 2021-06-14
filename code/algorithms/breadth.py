@@ -4,6 +4,7 @@ from code.classes.board_BF2 import Board_BF2
 from code.classes.car_BF2 import Car_BF2
 import queue
 import copy
+import random
 
 class Breadth_first:
 
@@ -169,17 +170,8 @@ class Breadth_first_V2:
         """
         Goes breadth first through all possible moves until a solution was found or the maximum depth was reached.
         """
-        #depth = 0
         while not self.q.empty():
             state = self.q.get()
-
-            # track the depth your currently on
-            # if len(state.moves) - 1 > depth:
-            #     depth = state.depth
-            #     print(f'ID: {state.id}\nDepth: {depth}\n')
-
-            # if self.max_depth_reached(state):
-            #     break
 
             children = self.make_children(state)
             winner = self.log_children(children)
@@ -195,9 +187,9 @@ class Breadth_first_V2:
 
 class Breadth_first_Hillclimber(Breadth_first_V2):
 
-    def __init__(self, start_board, finish_matrix):
+    def __init__(self, start_board, finish_board):
         self.start_board = start_board
-        self.finish_matrix = finish_matrix
+        self.finish_board = finish_board
         self.q = queue.Queue()
         self.archive = {}
 
@@ -232,10 +224,12 @@ class Breadth_first_Hillclimber(Breadth_first_V2):
         """
         Checks if finish matrix has been found.
         """
-        if matrix == self.finish_matrix:
-            return True
+        for i in range(self.finish_board.board_len):
+            for j in range(self.finish_board.board_len):
+                if matrix[i][j] != self.finish_board.matrix[i][j]:
+                    return False
         
-        return False
+        return True
 
 
     def run(self):
@@ -252,5 +246,56 @@ class Breadth_first_Hillclimber(Breadth_first_V2):
                 break
 
         del winner.moves[0]
+
+        return winner.moves
+
+#############################################################################################################################
+
+class Breadth_first_beam(Breadth_first_V2):
+
+    def make_children(self, state, beam_width):
+        """
+        Makes 3 possible children of a board.
+        """
+        children = []
+        
+        for i in range(beam_width):
+            while True:
+                car = random.choice(list(state.cars.values()))
+                car_moves = state.get_possibilities(car)
+
+                if len(car_moves) > 0:
+                    break
+            
+            move = random.choice(car_moves)
+
+            child = state.copy()
+            child.update_matrix(car, move)
+            child.moves.append((car,move))
+            children.append(child)
+
+        return children
+
+    def run(self, beam_width):
+        """
+        Goes breadth first through all possible moves until a solution was found or the maximum depth was reached.
+        """
+        count = 0
+        print
+        while not self.q.empty():
+            if count % 3 == 0:
+                print(round(count / 3, 0))
+            count += 1
+            state = self.q.get()
+
+            children = self.make_children(state, beam_width)
+            winner = self.log_children(children)
+
+            if winner != None:
+                #print('SOLUTION FOUND!!')
+                break
+
+        if winner == None:
+            return None
 
         return winner.moves
