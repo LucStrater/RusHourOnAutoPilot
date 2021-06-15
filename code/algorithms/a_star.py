@@ -24,14 +24,13 @@ class A_star:
         len_board = float("inf")
         next_state = None
         for board in self.open.values():
-            current_score = self.calculate_h2_score(board)
-            if current_score > lowest_score:
+            if board.score > lowest_score:
                 continue
-            elif current_score < lowest_score:
-                lowest_score = current_score
+            elif board.score < lowest_score:
+                lowest_score = board.score
                 next_state = tuple([tuple(i) for i in board.matrix])
                 len_board = len(board.moves)
-            elif current_score == lowest_score and len(board.moves) < len_board:
+            elif board.score == lowest_score and len(board.moves) < len_board:
                 next_state = tuple([tuple(i) for i in board.matrix])
                 len_board = len(board.moves)
 
@@ -96,17 +95,18 @@ class A_star:
 
                 # if this state has not been reached put it on the stack
                 if (matrix_tuple not in self.closed.keys() and matrix_tuple not in self.open.keys()):
+                    new_board.score = self.calculate_h3_score(new_board)
                     self.open[matrix_tuple] = new_board
 
                 # if current matrix exists in archive, and moves to get to current matrix is shorter, replace board in archive
                 elif matrix_tuple in self.closed.keys():
                     if len(new_board.moves) < len(self.closed[matrix_tuple].moves):
-                        self.closed[matrix_tuple] = new_board
+                        self.closed[matrix_tuple].moves = new_board.moves
 
                 # saem as above, but for open
                 elif matrix_tuple in self.open.keys():
                     if len(new_board.moves) < len(self.open[matrix_tuple].moves):
-                        self.open[matrix_tuple] = new_board
+                        self.open[matrix_tuple].moves = new_board.moves
 
     def move_backtracking(self, solution_state):
         # list with the solution

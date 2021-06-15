@@ -8,15 +8,16 @@ class Board():
         self.cars = {}
         self.matrix = self.load_matrix(source_file)
         self.moves = [('car', 'move')]
-        self.car_possibilities = self.load_possibilities()
+        self.score = 1000
+    #     self.car_possibilities = self.load_possibilities()
 
-    def load_possibilities(self):
-        # get starting possibilities of all cars on the initial board
-        for car in self.cars.values():
-            car_possibilities = car.get_possibilities(self)
+    # def load_possibilities(self):
+    #     # get starting possibilities of all cars on the initial board
+    #     for car in self.cars.values():
+    #         car_possibilities = car.get_possibilities(self)
 
-            # for every car loop over its possible moves
-            for move in car_possibilities:        
+    #         # for every car loop over its possible moves
+    #         for move in car_possibilities:        
        
     def load_matrix(self, source_file):
         """
