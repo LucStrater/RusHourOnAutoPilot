@@ -24,7 +24,7 @@ def main():
     # init the board
     rushHourBoard = Board(board_title)
 
-    ########################### A* ##############################
+    # ########################### A* ##############################
     start = time.perf_counter()
 
     a_star = ast.A_star(rushHourBoard)
@@ -72,18 +72,18 @@ def main():
 
     # ############################# Random ################################
 
-    # # solve the board using random moves and print first 10 moves
-    # # all_moves = randomise.run_milestone1(rushHourBoard, True)[0]
+    # solve the board using random moves and print first 10 moves
+    # all_moves = randomise.run_milestone1(rushHourBoard, True)[0]
 
-    # # save moves to output file
-    # # output.export_to_csv(all_moves, './data/output/output.csv')
+    # save moves to output file
+    # output.export_to_csv(all_moves, './data/output/output.csv')
 
-    # # average amount of steps for 100 iterations of randomise to solve the board
+    # average amount of steps for 100 iterations of randomise to solve the board
     # counters = 0
     # maximum = 0
     # minimum = float('inf')
 
-    # for i in range(100):
+    # for i in range(1):
     #     rushHourBoard = Board(board_title)
     #     counter = randomise.run_milestone1(rushHourBoard, False)[1]
     #     if counter < minimum:
