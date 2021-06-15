@@ -11,6 +11,7 @@ class Board_BF2():
         self.matrix = []
         self.load_matrix(source_file)
         self.moves = [('Car','Move')]
+        #self.moves = []
         self.id = None
 
 

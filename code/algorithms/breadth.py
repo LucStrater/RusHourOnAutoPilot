@@ -182,7 +182,6 @@ class Breadth_first_V2:
 
         return winner.moves
 
-
 #########################################################################################################################
 
 class Breadth_first_Hillclimber(Breadth_first_V2):

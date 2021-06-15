@@ -28,14 +28,30 @@ def main():
     rushHourBoard_V2 = Board_BF2(board_title)
 
     ########################### Hillclimber ###########################
+
+    # ### BF Shortening ###
+    # hc_random_nr = 10
+    # hc_bf_division = 5
+
+    # hc_start = time.perf_counter()
+
+    # hillclimber = hc.Hillclimber(rushHourBoard_V2)
+    # hc_moves = hillclimber.run(hc_random_nr, hc_bf_division)
+    # print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
+
+    # hc_finish = time.perf_counter()
+    
+    # print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
+
+    ### State Tracing ###
     hc_random_nr = 10
-    hc_bf_division = 5
+    hc_trace_iterations = 1000
 
     hc_start = time.perf_counter()
 
-    hillclimber = hc.Hillclimber(rushHourBoard_V2)
-    hc_moves = hillclimber.run(hc_random_nr, hc_bf_division)
-    print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
+    hillclimber = hc.Hillclimber_state_trace(rushHourBoard_V2)
+    hc_moves = hillclimber.run(hc_random_nr, hc_trace_iterations)
+    print(f'State Tracer found solution in {len(hc_moves) - 1} moves.')
 
     hc_finish = time.perf_counter()
     
