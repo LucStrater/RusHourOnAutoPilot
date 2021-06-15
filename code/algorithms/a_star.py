@@ -86,11 +86,30 @@ class A_star:
 
         return score
 
-    def calculate_h4_score(self, state):
+    def calculate_h4_score(self, old_board, state):
         """
         MoveFreed: checks if the last move increased the number of vehicles free to move
         """
-        pass
+        score = 0
+
+        old_board_moves = 0
+        for car in old_board.cars.values():
+                car_possibilities = car.get_possibilities(state)
+
+                # for every car loop over its possible moves
+                for move in car_possibilities:
+                    old_board_moves += 1
+
+        current_board_moves = 0
+        for car in state.cars.values():
+            car_possibilities = car.get_possibilities(state)
+
+            # for every car loop over its possible moves
+            for move in car_possibilities:
+                current_board_moves += 1
+
+        score = current_board_moves - old_board_moves
+        return score
 
     def calculate_h5_score(self, state):
         """   
@@ -123,7 +142,7 @@ class A_star:
 
                 # if this state has not been reached put it on the stack
                 if (matrix_tuple not in self.closed.keys() and matrix_tuple not in self.open.keys()):
-                    new_board.score = self.calculate_h3_score(new_board)
+                    new_board.score = self.calculate_h4_score(state, new_board)
                     self.open[matrix_tuple] = new_board
 
                 # if current matrix exists in archive, and moves to get to current matrix is shorter, replace board in archive
