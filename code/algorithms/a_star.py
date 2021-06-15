@@ -49,7 +49,7 @@ class A_star:
         filled_spots = 0
 
         for column in state.matrix[state.cars["X"].row]:
-            if  column is not None:
+            if column is not None:
                 filled_spots += 1
 
         return filled_spots
@@ -69,6 +69,104 @@ class A_star:
                     if state.matrix[j][i] is not None and state.matrix[j][i] not in unique:
                         score += 1
                         unique.append(state.matrix[j][i])
+        return score
+
+    def calculate_h4_score(self, state):
+        """
+        Heuristic based on heuristic 2 plus the minimum number of cars that block these cars
+        """
+        len_board = range(state.board_len)
+        x_to_end = range(state.cars["X"].row + state.cars["X"].length, state.board_len)
+        
+        score = 0
+        sub_scores = []
+        # level_two_blockers_a = 0
+        # level_two_blockers_b = 0
+
+        for i in x_to_end:
+            sub_score_a = 0
+            sub_score_b = 0
+            unique = []
+            if (state.matrix[state.cars["X"].row][i] is not None and state.matrix[state.cars["X"].row][i] != "X"):
+                score += 1 
+
+                blocking_car = state.cars[state.matrix[state.cars["X"].row][i]]
+                blocking_car.length
+
+                # look below the directly blocking car
+                for j in range(blocking_car.row + blocking_car.length, state.board_len):
+                    if state.matrix[j][i] is not None and state.matrix[j][i] not in unique:
+                        sub_score_a += 1
+                        unique.append(state.matrix[j][i])
+                
+                # look above the directly blocking car
+                for k in range(0, blocking_car.row):
+                    if state.matrix[k][i] is not None and state.matrix[k][i] not in unique:
+                        sub_score_b += 1
+                        unique.append(state.matrix[k][i])
+                print(f"score a: ${sub_score_a}, score b: ${sub_score_b}")
+                sub_scores.append(min(sub_score_a, sub_score_b))
+                print(f"List with minimum sub_scores: ${sub_scores}")
+                        
+                        # level_two_blocking_car =  state.cars[state.matrix[j][i]]
+                        # orientation_car = level_two_blocking_car.orientation
+                        # length_car = level_two_blocking_car.length
+                        # row_car = level_two_blocking_car.row
+                        # column_car = level_two_blocking_car.column
+
+                        # level_three_blockers = 0
+                        # if orientation_car == 'H':
+                        #     for k in range(column_car + length_car, state.board_len):
+                        #         if state.matrix[j][k] is not None:
+                        #             level_three_blockers += 1
+                        #             break
+                        #     for l in range(0, column_car):
+                        #         if state.matrix[j][l] is not None:
+                        #             level_three_blockers += 1
+                        #             break
+                        # if orientation_car == 'V':
+                        #     # for looking above row of X
+                        #     # for k in range(0, row_car):
+                        #     #     if state.matrix[i][k] is not None:
+                        #     #         level_three_blockers += 1
+                        #     #         break
+                        #     for l in range(row_car + length_car, state.board_len)
+                        #         if state.matrix[i][k] is not None:
+                        #             level_three_blockers += 1
+                        #             break        
+        
+        return (score + min(sub_scores))
+
+    def calculate_h5_score(self, state):
+        """
+        Heuristic based on the number of cars blocking the red car and the cars blocking those
+        """
+        score = 0
+
+        for l in range(state.cars["X"].column + 2, state.board_len):
+            up_score = 0
+            down_score = 0
+
+            if state.matrix[state.cars["X"].row][l] is not None:
+                up_set = set()
+                down_set = set()
+
+                for k in range(state.board_len):
+                    if k <= state.cars["X"].row and state.matrix[k][l] is not None:
+                        up_set.add(state.matrix[k][l])
+                    elif k >= state.cars["X"].row and state.matrix[k][l] is not None:
+                        down_set.add(state.matrix[k][l])
+
+                for j in down_set:
+                    if j is not None:
+                        down_score += 1
+
+                for j in up_set:
+                    if j is not None:
+                        up_score += 1
+                
+                score += min(up_score, down_score)
+
         return score
 
     def create_children(self, state):
@@ -95,7 +193,7 @@ class A_star:
 
                 # if this state has not been reached put it on the stack
                 if (matrix_tuple not in self.closed.keys() and matrix_tuple not in self.open.keys()):
-                    new_board.score = self.calculate_h3_score(new_board)
+                    new_board.score = self.calculate_h5_score(new_board)
                     self.open[matrix_tuple] = new_board
 
                 # if current matrix exists in archive, and moves to get to current matrix is shorter, replace board in archive
@@ -103,7 +201,7 @@ class A_star:
                     if len(new_board.moves) < len(self.closed[matrix_tuple].moves):
                         self.closed[matrix_tuple].moves = new_board.moves
 
-                # saem as above, but for open
+                # same as above, but for open
                 elif matrix_tuple in self.open.keys():
                     if len(new_board.moves) < len(self.open[matrix_tuple].moves):
                         self.open[matrix_tuple].moves = new_board.moves
