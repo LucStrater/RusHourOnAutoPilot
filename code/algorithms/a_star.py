@@ -1,5 +1,5 @@
 import copy
-
+from code.algorithms import randomise_a_star as ras
 
 class A_star:
     """
@@ -8,6 +8,7 @@ class A_star:
 
     def __init__(self, board):
         self.board = board
+        self.solution_board = copy.deepcopy(self.board)
 
         # initialise the open / closed list
         self.open = {}
@@ -114,8 +115,13 @@ class A_star:
     def calculate_h5_score(self, state):
         """   
         Distance to goal: with a given solution from a random algorithm determine the distance of every car to its final position
-        """     
-        pass
+        """ 
+        score = 0
+
+        for id in self.solution_board.cars.keys():
+            score += abs(state.cars[id].row - self.solution_board.cars[id].row) + abs(state.cars[id].column - self.solution_board.cars[id].column)
+
+        return score
 
 
     def create_children(self, state):
@@ -178,7 +184,9 @@ class A_star:
 
     def run(self):
 
-        # get a random solution 
+        # get the solution state with a random algorithm
+        # randomise = ras.randomise(self.solution_board)
+        # randomise.run()
 
         # repeat untill a solution is found or no solution is possible
         while True:
