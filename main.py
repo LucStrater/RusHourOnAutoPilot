@@ -25,99 +25,99 @@ def main():
     # init the board
     rushHourBoard = Board(board_title)
 
-    ############################# Random ################################
+    # ############################# Random ################################
 
-    # # solve the board using random moves and print first 10 moves
-    # all_moves = randomise.run_milestone1(rushHourBoard, True)[0]
+    # # # solve the board using random moves and print first 10 moves
+    # # all_moves = randomise.run_milestone1(rushHourBoard, True)[0]
 
-    # # save moves to output file
-    # output.export_to_csv(all_moves, './data/output/output.csv')
+    # # # save moves to output file
+    # # output.export_to_csv(all_moves, './data/output/output.csv')
 
-    # average amount of steps for 100 iterations of randomise to solve the board
-    counters = 0
-    maximum = 0
-    minimum = float('inf')
+    # # average amount of steps for 100 iterations of randomise to solve the board
+    # counters = 0
+    # maximum = 0
+    # minimum = float('inf')
 
-    for i in range(100):
-        rushHourBoard = Board(board_title)
-        counter = randomise.run_milestone1(rushHourBoard, False)[1]
-        if counter < minimum:
-            minimum = counter
-        if counter > maximum:
-            maximum = counter
+    # for i in range(100):
+    #     rushHourBoard = Board(board_title)
+    #     counter = randomise.run_milestone1(rushHourBoard, False)[1]
+    #     if counter < minimum:
+    #         minimum = counter
+    #     if counter > maximum:
+    #         maximum = counter
 
-        counters += counter
+    #     counters += counter
 
-    print("[Baseline: make random moves until solved]")
-    print(f"The average amount of steps of 100 iterations is: {counters/100}")
-    print(f"The maximum steps of 100 iterations is: {maximum}")
-    print(f"The minimum steps of 100 iterations is: {minimum}")
-    print()
+    # print("[Baseline: make random moves until solved]")
+    # print(f"The average amount of steps of 100 iterations is: {counters/100}")
+    # print(f"The maximum steps of 100 iterations is: {maximum}")
+    # print(f"The minimum steps of 100 iterations is: {minimum}")
+    # print()
 
-    ####################### Greedy ####################################
+    # ####################### Greedy ####################################
 
-    # average amount of steps for 100 iterations of greedy 1 to solve the board
-    counters_greedy_1 = 0
-    maximum_greedy_1 = 0
-    minimum_greedy_1 = float('inf')
-    for i in range(100):
-        rushHourBoard = Board(board_title)
-        counter_greedy_1 = greedy.run_1(rushHourBoard)
-        if counter_greedy_1 < maximum_greedy_1:
-            minimum_greedy_1 = counter_greedy_1
-        if counter_greedy_1 > maximum_greedy_1:
-            maximum_greedy_1 = counter_greedy_1
+    # # average amount of steps for 100 iterations of greedy 1 to solve the board
+    # counters_greedy_1 = 0
+    # maximum_greedy_1 = 0
+    # minimum_greedy_1 = float('inf')
+    # for i in range(100):
+    #     rushHourBoard = Board(board_title)
+    #     counter_greedy_1 = greedy.run_1(rushHourBoard)
+    #     if counter_greedy_1 < maximum_greedy_1:
+    #         minimum_greedy_1 = counter_greedy_1
+    #     if counter_greedy_1 > maximum_greedy_1:
+    #         maximum_greedy_1 = counter_greedy_1
 
-        counters_greedy_1 += counter_greedy_1
+    #     counters_greedy_1 += counter_greedy_1
 
-    print("[Greedy 1: if row of car X is empty -> finish]")
-    print(f"The average amount of steps of 100 iterations is: {counters_greedy_1/100}")
-    print(f"The maximum steps of 100 iterations is: {maximum_greedy_1}")
-    print(f"The minimum steps of 100 iterations is: {minimum_greedy_1}")
-    print(f"That is {round(- (counters_greedy_1/counters - 1) * 100)}% better than the baseline")
-    print()
+    # print("[Greedy 1: if row of car X is empty -> finish]")
+    # print(f"The average amount of steps of 100 iterations is: {counters_greedy_1/100}")
+    # print(f"The maximum steps of 100 iterations is: {maximum_greedy_1}")
+    # print(f"The minimum steps of 100 iterations is: {minimum_greedy_1}")
+    # print(f"That is {round(- (counters_greedy_1/counters - 1) * 100)}% better than the baseline")
+    # print()
 
-    # average amount of steps for 100 iterations of greedy 2 to solve the board
-    counters_greedy_2 = 0
-    maximum_greedy_2 = 0
-    minimum_greedy_2 = float('inf')
-    for i in range(100):
-        rushHourBoard = Board(board_title)
-        counter_greedy_2 = greedy.run_2(rushHourBoard)
-        if counter_greedy_2 < maximum_greedy_2:
-            minimum_greedy_2 = counter_greedy_2
-        if counter_greedy_2 > maximum_greedy_2:
-            maximum_greedy_2 = counter_greedy_2
+    # # average amount of steps for 100 iterations of greedy 2 to solve the board
+    # counters_greedy_2 = 0
+    # maximum_greedy_2 = 0
+    # minimum_greedy_2 = float('inf')
+    # for i in range(100):
+    #     rushHourBoard = Board(board_title)
+    #     counter_greedy_2 = greedy.run_2(rushHourBoard)
+    #     if counter_greedy_2 < maximum_greedy_2:
+    #         minimum_greedy_2 = counter_greedy_2
+    #     if counter_greedy_2 > maximum_greedy_2:
+    #         maximum_greedy_2 = counter_greedy_2
 
-        counters_greedy_2 += counter_greedy_2
+    #     counters_greedy_2 += counter_greedy_2
 
-    print("[Greedy 2: if cars on row of car X can all be moved -> move them + Greedy 1]")
-    print(f"The average amount of steps of 100 iterations is: {counters_greedy_2/100}")
-    print(f"The maximum steps of 100 iterations is: {maximum_greedy_2}")
-    print(f"The minimum steps of 100 iterations is: {minimum_greedy_2}")
-    print(f"That is {round(- (counters_greedy_2/counters - 1) * 100)}% better than the baseline")
-    print()
+    # print("[Greedy 2: if cars on row of car X can all be moved -> move them + Greedy 1]")
+    # print(f"The average amount of steps of 100 iterations is: {counters_greedy_2/100}")
+    # print(f"The maximum steps of 100 iterations is: {maximum_greedy_2}")
+    # print(f"The minimum steps of 100 iterations is: {minimum_greedy_2}")
+    # print(f"That is {round(- (counters_greedy_2/counters - 1) * 100)}% better than the baseline")
+    # print()
 
-    # average amount of steps for 100 iterations of greedy 3 to solve the board
-    counters_greedy_3 = 0
-    maximum_greedy_3 = 0
-    minimum_greedy_3 = float('inf')
-    for i in range(100):
-        rushHourBoard = Board(board_title)
-        counter_greedy_3 = greedy.run_3(rushHourBoard)
-        if counter_greedy_3 < minimum_greedy_3:
-            minimum_greedy_3 = counter_greedy_3
-        if counter_greedy_3 > maximum_greedy_3:
-            maximum_greedy_3 = counter_greedy_3
+    # # average amount of steps for 100 iterations of greedy 3 to solve the board
+    # counters_greedy_3 = 0
+    # maximum_greedy_3 = 0
+    # minimum_greedy_3 = float('inf')
+    # for i in range(100):
+    #     rushHourBoard = Board(board_title)
+    #     counter_greedy_3 = greedy.run_3(rushHourBoard)
+    #     if counter_greedy_3 < minimum_greedy_3:
+    #         minimum_greedy_3 = counter_greedy_3
+    #     if counter_greedy_3 > maximum_greedy_3:
+    #         maximum_greedy_3 = counter_greedy_3
 
-        counters_greedy_3 += counter_greedy_3
+    #     counters_greedy_3 += counter_greedy_3
 
-    print("[Greedy 3: if Greedy 1 & 2 not possible, try randomly move a car that blocks road for car X]")
-    print(f"The average amount of steps of 100 iterations is: {counters_greedy_3/100}")
-    print(f"The maximum steps of 100 iterations is: {maximum_greedy_3}")
-    print(f"The minimum steps of 100 iterations is: {minimum_greedy_3}")
-    print(f"That is {round(- (counters_greedy_3/counters - 1) * 100)}% better than the baseline")
-    print()
+    # print("[Greedy 3: if Greedy 1 & 2 not possible, try randomly move a car that blocks road for car X]")
+    # print(f"The average amount of steps of 100 iterations is: {counters_greedy_3/100}")
+    # print(f"The maximum steps of 100 iterations is: {maximum_greedy_3}")
+    # print(f"The minimum steps of 100 iterations is: {minimum_greedy_3}")
+    # print(f"That is {round(- (counters_greedy_3/counters - 1) * 100)}% better than the baseline")
+    # print()
 
     ########################### A* ##############################
 
@@ -134,40 +134,40 @@ def main():
     print(f'runtime: {round(finish - start, 2)} seconds')
     print()
 
-    ########################### Depth first ###########################
+    # ########################### Depth first ###########################
 
-    # init the board
-    rushHourBoard = Board(board_title)
+    # # init the board
+    # rushHourBoard = Board(board_title)
 
-    start = time.perf_counter()
+    # start = time.perf_counter()
 
-    depth = df.DepthFirst(rushHourBoard)
-    all_moves = depth.run()
-    print(
-        f"best solution for depth first: {all_moves}. This takes {len(all_moves) - 1} moves.")
+    # depth = df.DepthFirst(rushHourBoard)
+    # all_moves = depth.run()
+    # print(
+    #     f"best solution for depth first: {all_moves}. This takes {len(all_moves) - 1} moves.")
 
-    # output.export_to_csv(all_moves, './data/output/output.csv')
+    # # output.export_to_csv(all_moves, './data/output/output.csv')
 
-    finish = time.perf_counter()
-    print(f'runtime depth first: {round(finish - start, 2)} seconds')
-    print()
+    # finish = time.perf_counter()
+    # print(f'runtime depth first: {round(finish - start, 2)} seconds')
+    # print()
 
-    ######################## Iterative deepening #####################
+    # ######################## Iterative deepening #####################
 
-    # init the board
-    rushHourBoard = Board(board_title)
+    # # init the board
+    # rushHourBoard = Board(board_title)
 
-    start = time.perf_counter()
+    # start = time.perf_counter()
 
-    depth = id.Iterative_deepening(rushHourBoard)
-    all_moves = depth.run()
-    print(f"best solution for iterative deepening: {all_moves}. This takes {len(all_moves) - 1} moves.")
+    # depth = id.Iterative_deepening(rushHourBoard)
+    # all_moves = depth.run()
+    # print(f"best solution for iterative deepening: {all_moves}. This takes {len(all_moves) - 1} moves.")
 
-    # output.export_to_csv(all_moves, './data/output/output.csv')
+    # # output.export_to_csv(all_moves, './data/output/output.csv')
 
-    finish = time.perf_counter()
-    print(f'runtime iterative deepening: {round(finish - start, 2)} seconds')
-    print()
+    # finish = time.perf_counter()
+    # print(f'runtime iterative deepening: {round(finish - start, 2)} seconds')
+    # print()
 
 
 

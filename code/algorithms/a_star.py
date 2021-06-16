@@ -148,7 +148,7 @@ class A_star:
 
                 # if this state has not been reached put it on the stack
                 if (matrix_tuple not in self.closed.keys() and matrix_tuple not in self.open.keys()):
-                    new_board.score = self.calculate_h3_score(new_board)
+                    new_board.score = self.calculate_h1_score(new_board)
                     self.open[matrix_tuple] = new_board
 
                 # if current matrix exists in archive, and moves to get to current matrix is shorter, replace board in archive
