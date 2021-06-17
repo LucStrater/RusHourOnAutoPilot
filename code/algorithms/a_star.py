@@ -36,6 +36,35 @@ class A_star:
                 len_board = len(board.moves)
 
         return self.open.pop(next_state)
+    
+    # def get_next_state(self):
+    #     """
+    #     Get the next state based on multiple heuristics
+    #     """
+    #     lowest_score = float('inf')
+    #     lowest_score_two = float('inf')
+    #     lowest_score_three = float('inf')
+    #     lowest_score_four = float('inf')
+    #     next_state = None
+
+    #     for board in self.open.values():
+    #         if board.score > lowest_score:
+    #             continue
+    #         elif board.score < lowest_score:
+    #             lowest_score = board.score
+    #             next_state = tuple([tuple(i) for i in board.matrix])
+    #         # elif board.score_three < lowest_score_three:
+    #         #     lowest_score_three = board.score_three
+    #         #     next_state = tuple([tuple(i) for i in board.matrix])
+    #         # elif board.score_two < lowest_score_two:
+    #         #     lowest_score_two = board.score_two
+    #         #     next_state = tuple([tuple(i) for i in board.matrix])
+    #         elif board.score_four < lowest_score_four:
+    #             lowest_score_four = board.score_four
+    #             next_state = tuple([tuple(i) for i in board.matrix])
+            
+            
+    #     return self.open.pop(next_state)
 
     def calculate_h1_score(self, state):
         """
@@ -48,7 +77,7 @@ class A_star:
         Blockers: Heuristic based on the number of cars in the row of the winning car
         """
         filled_spots = 0
-
+    
         for column in state.matrix[state.cars["X"].row]:
             if column is not None:
                 filled_spots += 1
@@ -123,6 +152,12 @@ class A_star:
 
         return score
 
+    def calculate_h6_score(self, state):
+        """   
+        Steps from source: the number of steps from the begin board to the current board.
+        """  
+        
+        return len(state.moves)
 
     def create_children(self, state):
         """
@@ -148,7 +183,10 @@ class A_star:
 
                 # if this state has not been reached put it on the stack
                 if (matrix_tuple not in self.closed.keys() and matrix_tuple not in self.open.keys()):
-                    new_board.score = self.calculate_h1_score(new_board)
+                    new_board.score = self.calculate_h5_score(new_board)
+                    # new_board.score_two = self.calculate_h4_score(state, new_board)
+                    # new_board.score_three = self.calculate_h5_score(new_board)
+                    # new_board.score_four = self.calculate_h6_score(new_board)
                     self.open[matrix_tuple] = new_board
 
                 # if current matrix exists in archive, and moves to get to current matrix is shorter, replace board in archive
@@ -185,11 +223,14 @@ class A_star:
     def run(self):
 
         # get the solution state with a random algorithm
-        # randomise = ras.randomise(self.solution_board)
-        # randomise.run()
-
+        randomise = ras.randomise(self.solution_board)
+        randomise.run()
+        # self.solution_board.print()
+        
+        # counter = 0
         # repeat untill a solution is found or no solution is possible
         while True:
+            # counter += 1
             # take the board at the top of the stack
             state = self.get_next_state()
 
@@ -203,7 +244,11 @@ class A_star:
             # create children
             self.create_children(state)
 
+        # state.print()
+
         # check if a faster set of moves was possible to get to states in the solution
         solution = self.move_backtracking(state)
+        # print(counter)
+        
 
         return solution

@@ -9,6 +9,9 @@ class Board():
         self.matrix = self.load_matrix(source_file)
         self.moves = [('car', 'move')]
         self.score = 1000
+        self.score_two = 1000
+        self.score_three = 1000
+        self.score_four = 1000
     #     self.car_possibilities = self.load_possibilities()
 
     # def load_possibilities(self):
