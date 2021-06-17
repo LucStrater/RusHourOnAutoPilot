@@ -53,7 +53,7 @@ class DepthFirst():
         while len(self.stack) > 0:
             # take the board at the top of the stack
             state = self.get_next_state()
-            depth = 22
+            depth = 26
 
             # if the current board is a solution save it
             if state.is_solution():
