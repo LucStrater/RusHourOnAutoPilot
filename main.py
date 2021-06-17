@@ -25,15 +25,15 @@ def main():
     # init the board
     rushHourBoard = Board(board_title)
 
-    ############################# Random ################################
+    # ############################# Random ################################
 
-    # # solve the board using random moves and print first 10 moves
-    # all_moves = randomise.run_milestone1(rushHourBoard, True)[0]
+    # # # solve the board using random moves and print first 10 moves
+    # # all_moves = randomise.run_milestone1(rushHourBoard, True)[0]
 
-    # # save moves to output file
-    # output.export_to_csv(all_moves, './data/output/output.csv')
+    # # # save moves to output file
+    # # output.export_to_csv(all_moves, './data/output/output.csv')
 
-    # average amount of steps for 100 iterations of randomise to solve the board
+    # # average amount of steps for 100 iterations of randomise to solve the board
     # counters = 0
     # maximum = 0
     # minimum = float('inf')
@@ -134,25 +134,25 @@ def main():
     print(f'runtime: {round(finish - start, 2)} seconds')
     print()
 
-    ########################### Depth first ###########################
+    # ########################### Depth first ###########################
 
-    # init the board
-    rushHourBoard = Board(board_title)
+    # # init the board
+    # rushHourBoard = Board(board_title)
 
-    start = time.perf_counter()
+    # start = time.perf_counter()
 
-    depth = df.DepthFirst(rushHourBoard)
-    all_moves = depth.run()
-    print(
-        f"best solution for depth first: {all_moves}. This takes {len(all_moves) - 1} moves.")
+    # depth = df.DepthFirst(rushHourBoard)
+    # all_moves = depth.run()
+    # print(
+    #     f"best solution for depth first: {all_moves}. This takes {len(all_moves) - 1} moves.")
 
-    # output.export_to_csv(all_moves, './data/output/output.csv')
+    # # output.export_to_csv(all_moves, './data/output/output.csv')
 
-    finish = time.perf_counter()
-    print(f'runtime depth first: {round(finish - start, 2)} seconds')
-    print()
+    # finish = time.perf_counter()
+    # print(f'runtime depth first: {round(finish - start, 2)} seconds')
+    # print()
 
-    ######################## Iterative deepening #####################
+    # ######################## Iterative deepening #####################
 
     # # init the board
     # rushHourBoard = Board(board_title)
