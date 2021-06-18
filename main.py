@@ -1,13 +1,13 @@
 from code.classes.board import Board
-from code.classes.car import Car
-from code.algorithms import randomise, greedy
+# from code.classes.car import Car
+# from code.algorithms import randomise, greedy
 from sys import argv
-from code.algorithms import depth_first as df
-from code.algorithms import iterative_deepening as id
+# from code.algorithms import depth_first as df
+# from code.algorithms import iterative_deepening as id
 from code.algorithms import a_star as ast
-from code.algorithms import pruned_a_star as pas
-from code.algorithms import breadth as bf
-from code.algorithms import randomise_a_star as ras
+# from code.algorithms import pruned_a_star as pas
+# from code.algorithms import breadth as bf
+# from code.algorithms import randomise_a_star as ras
 from code.output import output
 import time
 
@@ -120,21 +120,6 @@ def main():
     # print(f"That is {round(- (counters_greedy_3/counters - 1) * 100)}% better than the baseline")
     # print()
 
-    # ########################### A* ##############################
-
-    # # init the board
-    # rushHourBoard = Board(board_title)
-
-    # start = time.perf_counter()
-
-    # a_star = ast.A_star(rushHourBoard)
-    # moves = a_star.run()
-    # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
-
-    # finish = time.perf_counter()
-    # print(f'runtime: {round(finish - start, 2)} seconds')
-    # print()
-
     ########################### A* ##############################
 
     # init the board
@@ -142,13 +127,28 @@ def main():
 
     start = time.perf_counter()
 
-    pruned_a_star = pas.Pruned_a_star(rushHourBoard)
-    moves = pruned_a_star.run()
+    a_star = ast.A_star(rushHourBoard)
+    moves = a_star.run()
     print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
 
     finish = time.perf_counter()
     print(f'runtime: {round(finish - start, 2)} seconds')
     print()
+
+    # ########################### PRUNED A* ##############################
+
+    # # init the board
+    # rushHourBoard = Board(board_title)
+
+    # start = time.perf_counter()
+
+    # pruned_a_star = pas.Pruned_a_star(rushHourBoard)
+    # moves = pruned_a_star.run()
+    # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
+
+    # finish = time.perf_counter()
+    # print(f'runtime: {round(finish - start, 2)} seconds')
+    # print()
 
     # ########################### Depth first ###########################
 

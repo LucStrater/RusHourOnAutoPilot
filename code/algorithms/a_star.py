@@ -22,18 +22,18 @@ class A_star:
         Method that gets the board with the lowest score from open
         """
         lowest_score = float("inf")
-        len_board = float("inf")
+        # len_board = float("inf")
         next_state = None
         for board in self.open.values():
-            if board.score > lowest_score:
-                continue
-            elif board.score < lowest_score:
+            # if board.score > lowest_score:
+            #     continue
+            if board.score < lowest_score:
                 lowest_score = board.score
                 next_state = tuple([tuple(i) for i in board.matrix])
-                len_board = len(board.moves)
-            elif board.score == lowest_score and len(board.moves) < len_board:
-                next_state = tuple([tuple(i) for i in board.matrix])
-                len_board = len(board.moves)
+                # len_board = len(board.moves)
+            # elif board.score == lowest_score and len(board.moves) < len_board:
+            #     next_state = tuple([tuple(i) for i in board.matrix])
+            #     len_board = len(board.moves)
 
         return self.open.pop(next_state)
     
@@ -42,9 +42,9 @@ class A_star:
     #     Get the next state based on multiple heuristics
     #     """
     #     lowest_score = float('inf')
-    #     lowest_score_two = float('inf')
-    #     lowest_score_three = float('inf')
-    #     lowest_score_four = float('inf')
+    #     # lowest_score_two = float('inf')
+    #     # lowest_score_three = float('inf')
+    #     # lowest_score_four = float('inf')
     #     next_state = None
 
     #     for board in self.open.values():
@@ -59,9 +59,9 @@ class A_star:
     #         # elif board.score_two < lowest_score_two:
     #         #     lowest_score_two = board.score_two
     #         #     next_state = tuple([tuple(i) for i in board.matrix])
-    #         elif board.score_four < lowest_score_four:
-    #             lowest_score_four = board.score_four
-    #             next_state = tuple([tuple(i) for i in board.matrix])
+    #         # elif board.score_four < lowest_score_four:
+    #         #     lowest_score_four = board.score_four
+    #         #     next_state = tuple([tuple(i) for i in board.matrix])
             
             
     #     return self.open.pop(next_state)
@@ -183,7 +183,7 @@ class A_star:
 
                 # if this state has not been reached put it on the stack
                 if (matrix_tuple not in self.closed.keys() and matrix_tuple not in self.open.keys()):
-                    new_board.score = self.calculate_h5_score(new_board)
+                    new_board.score = len(new_board.moves) + self.calculate_h5_score(new_board)
                     # new_board.score_two = self.calculate_h4_score(state, new_board)
                     # new_board.score_three = self.calculate_h5_score(new_board)
                     # new_board.score_four = self.calculate_h6_score(new_board)
