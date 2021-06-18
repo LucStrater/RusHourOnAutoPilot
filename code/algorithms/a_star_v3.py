@@ -6,68 +6,66 @@ class A_star:
     An A* algorithm that finds the optimal solution of a rush hour board.
     """
 
-    def __init__(self, board):
-        self.board = board
-        self.solution_board = copy.deepcopy(self.board)
+    def __init__(self, model):
+        self.model = model
 
         # initialise the open / closed list
         self.open = {}
-        self.open[tuple([tuple(i) for i in self.board.matrix])] = copy.deepcopy(self.board)
+        self.open[self.model.get_tuple()] = self.model.copy()
 
         self.closed = {}
-        self.closed[tuple([tuple(i) for i in self.board.matrix])] = copy.deepcopy(self.board)
+        self.closed[self.model.get_tuple()] = self.model.copy()
 
     def get_next_state(self):
         """
         Method that gets the board with the lowest score from open
         """
         lowest_score = float("inf")
-        # len_board = float("inf")
         next_state = None
-        for board in self.open.values():
-            if board.score < lowest_score:
-                lowest_score = board.score
-                next_state = tuple([tuple(i) for i in board.matrix])
+        for model in self.open.values():
+            if model.score < lowest_score:
+                lowest_score = model.score
+                next_state = model.get_tuple()
 
         return self.open.pop(next_state)
 
-    def calculate_h1_score(self, state):
+    def calculate_h1_score(self, model):
         """
         Heuristic based on the distance of the red car to the exit
         """
-        return state.board_len - 2 - state.cars["X"].column
+        return model.board.board_len - 2 - model.get_car_pos(model.board.cars['X'])[1]
 
-    def calculate_h2_score(self, state):
+    def calculate_h2_score(self, model):
         """
         Blockers: Heuristic based on the number of cars in the row of the winning car
         """
         filled_spots = 0
     
-        for column in state.matrix[state.cars["X"].row]:
+        for column in model.matrix[model.get_car_pos(model.board.cars['X'])[0]]:
             if column is not None:
                 filled_spots += 1
 
         return filled_spots
 
-    def calculate_h3_score(self, state):
+    def calculate_h3_score(self, model):
         """
         BlockersLowerBound: Heuristic based on heuristic 2 plus the minimum number of cars that block these cars
         """
         score = 0
 
-        for l in range(state.cars["X"].column + 2, state.board_len):
+        for index in range(model.get_car_pos(model.board.cars['X'])[1] + 2, model.board.board_len):
             up_score = 0
             down_score = 0
 
-            if state.matrix[state.cars["X"].row][l] is not None:
+            if model.matrix[model.get_car_pos(model.board.cars['X'])[0]][index] is not None:
                 up_set = set()
                 down_set = set()
 
-                for k in range(state.board_len):
-                    if k <= state.cars["X"].row:
-                        up_set.add(state.matrix[k][l])
-                    elif k >= state.cars["X"].row:
-                        down_set.add(state.matrix[k][l])
+                for k in range(model.board.board_len):
+                    if k <= model.get_car_pos(model.board.cars['X'])[0]:
+                        up_set.add(model.matrix[k][index])
+                    elif k >= model.get_car_pos(model.board.cars['X'])[0]:
+                        down_set.add(model.matrix[k][index])
 
                 for j in down_set:
                     if j is not None:
@@ -81,111 +79,89 @@ class A_star:
 
         return score
 
-    def calculate_h4_score(self, old_board, state):
+    def calculate_h4_score(self, old_model, model):
         """
         MoveFreed: checks if the last move increased the number of vehicles free to move
         """
         score = 0
 
-        old_board_moves = 0
-        for car in old_board.cars.values():
-                car_possibilities = car.get_possibilities(state)
-
-                # for every car loop over its possible moves
-                for move in car_possibilities:
-                    old_board_moves += 1
-
-        current_board_moves = 0
-        for car in state.cars.values():
-            car_possibilities = car.get_possibilities(state)
+        old_model_moves = 0
+        for car in old_model.get_cars():
+            car_possibilities = old_model.get_possibilities(car)
 
             # for every car loop over its possible moves
-            for move in car_possibilities:
-                current_board_moves += 1
+            old_model_moves += len(car_possibilities)
 
-        score = current_board_moves - old_board_moves
+        current_model_moves = 0
+        for car in model.get_cars():
+            car_possibilities = model.get_possibilities(car)
+
+            # for every car loop over its possible moves
+            current_model_moves += len(car_possibilities)
+
+        score = current_model_moves - old_model_moves
         return score
 
-    def calculate_h5_score(self, state):
-        """   
-        Distance to goal: with a given solution from a random algorithm determine the distance of every car to its final position
-        """ 
-        score = 0
-
-        for id in self.solution_board.cars.keys():
-            score += abs(state.cars[id].row - self.solution_board.cars[id].row) + abs(state.cars[id].column - self.solution_board.cars[id].column)
-
-        return score
-
-    def calculate_h6_score(self, state):
-        """   
-        Steps from source: the number of steps from the begin board to the current board.
-        """  
-        
-        return len(state.moves)
-
-    def create_children(self, state):
+    def create_children(self, model):
         """
-        Create the children of the current state
+        Create the children of the current model
         """
         # get current possibilities of all cars on board
-        for car in state.cars.values():
-            car_possibilities = car.get_possibilities(state)
+        for car in self.model.get_cars():
+            car_possibilities = model.get_possibilities(car)
 
             # for every car loop over its possible moves
             for move in car_possibilities:
                 # copy the board of the previous board
-                new_board = copy.deepcopy(state)
+                new_model = model.copy()
 
-                # update new board with chosen move
-                new_board.update_matrix(move, new_board.cars[car.car_id])
+                # update new model with chosen move
+                new_model.update_matrix(car, move)
 
-                # append move made to list of moves to get to incumbent (new) board
-                new_board.add_move(new_board.cars[car.car_id].car_id, move)
+                # append move made to list of moves to get to incumbent (new) model
+                new_model.add_move(car.cid, move)
 
                 # For matrix form, turn list of lists into tuple of tuples, such that matrix is hashable
-                matrix_tuple = tuple([tuple(i) for i in new_board.matrix])
+                matrix_tuple = new_model.get_tuple()
 
-                # if this state has not been reached put it on the stack
+                # if this model has not been reached put it on the stack
                 if (matrix_tuple not in self.closed.keys() and matrix_tuple not in self.open.keys()):
-                    new_board.score = len(new_board.moves) + self.calculate_h5_score(new_board)
-                    self.open[matrix_tuple] = new_board
+                    new_model.score = len(new_model.moves) + self.calculate_h3_score(new_model)
+                    self.open[matrix_tuple] = new_model
 
-                # if current matrix exists in archive, and moves to get to current matrix is shorter, replace board in archive
+                # if current matrix exists in archive, and moves to get to current matrix is shorter, replace model in archive
                 elif matrix_tuple in self.closed.keys():
-                    if len(new_board.moves) < len(self.closed[matrix_tuple].moves):
-                        self.closed[matrix_tuple].moves = new_board.moves
+                    if len(new_model.moves) < len(self.closed[matrix_tuple].moves):
+                        self.closed[matrix_tuple].moves = new_model.moves
 
                 # same as above, but for open
                 elif matrix_tuple in self.open.keys():
-                    if len(new_board.moves) < len(self.open[matrix_tuple].moves):
-                        self.open[matrix_tuple].moves = new_board.moves
+                    if len(new_model.moves) < len(self.open[matrix_tuple].moves):
+                        self.open[matrix_tuple].moves = new_model.moves
 
-    def move_backtracking(self, solution_state):
+    def move_backtracking(self, solution_model):
         # list with the solution
         optimal_moveset = []
 
         # do while loop
         while True:
             # take the last element of the move and save it to the solution
-            optimal_moveset.insert(0, solution_state.moves.pop())
+            optimal_moveset.insert(0, solution_model.moves.pop())
 
             # stop if start board is reached
-            if solution_state.matrix == self.board.matrix:
+            if solution_model.matrix == self.model.matrix:
                 break
 
             # take the new last move and look if there is a faster route to get there in the archive
             move = -optimal_moveset[0][1]
-            car = solution_state.cars[optimal_moveset[0][0]]
-            solution_state.update_matrix(move, car)
-            solution_state.moves = self.closed[tuple([tuple(i) for i in solution_state.matrix])].moves
+            car = solution_model.board.cars[optimal_moveset[0][0]]
+            solution_model.update_matrix(car, move)
+            solution_model.moves = self.closed[solution_model.get_tuple()].moves
 
         return optimal_moveset
 
     def run(self):
-        """
-        Get the solution state with a random algorithm
-        """
+
         while True:
             state = self.get_next_state()
 
@@ -194,7 +170,7 @@ class A_star:
                 break
 
             # save states to archive
-            self.closed[tuple([tuple(i) for i in state.matrix])] = state
+            self.closed[state.get_tuple()] = state
 
             # create children
             self.create_children(state)

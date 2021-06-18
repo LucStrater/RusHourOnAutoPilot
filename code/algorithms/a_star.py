@@ -183,7 +183,7 @@ class A_star:
 
                 # if this state has not been reached put it on the stack
                 if (matrix_tuple not in self.closed.keys() and matrix_tuple not in self.open.keys()):
-                    new_board.score = len(new_board.moves) + self.calculate_h5_score(new_board)
+                    new_board.score = len(new_board.moves) + self.calculate_h3_score(new_board)
                     # new_board.score_two = self.calculate_h4_score(state, new_board)
                     # new_board.score_three = self.calculate_h5_score(new_board)
                     # new_board.score_four = self.calculate_h6_score(new_board)
@@ -223,8 +223,8 @@ class A_star:
     def run(self):
 
         # get the solution state with a random algorithm
-        randomise = ras.randomise(self.solution_board)
-        randomise.run()
+        # randomise = ras.randomise(self.solution_board)
+        # randomise.run()
         # self.solution_board.print()
         
         # counter = 0
