@@ -1,10 +1,14 @@
-from code.classes.board import Board
+from code.classes.model import Model
 # from code.classes.car import Car
 # from code.algorithms import randomise, greedy
 from sys import argv
 # from code.algorithms import depth_first as df
 # from code.algorithms import iterative_deepening as id
-from code.algorithms import a_star as ast
+from code.algorithms import depth_first_v3 as df
+from code.algorithms import breadth_first_v3 as bf
+from code.algorithms import iterative_deepening_v3 as id
+from code.algorithms import randomise_v3 as rd
+from code.algorithms import hillclimber_v3 as hc
 # from code.algorithms import pruned_a_star as pas
 # from code.algorithms import breadth as bf
 # from code.algorithms import randomise_a_star as ras
@@ -24,7 +28,20 @@ def main():
         board_title = './data/input/Rushhour6x6_1.csv'
 
     # init the board
-    rushHourBoard = Board(board_title)
+    rushHourBoard = Model(board_title)
+
+    # ########################### Randomise ###########################
+    # start = time.perf_counter()
+
+    # randomise = rd.Randomise(rushHourBoard)
+    # all_moves = randomise.run()
+    # print(f"best solution for randomise: {all_moves}. This takes {len(all_moves) - 1} moves.")
+
+    # # output.export_to_csv(all_moves, './data/output/output.csv')
+
+    # finish = time.perf_counter()
+    # print(f'runtime randomise: {round(finish - start, 2)} seconds')
+    # print()
 
     # ############################# Random ################################
 
@@ -120,20 +137,20 @@ def main():
     # print(f"That is {round(- (counters_greedy_3/counters - 1) * 100)}% better than the baseline")
     # print()
 
-    ########################### A* ##############################
+    # ########################### A* ##############################
 
-    # init the board
-    rushHourBoard = Board(board_title)
+    # # init the board
+    # rushHourBoard = Board(board_title)
 
-    start = time.perf_counter()
+    # start = time.perf_counter()
 
-    a_star = ast.A_star(rushHourBoard)
-    moves = a_star.run()
-    print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
+    # a_star = ast.A_star(rushHourBoard)
+    # moves = a_star.run()
+    # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
 
-    finish = time.perf_counter()
-    print(f'runtime: {round(finish - start, 2)} seconds')
-    print()
+    # finish = time.perf_counter()
+    # print(f'runtime: {round(finish - start, 2)} seconds')
+    # print()
 
     # ########################### PRUNED A* ##############################
 
@@ -151,16 +168,11 @@ def main():
     # print()
 
     # ########################### Depth first ###########################
-
-    # # init the board
-    # rushHourBoard = Board(board_title)
-
     # start = time.perf_counter()
 
     # depth = df.DepthFirst(rushHourBoard)
     # all_moves = depth.run()
-    # print(
-    #     f"best solution for depth first: {all_moves}. This takes {len(all_moves) - 1} moves.")
+    # print(f"best solution for depth first: {all_moves}. This takes {len(all_moves) - 1} moves.")
 
     # # output.export_to_csv(all_moves, './data/output/output.csv')
 
@@ -169,9 +181,6 @@ def main():
     # print()
 
     # ######################## Iterative deepening #####################
-
-    # # init the board
-    # rushHourBoard = Board(board_title)
 
     # start = time.perf_counter()
 
@@ -185,6 +194,31 @@ def main():
     # print(f'runtime iterative deepening: {round(finish - start, 2)} seconds')
     # print()
 
+    # # ######################## Breadth First #####################
+
+    # bf_start = time.perf_counter()
+
+    # breadth_first = bf.Breadth_first(rushHourBoard)
+    # bf_moves = breadth_first.run()
+    # print(f'Breadth First found a solution in {len(bf_moves) - 1} moves.')
+
+    # bf_finish = time.perf_counter()
+    
+    # print(f'runtime V2: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
+    # print()
+
+    ######################## Hillclimber #####################
+    hc_random_nr = 10
+
+    hc_start = time.perf_counter()
+
+    hillclimber = hc.Hillclimber(rushHourBoard)
+    hc_moves = hillclimber.run(hc_random_nr)
+    print(f'State Tracer found solution in {len(hc_moves) - 1} moves.')
+
+    hc_finish = time.perf_counter()
+    
+    print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
 
 
 if __name__ == "__main__":

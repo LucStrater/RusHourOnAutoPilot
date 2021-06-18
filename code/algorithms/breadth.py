@@ -3,7 +3,7 @@ from code.classes.car import Car
 import queue
 import copy
 
-class Breadth_first:
+class Breadth_first_old:
 
     def __init__(self, board):
         self.start_board = board
@@ -112,4 +112,3 @@ class Breadth_first:
 
         #     for move in winner.bf_moves:
         #         print(move)
-

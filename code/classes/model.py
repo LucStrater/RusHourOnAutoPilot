@@ -8,9 +8,11 @@ class Model:
     """
     def __init__(self, source_file): 
         self.board = Board()
-        self.matrix = self.load_matrix(source_file)
+        self.matrix = []
+        self.load_matrix(source_file)
         self.moves = [('car', 'move')]
         self.score = 1000
+
 
     def load_matrix(self, source_file):
         """
@@ -63,11 +65,11 @@ class Model:
         """
         if car.orientation == "H":
             for column in range(self.board.board_len):
-                if self.matrix[car.const_pos][column] == car.id:
+                if self.matrix[car.const_pos][column] == car.cid:
                     return (car.const_pos, column)
         else:
             for row in range(self.board.board_len):
-                if self.matrix[row][car.const_pos] == car.id:
+                if self.matrix[row][car.const_pos] == car.cid:
                     return (row, car.const_pos)
 
 
@@ -130,14 +132,14 @@ class Model:
                 self.matrix[row][column + i] = None
             # place car back on board
             for i in range(car.length):
-                self.matrix[row][column + move + i] = car.id
+                self.matrix[row][column + move + i] = car.cid
         else:
             # remove car from board
             for i in range(car.length):
                 self.matrix[row + i][column] = None
             # place car back on board
             for i in range(car.length):
-                self.matrix[row + move + i][column] = car.id
+                self.matrix[row + move + i][column] = car.cid
 
 
     def print(self):
@@ -168,7 +170,7 @@ class Model:
         child.moves = []
         
         # Fill matrix with None
-        child.matrix = [[None for i in range(self.board_len)] for j in range(self.board_len)]
+        child.matrix = [[None for i in range(self.board.board_len)] for j in range(self.board.board_len)]
 
         # Recreate parent matrix
         for i in range(self.board.board_len):
@@ -190,3 +192,15 @@ class Model:
             return True
         
         return False        
+
+
+    def get_cars(self):
+        return list(self.board.cars.values())
+
+
+    def get_tuple(self):
+        """
+        Get the tuple of the matrix.
+        """
+        return tuple([tuple(i) for i in self.matrix])
+        
