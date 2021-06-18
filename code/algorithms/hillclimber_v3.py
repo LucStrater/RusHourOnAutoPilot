@@ -1,5 +1,5 @@
 from .randomise_v3 import Randomise as rd
-# from .breadth import Breadth_first_Hillclimber as bf
+from .breadth_first_v3 import Breadth_first_Hillclimber as bf
 import time
 import copy
 
@@ -51,26 +51,26 @@ class Hillclimber:
         """
         Makes moves and looks for doubly visited states
         """
-        tracer = self.board.copy()
+        tracer = self.model.copy()
         tracer.moves.pop(0)
         archive = {}
         move_archive = {}
 
-        # loop over first 'chunk_size' moves in solution set
         for i in range(len(tracer.moves)):
 
-            # voer move uit op tracer bord
+            # execute move on tracer model
             car_move = tracer.moves[i]
-            tracer.update_matrix(car_move[0], car_move[1])
+            car = tracer.board.cars[car_move[0]]
+            tracer.update_matrix(car, car_move[1])
 
-            # check of tracer matrix in archive zit
-            matrix = str(tracer.matrix)
+            # check archive for tracer matrix
+            matrix = tracer.get_tuple()
             if matrix in archive:
-                # log de moves 
+                # log the moves in move archive
                 arch_index = archive[matrix]
                 move_archive[arch_index] = i
             else:
-                # voeg tracer matrix toe aan archive
+                # add tracer matrix to archive
                 archive[matrix] = i
 
         return move_archive
@@ -95,100 +95,105 @@ class Hillclimber:
                     bad_move = move_archive[key]
             
             # check if moves don't partially fall into recently removed chunk
-            if self.board.moves[good_move + 2] != None and self.board.moves[bad_move + 1] != None:
+            if self.model.moves[good_move + 2] != None and self.model.moves[bad_move + 1] != None:
                 for i in range(good_move + 2, bad_move + 2):
-                    self.board.moves[i] = None
+                    self.model.moves[i] = None
                 move_archive.pop(good_move)
             else:
                 move_archive.pop(good_move)
         
         # delete moves from moves list
-        filtered_moves = [move for move in self.board.moves if move != None]
-        self.board.moves = filtered_moves
+        filtered_moves = [move for move in self.model.moves if move != None]
+        self.model.moves = filtered_moves
 
 
     def bf_archive(self):
         """
         Makes moves on tracer board and returns dict with matrix as key and number of moves as value
         """
-        board = self.board.copy()
-        board.moves.pop(0)
+        model = self.model.copy()
+        model.moves.pop(0)
         archive = {}
 
         arch_move_count = 0
-        archive[str(board.matrix)] = arch_move_count
+        start_matrix = model.get_tuple()
+        archive[start_matrix] = arch_move_count
 
-        for move in board.moves:
+        for car_move in model.moves:
             arch_move_count += 1
+            car = model.board.cars[car_move[0]]
 
-            board.update_matrix(move[0], move[1])
-            archive[str(board.matrix)] = arch_move_count
+            model.update_matrix(car, car_move[1])
+            matrix = model.get_tuple()
+            archive[matrix] = arch_move_count
         
         return archive
     
 
-    # def bf_shortening(self, state_archive, depth):
-    #     """
-    #     Performs BFS up to given depth to search for shorter paths to states in archive
-    #     """
-    #     board = self.board.copy()
-    #     board.moves = []
-    #     improved_moves = []
+    def bf_shortening(self, state_archive, depth):
+        """
+        Performs BFS up to given depth to search for shorter paths to states in archive
+        """
+        model = self.model.copy()
+        model.moves = []
+        improved_moves = []
 
-    #     count = 0
+        count = 0
 
-    #     while True:
-    #         breadth = bf(board, state_archive)
-    #         good_moves = breadth.run(depth)
+        while True:
+            breadth = bf(model, state_archive)
+            good_moves = breadth.run(depth)
             
-    #         if good_moves == None:
-    #             if count % 100 == 0:
-    #                 print('bad')
+            if good_moves == None:
+                if count % 100 == 0:
+                    print('bad')
 
-    #             # perform depth + 1 moves from self.board.moves on board
-    #             start = state_archive[str(board.matrix)] + 1
-    #             finish = depth + 2
+                # perform depth + 1 moves from self.board.moves on board
+                start = state_archive[str(board.matrix)] + 1
+                finish = depth + 2
 
-    #             for move in self.board.moves[start:finish]:
-    #                 board.update_matrix(move[0], move[1])
-    #                 board.moves.append(move)
+                for move in self.board.moves[start:finish]:
+                    board.update_matrix(move[0], move[1])
+                    board.moves.append(move)
 
-    #                 if board.is_solution():
-    #                     break
-    #         else:
-    #             if count % 100 == 0:
-    #                 print(f'good: {len(good_moves)}')
+                    if board.is_solution():
+                        break
+            else:
+                if count % 100 == 0:
+                    print(f'good: {len(good_moves)}')
 
-    #             # perform good_moves on board
-    #             for move in good_moves:
-    #                 board.update_matrix(move[0], move[1])
-    #                 board.moves.append(move)
+                # perform good_moves on board
+                for move in good_moves:
+                    board.update_matrix(move[0], move[1])
+                    board.moves.append(move)
             
-    #         if board.is_solution():
-    #             break
+            if board.is_solution():
+                break
             
-    #         count += 1
-    #         if count % 100 == 0:
-    #             print(count)
-    #             print(len(board.moves))
+            count += 1
+            if count % 100 == 0:
+                print(count)
+                print(len(board.moves))
 
                 
-    #     board.moves.insert(0, ('Move', 'Car'))
-    #     print(len(board.moves))
+        board.moves.insert(0, ('Move', 'Car'))
+        print(len(board.moves))
             
  
-    # def check_solution(self):
-    #     """
-    #     Checks if the move set obtained leads to a solution.
-    #     """
-    #     for i in range(len(self.model.moves) - 1):
-    #         car_move = self.model.moves[i + 1]
-    #         self.model.update_matrix(car_move[0], car_move[1])
+    def check_solution(self):
+        """
+        Checks if the move set obtained leads to a solution.
+        """
+        for i in range(len(self.model.moves) - 1):
+            car_move = self.model.moves[i + 1]
+            car = self.model.board.cars[car_move[0]]
+            move = car_move[1]
+            self.model.update_matrix(car, move)
         
-    #     if self.model.is_solution():
-    #         return True
+        if self.model.is_solution():
+            return True
         
-    #     return False
+        return False
 
     def run(self, random_nr):
         """
@@ -206,25 +211,24 @@ class Hillclimber:
         self.remove_back_forward()
         print(f'after back-forward trimming: {len(self.model.moves) - 1}', end='\n\n')
 
-        # ### STATE TRACING
-        # while True:
+        ### STATE TRACING
+        count = 0
+        while True:
+            good_bad_dict = self.state_tracer()
+            if len(good_bad_dict) == 0:
+                break
 
-        #     good_bad_dict = self.state_tracer()
-        #     if len(good_bad_dict) == 0:
-        #         break
+            self.clean_up(good_bad_dict)
 
-        #     self.clean_up(good_bad_dict)
+        print(f'After state tracing: {len(self.model.moves) - 1}', end='\n\n')
 
-        # print(f'After state tracing: {len(self.board.moves) - 1}', end='\n\n')
-
-        # ### BREADTH FIRST SHORTENING
-        # state_archive = self.bf_archive()
-        # bf_depth = 3
-        # self.bf_shortening(state_archive, bf_depth)
-
+        ### BREADTH FIRST SHORTENING
+        state_archive = self.bf_archive()
+        bf_depth = 3
+        self.bf_shortening(state_archive, bf_depth)
 
         ### FINAL CHECK
-        # if not self.check_solution():
-        #     print('Error: Moveset is not a valid solution.', end='\n\n')
+        if not self.check_solution():
+            print('Error: Moveset is not a valid solution.', end='\n\n')
 
         return self.model.moves
