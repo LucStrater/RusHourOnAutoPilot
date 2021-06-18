@@ -122,13 +122,10 @@ class Breadth_first_V2:
     def __init__(self, board):
         self.start_board = board
         self.q = queue.Queue()
-        self.archive = {}
+        self.archive = set()
 
-        self.start_board.id = 0
         self.q.put(self.start_board)
-        self.archive[self.start_board.id] = self.start_board.matrix
-
-        self.matrix_id = 1
+        self.archive.add(str(self.start_board.matrix))
 
 
     def make_children(self, state):
@@ -151,17 +148,14 @@ class Breadth_first_V2:
         Logs all children whose matrix is not in the archive. Returns True if a child is a solution.
         """
         for child in children:
-            if child.matrix in self.archive.values():
+            if str(child.matrix) in self.archive:
                 continue
-
-            child.id = self.matrix_id
-            self.matrix_id += 1
 
             if child.is_solution():
                 return child
 
             self.q.put(child)
-            self.archive[child.id] = child.matrix
+            self.archive.add(str(child.matrix))
         
         return None
 
@@ -170,14 +164,17 @@ class Breadth_first_V2:
         """
         Goes breadth first through all possible moves until a solution was found or the maximum depth was reached.
         """
+        depth = 0
         while not self.q.empty():
             state = self.q.get()
+            if len(state.moves) > depth:
+                depth = len(state.moves)
+                print(depth)
 
             children = self.make_children(state)
             winner = self.log_children(children)
 
             if winner != None:
-                #print('SOLUTION FOUND!!')
                 break
 
         return winner.moves
@@ -186,17 +183,18 @@ class Breadth_first_V2:
 
 class Breadth_first_Hillclimber(Breadth_first_V2):
 
-    def __init__(self, start_board, finish_board):
-        self.start_board = start_board
-        self.finish_board = finish_board
+    def __init__(self, start_board, finish_board_dict):
+        self.start_board = start_board.copy()
+        self.finish_boards = finish_board_dict
         self.q = queue.Queue()
         self.archive = {}
 
-        self.start_board.id = 0
-        self.q.put(self.start_board)
-        self.archive[self.start_board.id] = self.start_board.matrix
+        self.prior_length = len(start_board.moves)
+        self.start_board.moves = []
 
-        self.matrix_id = 1
+        #self.start_board.id = 0
+        self.q.put(self.start_board)
+        self.archive[str(start_board.matrix)] = len(start_board.moves)
     
 
     def log_children(self, children):
@@ -204,49 +202,51 @@ class Breadth_first_Hillclimber(Breadth_first_V2):
         Logs all children whose matrix is not in the archive. Returns child if it is the solution.
         """
         for child in children:
-            if child.matrix in self.archive.values():
+            if str(child.matrix) in self.archive:
                 continue
 
-            child.id = self.matrix_id
-            self.matrix_id += 1
-
-            if self.check_finish(child.matrix):
+            if self.check_finish(child):
                 return child
 
             self.q.put(child)
-            self.archive[child.id] = child.matrix
+
+            self.archive[str(child.matrix)] = len(child.moves)
         
         return None
 
     
-    def check_finish(self, matrix):
+    def check_finish(self, child):
         """
         Checks if finish matrix has been found.
         """
-        for i in range(self.finish_board.board_len):
-            for j in range(self.finish_board.board_len):
-                if matrix[i][j] != self.finish_board.matrix[i][j]:
-                    return False
-        
-        return True
+        matrix = str(child.matrix)
+        total_moves = self.prior_length + len(child.moves)
+        if matrix in self.finish_boards and total_moves < self.finish_boards[matrix]:
+
+            print(f'{self.finish_boards[matrix]} to {self.prior_length + len(child.moves)}')
+            
+            return True
+        return False
 
 
-    def run(self):
+    def run(self, max_depth):
         """
         Goes breadth first through all possible moves until a solution was found or the maximum depth was reached.
         """
+        start_depth = len(self.start_board.moves)
+
         while not self.q.empty():
             state = self.q.get()
+
+            if len(state.moves) == start_depth + max_depth:
+                return None
 
             children = self.make_children(state)
             winner = self.log_children(children)
 
             if winner != None:
-                break
-
-        del winner.moves[0]
-
-        return winner.moves
+                return winner.moves
+        
 
 #############################################################################################################################
 

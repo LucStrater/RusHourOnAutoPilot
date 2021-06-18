@@ -12,7 +12,7 @@ class Board_BF2():
         self.load_matrix(source_file)
         self.moves = [('Car','Move')]
         #self.moves = []
-        self.id = None
+        # self.id = None
 
 
     def load_matrix(self, source_file):
@@ -104,6 +104,18 @@ class Board_BF2():
         row = position[0]
         column = position[1]
 
+
+
+        if move in self.get_possibilities(car):
+            pass
+        else:
+            print('illegal')
+            self.print()
+            print(move)
+            print(f'{car} - {self.get_possibilities(car)}')
+            input()
+            return False
+
         if car.orientation == 'H':
             for i in range(car.length):
                 self.matrix[row][column + i] = None
@@ -150,8 +162,18 @@ class Board_BF2():
         Copies a the board to a child and creates deepcopies of only the matrix and the moves.
         """
         child = copy.copy(self)
-        child.matrix = copy.deepcopy(self.matrix)
-        child.moves = copy.deepcopy(self.moves)
+        # child.matrix = copy.deepcopy(self.matrix)
+        # child.moves = copy.deepcopy(self.moves)
+        # print(self.matrix)
+        child.matrix = []
+        child.matrix = [[None for i in range(self.board_len)] for j in range(self.board_len)]
+        for i in range(self.board_len):
+            for j in range(self.board_len):
+                child.matrix[i][j] = self.matrix[i][j]
+        
+        child.moves = []
+        for move in self.moves:
+            child.moves.append(move)
         
         return child
     

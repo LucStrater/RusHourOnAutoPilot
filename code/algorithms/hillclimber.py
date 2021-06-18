@@ -190,39 +190,8 @@ class Hillclimber_state_trace(Hillclimber):
     #         print(f'{count}. {best}')
     #         count += 1
 
-
-    def state_trace(self, matrix):
-        """
-        Perfoms all moves from move set and returns the last state that was equal to the start state.
-        """
-        tracer = self.board.copy()
-        tracer.moves.pop(0)
-        move_indices = []
-
-        count = 1
-        for move in tracer.moves:
-            tracer.update_matrix(move[0], move[1])
-
-            if tracer.matrix == matrix:
-                move_indices.append(count)
-            
-            count += 1
-        
-        return move_indices
-
-
-    def delete_moves(self, start, finish):
-        """
-        Delets all moves between and including start and finish from self.board.moves
-        """
-        for i in range(start, finish + 1):
-            self.board.moves[i] = None
-        
-        filtered_moves = [move for move in self.board.moves if move != None]
-        self.board.moves = filtered_moves
     
-    
-    def archive_tracing(self):
+    def state_tracer(self):
         """
         Makes moves and looks for doubly visited states
         """
@@ -247,141 +216,147 @@ class Hillclimber_state_trace(Hillclimber):
             else:
                 # voeg tracer matrix toe aan archive
                 archive[matrix] = i
-        
-        if len(move_archive) == 0:
-            return None
 
-        good_moves = list(move_archive.keys())
-        bad_moves = list(move_archive.values())
-
-        best = 0
-        for i in range(len(good_moves)):
-            diff = bad_moves[i] - good_moves[i]
-            if diff > best:
-                best = diff
-                index = i
-
-        return (good_moves[index], bad_moves[index])
+        return move_archive
 
 
-    def archive_2(self):
+    def clean_up(self, move_archive):
         """
-        loop over moves
-        voer moves uit
-        check archief
-            aanwezig -> mark alle moves tussen archief en nu None
-                     -> return True
-            niet aanwezig -> voeg toe aan archief
-            return False
+        Go through dict and delete subset of moves in order of size, starting with biggest.
         """
-        tracer = self.board.copy()
-        tracer.moves.pop(0)
-        archive = {}
-        archive[str(tracer.matrix)] = 0
+        while True:
+            # quit when dict is empty
+            if len(move_archive) == 0:
+                break
 
-        for i in range(len(tracer.moves)):
-            move = tracer.moves[i]
-            tracer.update_matrix(move[0], move[1])
-
-            matrix = str(tracer.matrix)
-
-            if matrix in archive:
-                start = archive[matrix]
-                
-                
-                return True
-            else:
-                archive[matrix] = i + 1
-        
-
-        #     # check archief
-        #     if matrix in archive:
-        #         i2 = archive[matrix]
-
-        #         # zet moves naar None
-        #         for j in range(i2,i):
-        #             #self.board.moves.pop(i2)
-        #             self.board.moves[j] = None
-
-        #         # verwijder None uit moves
-        #         filtered_moves = [move for move in self.board.moves if move != None]
-        #         self.board.moves = filtered_moves
-        #         return True
-        #     else:
-        #         archive[matrix] = i + 1
-
-        return False
-
-
-    def test(self, good, bad):
-
-        test_good = self.board.copy()
-        for i in range(good + 1):
-            car_move = test_good.moves[i + 1]
-            test_good.update_matrix(car_move[0], car_move[1])
-        
-        test_bad = self.board.copy()
-        for i in range(bad + 1):
-            car_move = test_bad.moves[i + 1]
-            test_bad.update_matrix(car_move[0], car_move[1])
+            # find the biggest difference pair
+            best = 0
+            for key in move_archive:
+                diff = move_archive[key] - key
+                if diff > best:
+                    best = diff
+                    good_move = key
+                    bad_move = move_archive[key]
             
-        if test_good.matrix != test_bad.matrix:
-            return False
+            # check if moves don't partially fall into recently removed chunk
+            if self.board.moves[good_move + 2] != None and self.board.moves[bad_move + 1] != None:
+                for i in range(good_move + 2, bad_move + 2):
+                    self.board.moves[i] = None
+                move_archive.pop(good_move)
+            else:
+                move_archive.pop(good_move)
         
-        return True
+        # delete moves from moves list
+        filtered_moves = [move for move in self.board.moves if move != None]
+        self.board.moves = filtered_moves
 
 
-    def run(self, random_nr, trace_itr):
+    def bf_archive(self):
+        """
+        Makes moves on tracer board and returns dict with matrix as key and number of moves as value
+        """
+        board = self.board.copy()
+        board.moves.pop(0)
+        archive = {}
+
+        arch_move_count = 0
+        archive[str(board.matrix)] = arch_move_count
+
+        for move in board.moves:
+            arch_move_count += 1
+
+            board.update_matrix(move[0], move[1])
+            archive[str(board.matrix)] = arch_move_count
+        
+        return archive
+    
+    
+    def bf_shortening(self, state_archive, depth):
+        """
+        Performs BFS up to given depth to search for shorter paths to states in archive
+        """
+        board = self.board.copy()
+        board.moves = []
+        improved_moves = []
+
+        count = 0
+
+        while True:
+            breadth = bf(board, state_archive)
+            good_moves = breadth.run(depth)
+            
+            if good_moves == None:
+                if count % 100 == 0:
+                    print('bad')
+
+                # perform depth + 1 moves from self.board.moves on board
+                start = state_archive[str(board.matrix)] + 1
+                finish = depth + 2
+
+                for move in self.board.moves[start:finish]:
+                    board.update_matrix(move[0], move[1])
+                    board.moves.append(move)
+
+                    if board.is_solution():
+                        break
+            else:
+                if count % 100 == 0:
+                    print(f'good: {len(good_moves)}')
+
+                # perform good_moves on board
+                for move in good_moves:
+                    board.update_matrix(move[0], move[1])
+                    board.moves.append(move)
+            
+            if board.is_solution():
+                break
+            
+            count += 1
+            if count % 100 == 0:
+                print(count)
+                print(len(board.moves))
+
+                
+        board.moves.insert(0, ('Move', 'Car'))
+        print(len(board.moves))
+            
+            
+
+
+    def run(self, random_nr):
         """
         Run hillclimber state trace
         """
-        # RANDOM
+        ### RANDOM
         random_start = time.perf_counter()
         print(f'\n{random_nr} random runs')
         self.get_random_solution(random_nr)
         random_finish = time.perf_counter()
+
         print(f'Finished: {len(self.board.moves) - 1} moves\nRuntime: {round(random_finish - random_start, 2)}', end='\n\n')
         
-
-        # BACK-FORWARD
+        ### BACK-FORWARD TRIMMING
         self.remove_back_forward()
         print(f'after back-forward trimming: {len(self.board.moves) - 1}', end='\n\n')
 
-        # # START TRACE
-        # print(f'before start tracing: {len(self.board.moves) - 1}')
-        # traced_moves = self.state_trace(self.board.matrix)
-        # if len(traced_moves) > 0:
-        #     self.delete_moves(1, traced_moves[-1])
-        # print(f'after start tracing: {len(self.board.moves) - 1}', end='\n\n')
-        
-        # # FINISH TRACE
-        # print(f'before finish tracing: {len(self.board.moves) - 1}')
-        # end_board = self.trace_moves(self.board, self.board.moves[1:-1])
-        # traced_moves = self.state_trace(end_board)
-        # print(f'after finish tracing: {len(self.board.moves) - 1}', end='\n\n')
+        ### STATE TRACING
+        while True:
 
-        # ### ARCHIVE TRACE
-        trace_start = time.perf_counter()
-        for i in range(trace_itr):
-
-            good_bad = self.archive_tracing()
-
-            if good_bad == None:
-                print('none found')
-                break
-            if not self.test(good_bad[0], good_bad[1]):
-                print(f'test failed {i}')
+            good_bad_dict = self.state_tracer()
+            if len(good_bad_dict) == 0:
                 break
 
-            self.delete_moves(good_bad[0] + 2, good_bad[1] + 1)
-            if i % 100 == 0:
-                print(f'iteration {i}', end='\n\n')
+            self.clean_up(good_bad_dict)
 
-        trace_finish = time.perf_counter()
-        print(f'Finished: {len(self.board.moves) - 1} moves\nRuntime: {round(trace_finish - trace_start, 2)}', end='\n\n')
+        print(f'After state tracing: {len(self.board.moves) - 1}', end='\n\n')
 
-        #TODO: breadth first met archive
+        # ### BREADTH FIRST SHORTENING
+        # state_archive = self.bf_archive()
+        # bf_depth = 3
+        # self.bf_shortening(state_archive, bf_depth)
 
+
+        ### FINAL CHECK
         if not self.check_solution():
             print('Error: Moveset is not a valid solution.', end='\n\n')
 
