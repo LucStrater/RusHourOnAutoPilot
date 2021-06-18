@@ -194,7 +194,7 @@ def main():
     # print(f'runtime iterative deepening: {round(finish - start, 2)} seconds')
     # print()
 
-    # # ######################## Breadth First #####################
+    ######################## Breadth First #####################
 
     # bf_start = time.perf_counter()
 
@@ -208,13 +208,13 @@ def main():
     # print()
 
     ######################## Hillclimber #####################
-    hc_random_nr = 1
+    hc_random_nr = 30
 
     hc_start = time.perf_counter()
 
     hillclimber = hc.Hillclimber(rushHourBoard)
     hc_moves = hillclimber.run(hc_random_nr)
-    print(f'State Tracer found solution in {len(hc_moves) - 1} moves.')
+    print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
 
     hc_finish = time.perf_counter()
     

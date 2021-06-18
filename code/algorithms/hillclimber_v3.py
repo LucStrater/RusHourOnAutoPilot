@@ -1,5 +1,5 @@
 from .randomise_v3 import Randomise as rd
-from .breadth_first_v3 import Breadth_first_Hillclimber as bf
+from .breadth_first_v3 import Breadth_first_hillclimber as bf
 import time
 import copy
 
@@ -136,7 +136,6 @@ class Hillclimber:
         """
         model = self.model.copy()
         model.moves = []
-        improved_moves = []
 
         count = 0
 
@@ -145,39 +144,38 @@ class Hillclimber:
             good_moves = breadth.run(depth)
             
             if good_moves == None:
-                if count % 100 == 0:
-                    print('bad')
 
                 # perform depth + 1 moves from self.board.moves on board
-                start = state_archive[str(board.matrix)] + 1
+                start = state_archive[model.get_tuple()] + 1
                 finish = depth + 2
 
-                for move in self.board.moves[start:finish]:
-                    board.update_matrix(move[0], move[1])
-                    board.moves.append(move)
+                for move in self.model.moves[start:finish]:
+                    car = model.board.cars[move[0]]
+                    model.update_matrix(car, move[1])
+                    model.moves.append(move)
 
-                    if board.is_solution():
+                    if model.is_solution():
                         break
             else:
-                if count % 100 == 0:
-                    print(f'good: {len(good_moves)}')
-
                 # perform good_moves on board
                 for move in good_moves:
-                    board.update_matrix(move[0], move[1])
-                    board.moves.append(move)
-            
-            if board.is_solution():
+                    # print(move)
+                    car = model.board.cars[move[0]]
+                    model.update_matrix(car, move[1])
+                    model.moves.append(move)
+
+            if model.is_solution():
                 break
             
             count += 1
-            if count % 100 == 0:
-                print(count)
-                print(len(board.moves))
+            if count % 50 == 0:
+                print(f'bf {count}')
+                print(len(model.moves))
+                print()
 
                 
-        board.moves.insert(0, ('Move', 'Car'))
-        print(len(board.moves))
+        model.moves.insert(0, ('Move', 'Car'))
+        self.model.moves = model.moves
             
  
     def check_solution(self):
@@ -208,7 +206,14 @@ class Hillclimber:
         print(f'Finished: {len(self.model.moves) - 1} moves\nRuntime: {round(random_finish - random_start, 2)}', end='\n\n')
         
         ### BACK-FORWARD TRIMMING
-        self.remove_back_forward()
+        while True:
+            start_len = len(self.model.moves)
+            self.remove_back_forward()
+            new_len = len(self.model.moves)
+
+            if new_len == start_len:
+                break
+            
         print(f'after back-forward trimming: {len(self.model.moves) - 1}', end='\n\n')
 
         ### STATE TRACING
@@ -224,7 +229,7 @@ class Hillclimber:
 
         ### BREADTH FIRST SHORTENING
         state_archive = self.bf_archive()
-        bf_depth = 3
+        bf_depth = 1
         self.bf_shortening(state_archive, bf_depth)
 
         ### FINAL CHECK
