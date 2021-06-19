@@ -140,15 +140,15 @@ def main():
 
     ########################### A* #############################
 
-    start = time.perf_counter()
+    # start = time.perf_counter()
 
-    a_star = ast.A_star(rushHourBoard)
-    moves = a_star.run()
-    print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
+    # a_star = ast.A_star(rushHourBoard)
+    # moves = a_star.run()
+    # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
 
-    finish = time.perf_counter()
-    print(f'runtime: {round(finish - start, 2)} seconds')
-    print()
+    # finish = time.perf_counter()
+    # print(f'runtime: {round(finish - start, 2)} seconds')
+    # print()
 
     # ########################### PRUNED A* ##############################
 
@@ -206,17 +206,17 @@ def main():
     # print()
 
     ######################## Hillclimber #####################
-    # hc_random_nr = 30
+    hc_random_nr = 10
 
-    # hc_start = time.perf_counter()
+    hc_start = time.perf_counter()
 
-    # hillclimber = hc.Hillclimber(rushHourBoard)
-    # hc_moves = hillclimber.run(hc_random_nr)
-    # print(f'State Tracer found solution in {len(hc_moves) - 1} moves.')
+    hillclimber = hc.Hillclimber(rushHourBoard)
+    hc_moves = hillclimber.run(hc_random_nr)
+    print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
 
-    # hc_finish = time.perf_counter()
+    hc_finish = time.perf_counter()
     
-    # print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
+    print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
 
 
 if __name__ == "__main__":

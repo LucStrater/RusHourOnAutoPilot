@@ -136,18 +136,18 @@ class Hillclimber:
         """
         model = self.model.copy()
         model.moves = []
-
         count = 0
 
         while True:
+            # perform BFS on model
             breadth = bf(model, state_archive)
             good_moves = breadth.run(depth)
             
+            # if no better path was found
             if good_moves == None:
-
-                # perform depth + 1 moves from self.board.moves on board
+                # perform moves from the known path
                 start = state_archive[model.get_tuple()] + 1
-                finish = depth + 2
+                finish = start + depth + 2
 
                 for move in self.model.moves[start:finish]:
                     car = model.board.cars[move[0]]
@@ -156,10 +156,10 @@ class Hillclimber:
 
                     if model.is_solution():
                         break
+            # if a better path was found            
             else:
-                # perform good_moves on board
+                # perform good moves on board
                 for move in good_moves:
-                    # print(move)
                     car = model.board.cars[move[0]]
                     model.update_matrix(car, move[1])
                     model.moves.append(move)
@@ -168,12 +168,12 @@ class Hillclimber:
                 break
             
             count += 1
-            if count % 50 == 0:
+            if count % 20 == 0:
                 print(f'bf {count}')
                 print(len(model.moves))
                 print()
 
-                
+        # point the overarching model to the new move set
         model.moves.insert(0, ('Move', 'Car'))
         self.model.moves = model.moves
             
@@ -229,7 +229,7 @@ class Hillclimber:
 
         ### BREADTH FIRST SHORTENING
         state_archive = self.bf_archive()
-        bf_depth = 1
+        bf_depth = 3
         self.bf_shortening(state_archive, bf_depth)
 
         ### FINAL CHECK
