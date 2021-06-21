@@ -226,7 +226,7 @@ class Hillclimber:
             tracer.update_matrix(car, move[1])
             tracer.add_move(car.cid, move[1])
             
-            if count <= 30:
+            if count <= 30 and (len(tracer.moves) + 30) < len(self.model.moves):
                 continue
 
             score = self.heuristic(start_board, tracer)
@@ -285,7 +285,7 @@ class Hillclimber:
             goal_model = self.find_good_goal(start_board)
             a_star_io = asio.A_star(start_board, goal_model)
             a_star_board = a_star_io.run_hillclimber()
-            for move in a_star_board.moves:
+            for move in a_star_board.moves[1:]:
                 optimal_moveset.append(move)
             start_board = a_star_board
             

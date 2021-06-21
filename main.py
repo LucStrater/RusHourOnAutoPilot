@@ -165,18 +165,18 @@ def main():
     # print()
 
       ########################### A* IO #############################
-    state.print()
-    board = Model(board_title)
+    # state.print()
+    # board = Model(board_title)
 
-    start = time.perf_counter()
+    # start = time.perf_counter()
 
-    a_star_io = asio.A_star(board, state)
-    moves = a_star_io.run()
-    print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
+    # a_star_io = asio.A_star(board, state)
+    # moves = a_star_io.run()
+    # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
 
-    finish = time.perf_counter()
-    print(f'runtime: {round(finish - start, 2)} seconds')
-    print()
+    # finish = time.perf_counter()
+    # print(f'runtime: {round(finish - start, 2)} seconds')
+    # print()
 
     # ########################### PRUNED A* ##############################
 
