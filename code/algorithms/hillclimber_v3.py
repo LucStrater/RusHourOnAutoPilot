@@ -262,7 +262,7 @@ class Hillclimber:
                 tracer.moves = new_moves
                 break
 
-        print(f'goal - {state_archive[tracer.get_tuple()]}')
+        # print(f'goal - {state_archive[tracer.get_tuple()]}')
         return tracer
 
 
@@ -278,8 +278,8 @@ class Hillclimber:
         count = 0
         
         while True:
-            if count % 5 == 0:
-                print(f'--- {count} A* ---')
+            # if count % 5 == 0:
+            #     print(f'--- {count} A* ---')
             count += 1
             # get the best goal state
             goal_model = self.find_good_goal(start_board, max_score, state_archive)
@@ -290,17 +290,25 @@ class Hillclimber:
             # run A* from start to goal
             a_star_io = asio.A_star(start_board, goal_model)
             a_star_board = a_star_io.run_hillclimber()
+
+            # no solution was found
             if a_star_board == None:
-                print('None found')
-                max_score = 10
+                # print('None found')
+
+                # adjust max allowed heuristic score
+                max_score = 8
+
+                # move the board one step along the established path
                 old_position = state_archive[start_board.get_tuple()] + 1
                 move = self.model.moves[old_position]
                 car = self.model.board.cars[move[0]]
                 start_board.update_matrix(car, move[1])
+                start_board.add_move(car.cid, move[1])
                 continue
             
+            # reset max allowed heuristic score after A* found
             max_score = 20
-            print(len(a_star_board.moves))
+            # print(len(a_star_board.moves))
             
             # stop when solution has been found
             if a_star_board.is_solution():
@@ -348,7 +356,17 @@ class Hillclimber:
         ### A*
         start = time.perf_counter()
 
-        self.run_a_star()
+        count = 1
+        while True:
+            start_len = len(self.model.moves)
+            self.run_a_star()
+            finish_len = len(self.model.moves)
+
+            if finish_len == start_len:
+                break
+
+            print(f'A* iteration {count}: {len(self.model.moves) - 1}')
+            count += 1
 
         finish = time.perf_counter()
         print(f'Runtime A*: {round(finish - start, 2)}', end='\n\n')
