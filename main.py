@@ -32,18 +32,18 @@ def main():
     # init the board
     rushHourBoard = Model(board_title)
 
-    ########################### Randomise ###########################
-    start = time.perf_counter()
+    # ########################### Randomise ###########################
+    # start = time.perf_counter()
 
-    randomise = rd.Randomise(rushHourBoard)
-    all_moves = randomise.run()
-    print(f"best solution for randomise: {all_moves}. This takes {len(all_moves) - 1} moves.")
+    # randomise = rd.Randomise(rushHourBoard)
+    # all_moves = randomise.run()
+    # print(f"best solution for randomise: {all_moves}. This takes {len(all_moves) - 1} moves.")
 
-    # output.export_to_csv(all_moves, './data/output/output.csv')
+    # # output.export_to_csv(all_moves, './data/output/output.csv')
 
-    finish = time.perf_counter()
-    print(f'runtime randomise: {round(finish - start, 2)} seconds')
-    print()
+    # finish = time.perf_counter()
+    # print(f'runtime randomise: {round(finish - start, 2)} seconds')
+    # print()
 
     # ############################# Random ################################
 
@@ -139,7 +139,20 @@ def main():
     # print(f"That is {round(- (counters_greedy_3/counters - 1) * 100)}% better than the baseline")
     # print()
 
-    # ########################### A* #############################
+    #     ########################### Depth first ###########################
+    # start = time.perf_counter()
+
+    # depth = df.DepthFirst(rushHourBoard)
+    # all_moves = depth.run()
+    # print(f"best solution for depth first: {all_moves}. This takes {len(all_moves) - 1} moves.")
+
+    # # output.export_to_csv(all_moves, './data/output/output.csv')
+
+    # finish = time.perf_counter()
+    # print(f'runtime depth first: {round(finish - start, 2)} seconds')
+    # print()
+
+    ########################### A* #############################
 
     # start = time.perf_counter()
 
@@ -151,20 +164,15 @@ def main():
     # print(f'runtime: {round(finish - start, 2)} seconds')
     # print()
 
-      ########################### A* IO #############################
-    board = Model(board_title)
+    #   ########################### A* IO #############################
+    # state.print()
+    # board = Model(board_title)
 
     # start = time.perf_counter()
 
-<<<<<<< HEAD
-    a_star_io = asio.A_star(board, rushHourBoard)
-    moves = a_star_io.run()
-    print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
-=======
-    # a_star = ast.A_star(rushHourBoard)
-    # moves = a_star.run()
+    # a_star_io = asio.A_star(board, state)
+    # moves = a_star_io.run()
     # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
->>>>>>> b5d5fa9acfcc6a1bc46d960d11750762c67ef7a8
 
     # finish = time.perf_counter()
     # print(f'runtime: {round(finish - start, 2)} seconds')
@@ -185,18 +193,7 @@ def main():
     # print(f'runtime: {round(finish - start, 2)} seconds')
     # print()
 
-    # ########################### Depth first ###########################
-    # start = time.perf_counter()
 
-    # depth = df.DepthFirst(rushHourBoard)
-    # all_moves = depth.run()
-    # print(f"best solution for depth first: {all_moves}. This takes {len(all_moves) - 1} moves.")
-
-    # # output.export_to_csv(all_moves, './data/output/output.csv')
-
-    # finish = time.perf_counter()
-    # print(f'runtime depth first: {round(finish - start, 2)} seconds')
-    # print()
 
     # ######################## Iterative deepening #####################
 
@@ -225,8 +222,8 @@ def main():
     # print(f'runtime V2: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
     # print()
 
-    ######################## Hillclimber #####################
-    hc_random_nr = 10
+    # ######################## Hillclimber #####################
+    hc_random_nr = 1
 
     hc_start = time.perf_counter()
 

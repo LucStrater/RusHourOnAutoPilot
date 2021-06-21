@@ -17,11 +17,13 @@ class A_star:
 
         self.closed = set()
         self.open_set = set()
+        self.open_set.add(self.model)
 
     def get_next_state(self):
         """
         Method that gets the board with the lowest score from open
         """
+
         return self.open.get()[2]
 
     def calculate_h1_score(self, model):

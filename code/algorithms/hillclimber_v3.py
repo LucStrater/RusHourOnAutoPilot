@@ -2,11 +2,13 @@ from .randomise_v3 import Randomise as rd
 from .breadth_first_v3 import Breadth_first_hillclimber as bf
 import time
 import copy
+from code.algorithms import a_star_io_v3 as asio
 
 class Hillclimber:
 
     def __init__(self, model):
         self.model = model
+        self.cars = self.model.get_cars()
 
 
     def get_random_solution(self, amount):
@@ -193,6 +195,51 @@ class Hillclimber:
         
         return False
 
+
+    def heuristic(self, model, goal_model):
+        """   
+        Distance to goal: with a given solution from a random algorithm determine the distance of every car to its final position
+        """ 
+        score = 0
+
+        for car in self.cars:
+            row_model, column_model = model.get_car_pos(car)
+            row_goal, column_goal = goal_model.get_car_pos(car)
+            score += abs(row_model - row_goal) + abs(column_model - column_goal)
+
+        return score
+
+
+    def find_good_goal(self, start_board):
+        """
+
+        """
+        tracer = start_board.copy()
+        tracer.moves = [('car', 'move')]
+        best_board = None
+
+        count = 0
+        minimum = float('inf') 
+        for move in self.model.moves[len(start_board.moves):]:
+            count += 1
+            car = start_board.board.cars[move[0]]
+            tracer.update_matrix(car, move[1])
+            tracer.add_move(car.cid, move[1])
+            
+            if count <= 30:
+                continue
+
+            score = self.heuristic(start_board, tracer)
+            if score < minimum:
+                minimum = score
+                best_board = tracer.copy()
+
+        print(minimum)
+        print(f'distance: {len(best_board.moves) - 1}')
+
+        return best_board
+
+
     def run(self, random_nr):
         """
         Run hillclimber state trace
@@ -227,10 +274,37 @@ class Hillclimber:
 
         print(f'After state tracing: {len(self.model.moves) - 1}', end='\n\n')
 
+        ### A*
+        start = time.perf_counter()
+
+        start_board = self.model.copy()
+        start_board.moves = [('car', 'move')]
+        optimal_moveset = [('car', 'move')]
+        
+        while True:
+            goal_model = self.find_good_goal(start_board)
+            a_star_io = asio.A_star(start_board, goal_model)
+            a_star_board = a_star_io.run_hillclimber()
+            for move in a_star_board.moves:
+                optimal_moveset.append(move)
+            start_board = a_star_board
+            
+            
+            
+        finish = time.perf_counter()
+        print(f'Runtime heuristic: {round(finish - start, 2)}')
+
+        # use begin board -> find good end board  (intermediate) = find_good_goal
+        # loop
+            # A_star(start, good_goal), returns the astar_bord + moveset
+            # save moveset to ULTIMATE-MOVESET
+            # use astar_bord: find_good_goal(astar_board)
+            # repeat
+
         ### BREADTH FIRST SHORTENING
-        state_archive = self.bf_archive()
-        bf_depth = 3
-        self.bf_shortening(state_archive, bf_depth)
+        # state_archive = self.bf_archive()
+        # bf_depth = 3
+        # self.bf_shortening(state_archive, bf_depth)
 
         ### FINAL CHECK
         if not self.check_solution():

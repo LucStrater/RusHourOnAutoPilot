@@ -86,3 +86,22 @@ class A_star:
             self.create_children(state)      
 
         return state.moves
+
+
+    def run_hillclimber(self):
+        counter = 0
+        while True:
+            state = self.get_next_state()
+            counter += 1
+            # stop loop if a solution is found
+            if self.heuristic(state) == 0:
+                print(counter)
+                break
+
+            # save states to archive
+            self.closed.add(state.get_tuple())
+
+            # create children
+            self.create_children(state)      
+
+        return state
