@@ -98,7 +98,7 @@ class A_star:
                 # print(counter)
                 return state
             
-            if counter > 5000:
+            if counter > 400:
                 return None
 
             # save states to archive
