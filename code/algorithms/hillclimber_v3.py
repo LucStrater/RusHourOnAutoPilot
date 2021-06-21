@@ -209,36 +209,64 @@ class Hillclimber:
 
         return score
 
+    def heuristic_2(self, model, goal_model):
+        """   
+        Distance to goal: with a given solution from a random algorithm determine the distance of every car to its final position
+        """ 
+        score = 0
 
-    def find_good_goal(self, start_board):
+        for car in self.cars:
+            row_model, column_model = model.get_car_pos(car)
+            row_goal, column_goal = goal_model.get_car_pos(car)
+            if abs(row_model - row_goal) > 0 or abs(column_model - column_goal) > 0: 
+                score += 1
+
+        return score
+
+
+
+    def find_good_goal(self, start_board, max_score, state_archive):
         """
 
         """
         tracer = start_board.copy()
         tracer.moves = [('car', 'move')]
-        best_board = None
+        # tracer.print()
+        old_position = state_archive[tracer.get_tuple()] + 1
+        # print(old_position)
 
-        count = 0
-        minimum = float('inf') 
-        for move in self.model.moves[len(start_board.moves):]:
-            count += 1
+        # make all moves to get tracer to solution state
+        for move in self.model.moves[old_position:]:
             car = start_board.board.cars[move[0]]
-            print(move)
             tracer.update_matrix(car, move[1])
             tracer.add_move(car.cid, move[1])
+
+        # Make moves back from solution state to find the 
+        # furthest removed state with acceptable heuristic score
+        counter = 0
+        #hier ook het eind bord meenemen!
+        score = self.heuristic_2(start_board, tracer)
+        if score <= max_score:
+                # print('max found')
+                # print(counter)
+                new_moves = tracer.moves[:len(tracer.moves) - counter]
+                tracer.moves = new_moves
+                return tracer
+
+        for i in reversed(range(len(tracer.moves))):
+            counter += 1
+            move = tracer.moves[i]
+            tracer.update_matrix(tracer.board.cars[move[0]], move[1] * -1)
             
-            if count <= 30 and (len(tracer.moves) + 30) < len(self.model.moves):
-                continue
+            score = self.heuristic_2(start_board, tracer)
+            if score <= max_score:
+                # print('max found')
+                # print(counter)
+                new_moves = tracer.moves[:len(tracer.moves) - counter]
+                tracer.moves = new_moves
+                break
 
-            score = self.heuristic(start_board, tracer)
-            if score < minimum:
-                minimum = score
-                best_board = tracer.copy()
-
-        print(minimum)
-        print(f'distance: {len(best_board.moves) - 1}')
-
-        return best_board
+        return tracer
 
 
     def run(self, random_nr):
@@ -278,22 +306,35 @@ class Hillclimber:
         ### A*
         start = time.perf_counter()
 
+        max_score = 10
         start_board = self.model.copy()
         start_board.moves = [('car', 'move')]
-        optimal_moveset = [('car', 'move')]
+        state_archive = self.bf_archive()
+        count = 0
         
         while True:
-            goal_model = self.find_good_goal(start_board)
+            if count % 5 == 0:
+                print(count)
+            count += 1
+            # get the best goal state
+            goal_model = self.find_good_goal(start_board, max_score, state_archive)
+
+            # run A* from start to goal
             a_star_io = asio.A_star(start_board, goal_model)
             a_star_board = a_star_io.run_hillclimber()
-            for move in a_star_board.moves[1:]:
-                optimal_moveset.append(move)
+            # a_star_board.print()
+            # print(len(a_star_board.moves))
+            
+            # stop when solution has been found
+            if a_star_board.is_solution():
+                # print(f'we BROKE!')
+                break
+            
             start_board = a_star_board
             
-            
-            
         finish = time.perf_counter()
-        print(f'Runtime heuristic: {round(finish - start, 2)}')
+        print(f'Runtime A*: {round(finish - start, 2)}', end='\n\n')
+        self.model.moves = a_star_board.moves
 
         # use begin board -> find good end board  (intermediate) = find_good_goal
         # loop

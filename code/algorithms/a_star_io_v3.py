@@ -95,7 +95,7 @@ class A_star:
             counter += 1
             # stop loop if a solution is found
             if self.heuristic(state) == 0:
-                print(counter)
+                # print(counter)
                 break
 
             # save states to archive
