@@ -223,6 +223,7 @@ class Hillclimber:
         for move in self.model.moves[len(start_board.moves):]:
             count += 1
             car = start_board.board.cars[move[0]]
+            print(move)
             tracer.update_matrix(car, move[1])
             tracer.add_move(car.cid, move[1])
             
