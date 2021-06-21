@@ -64,8 +64,8 @@ class A_star:
 
                 # if this model has not been reached put it on the stack
                 if (matrix_tuple not in self.closed) and (matrix_tuple not in self.open_set):
-                    score = len(new_model.moves) + self.heuristic(new_model)
-                    self.open.put((score, next(self.counter), new_model))
+                    new_model.score = len(new_model.moves) + self.heuristic(new_model)
+                    self.open.put((new_model.score, next(self.counter), new_model))
                     self.open_set.add(matrix_tuple)
 
 
@@ -96,12 +96,13 @@ class A_star:
             # stop loop if a solution is found
             if self.heuristic(state) == 0:
                 # print(counter)
-                break
+                return state
+            
+            if counter > 5000:
+                return None
 
             # save states to archive
             self.closed.add(state.get_tuple())
 
             # create children
-            self.create_children(state)      
-
-        return state
+            self.create_children(state)    

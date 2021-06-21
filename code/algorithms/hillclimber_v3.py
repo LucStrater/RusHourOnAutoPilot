@@ -209,6 +209,7 @@ class Hillclimber:
 
         return score
 
+
     def heuristic_2(self, model, goal_model):
         """   
         Distance to goal: with a given solution from a random algorithm determine the distance of every car to its final position
@@ -224,16 +225,13 @@ class Hillclimber:
         return score
 
 
-
     def find_good_goal(self, start_board, max_score, state_archive):
         """
-
+        Finds the furthest removed state with the maximum heuristic score.
         """
         tracer = start_board.copy()
         tracer.moves = [('car', 'move')]
-        # tracer.print()
         old_position = state_archive[tracer.get_tuple()] + 1
-        # print(old_position)
 
         # make all moves to get tracer to solution state
         for move in self.model.moves[old_position:]:
@@ -247,11 +245,9 @@ class Hillclimber:
         #hier ook het eind bord meenemen!
         score = self.heuristic(start_board, tracer)
         if score <= max_score:
-                # print('max found')
-                # print(counter)
-                new_moves = tracer.moves[:len(tracer.moves) - counter]
-                tracer.moves = new_moves
-                return tracer
+            new_moves = tracer.moves[:len(tracer.moves) - counter]
+            tracer.moves = new_moves
+            return tracer
 
         for i in reversed(range(len(tracer.moves))):
             counter += 1
@@ -266,7 +262,53 @@ class Hillclimber:
                 tracer.moves = new_moves
                 break
 
+        print(f'goal - {state_archive[tracer.get_tuple()]}')
         return tracer
+
+
+    def run_a_star(self):
+        """
+
+        """
+        start_board = self.model.copy()
+        start_board.moves = [('car', 'move')]
+        state_archive = self.bf_archive()
+
+        max_score = 20
+        count = 0
+        
+        while True:
+            if count % 5 == 0:
+                print(f'--- {count} A* ---')
+            count += 1
+            # get the best goal state
+            goal_model = self.find_good_goal(start_board, max_score, state_archive)
+            # start_board.print()
+            # goal_model.print()
+            # input()
+
+            # run A* from start to goal
+            a_star_io = asio.A_star(start_board, goal_model)
+            a_star_board = a_star_io.run_hillclimber()
+            if a_star_board == None:
+                print('None found')
+                max_score = 10
+                old_position = state_archive[start_board.get_tuple()] + 1
+                move = self.model.moves[old_position]
+                car = self.model.board.cars[move[0]]
+                start_board.update_matrix(car, move[1])
+                continue
+            
+            max_score = 20
+            print(len(a_star_board.moves))
+            
+            # stop when solution has been found
+            if a_star_board.is_solution():
+                break
+            
+            start_board = a_star_board
+        
+        self.model.moves = a_star_board.moves
 
 
     def run(self, random_nr):
@@ -306,6 +348,7 @@ class Hillclimber:
         ### A*
         start = time.perf_counter()
 
+<<<<<<< HEAD
         max_score = 16
         start_board = self.model.copy()
         start_board.moves = [('car', 'move')]
@@ -318,30 +361,14 @@ class Hillclimber:
             count += 1
             # get the best goal state
             goal_model = self.find_good_goal(start_board, max_score, state_archive)
+=======
+        max_score = 20
+>>>>>>> 3b0876c3e16f4549fd8655d2d40965ff0b20ba3b
 
-            # run A* from start to goal
-            a_star_io = asio.A_star(start_board, goal_model)
-            a_star_board = a_star_io.run_hillclimber()
-            # a_star_board.print()
-            # print(len(a_star_board.moves))
-            
-            # stop when solution has been found
-            if a_star_board.is_solution():
-                # print(f'we BROKE!')
-                break
-            
-            start_board = a_star_board
             
         finish = time.perf_counter()
         print(f'Runtime A*: {round(finish - start, 2)}', end='\n\n')
-        self.model.moves = a_star_board.moves
-
-        # use begin board -> find good end board  (intermediate) = find_good_goal
-        # loop
-            # A_star(start, good_goal), returns the astar_bord + moveset
-            # save moveset to ULTIMATE-MOVESET
-            # use astar_bord: find_good_goal(astar_board)
-            # repeat
+        
 
         ### BREADTH FIRST SHORTENING
         # state_archive = self.bf_archive()
