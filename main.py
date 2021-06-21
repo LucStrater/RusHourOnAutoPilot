@@ -10,6 +10,7 @@ from code.algorithms import iterative_deepening_v3 as id
 from code.algorithms import randomise_v3 as rd
 from code.algorithms import hillclimber_v3 as hc
 from code.algorithms import a_star_v3 as ast
+from code.algorithms import a_star_io_v3 as asio
 # from code.algorithms import pruned_a_star as pas
 # from code.algorithms import breadth as bf
 # from code.algorithms import randomise_a_star as ras
@@ -31,18 +32,18 @@ def main():
     # init the board
     rushHourBoard = Model(board_title)
 
-    # ########################### Randomise ###########################
-    # start = time.perf_counter()
+    ########################### Randomise ###########################
+    start = time.perf_counter()
 
-    # randomise = rd.Randomise(rushHourBoard)
-    # all_moves = randomise.run()
-    # print(f"best solution for randomise: {all_moves}. This takes {len(all_moves) - 1} moves.")
+    randomise = rd.Randomise(rushHourBoard)
+    all_moves = randomise.run()
+    print(f"best solution for randomise: {all_moves}. This takes {len(all_moves) - 1} moves.")
 
-    # # output.export_to_csv(all_moves, './data/output/output.csv')
+    # output.export_to_csv(all_moves, './data/output/output.csv')
 
-    # finish = time.perf_counter()
-    # print(f'runtime randomise: {round(finish - start, 2)} seconds')
-    # print()
+    finish = time.perf_counter()
+    print(f'runtime randomise: {round(finish - start, 2)} seconds')
+    print()
 
     # ############################# Random ################################
 
@@ -138,13 +139,32 @@ def main():
     # print(f"That is {round(- (counters_greedy_3/counters - 1) * 100)}% better than the baseline")
     # print()
 
-    ########################### A* #############################
+    # ########################### A* #############################
 
     # start = time.perf_counter()
 
     # a_star = ast.A_star(rushHourBoard)
     # moves = a_star.run()
     # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
+
+    # finish = time.perf_counter()
+    # print(f'runtime: {round(finish - start, 2)} seconds')
+    # print()
+
+      ########################### A* IO #############################
+    board = Model(board_title)
+
+    # start = time.perf_counter()
+
+<<<<<<< HEAD
+    a_star_io = asio.A_star(board, rushHourBoard)
+    moves = a_star_io.run()
+    print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
+=======
+    # a_star = ast.A_star(rushHourBoard)
+    # moves = a_star.run()
+    # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
+>>>>>>> b5d5fa9acfcc6a1bc46d960d11750762c67ef7a8
 
     # finish = time.perf_counter()
     # print(f'runtime: {round(finish - start, 2)} seconds')
