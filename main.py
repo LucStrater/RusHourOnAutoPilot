@@ -223,7 +223,7 @@ def main():
     # print()
 
     # ######################## Hillclimber #####################
-    hc_random_nr = 10
+    hc_random_nr = 100
 
     hc_start = time.perf_counter()
 

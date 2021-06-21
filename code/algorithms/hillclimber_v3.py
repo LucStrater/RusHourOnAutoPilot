@@ -245,7 +245,7 @@ class Hillclimber:
         # furthest removed state with acceptable heuristic score
         counter = 0
         #hier ook het eind bord meenemen!
-        score = self.heuristic_2(start_board, tracer)
+        score = self.heuristic(start_board, tracer)
         if score <= max_score:
                 # print('max found')
                 # print(counter)
@@ -258,7 +258,7 @@ class Hillclimber:
             move = tracer.moves[i]
             tracer.update_matrix(tracer.board.cars[move[0]], move[1] * -1)
             
-            score = self.heuristic_2(start_board, tracer)
+            score = self.heuristic(start_board, tracer)
             if score <= max_score:
                 # print('max found')
                 # print(counter)
@@ -306,7 +306,7 @@ class Hillclimber:
         ### A*
         start = time.perf_counter()
 
-        max_score = 10
+        max_score = 16
         start_board = self.model.copy()
         start_board.moves = [('car', 'move')]
         state_archive = self.bf_archive()
