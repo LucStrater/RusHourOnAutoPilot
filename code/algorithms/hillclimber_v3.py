@@ -348,12 +348,11 @@ class Hillclimber:
         ### A*
         start = time.perf_counter()
 
-        max_score = 20
+        self.run_a_star()
 
-            
         finish = time.perf_counter()
         print(f'Runtime A*: {round(finish - start, 2)}', end='\n\n')
-        
+    
 
         ### BREADTH FIRST SHORTENING
         # state_archive = self.bf_archive()
