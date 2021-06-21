@@ -168,10 +168,9 @@ class Hillclimber:
                 break
             
             count += 1
-            if count % 20 == 0:
+            if count % 1000 == 0:
                 print(f'bf {count}')
                 print(len(model.moves))
-                print()
 
         # point the overarching model to the new move set
         model.moves.insert(0, ('Move', 'Car'))
@@ -204,7 +203,7 @@ class Hillclimber:
         random_finish = time.perf_counter()
 
         print(f'Finished: {len(self.model.moves) - 1} moves\nRuntime: {round(random_finish - random_start, 2)}', end='\n\n')
-        
+
         ### BACK-FORWARD TRIMMING
         while True:
             start_len = len(self.model.moves)
@@ -213,8 +212,9 @@ class Hillclimber:
 
             if new_len == start_len:
                 break
-            
-        print(f'after back-forward trimming: {len(self.model.moves) - 1}', end='\n\n')
+
+        finish = time.perf_counter()
+        print(f'after back-forward trimming: {len(self.model.moves) - 1}\nRuntime: {round(finish - random_start, 2)}', end='\n\n')
 
         ### STATE TRACING
         count = 0
@@ -224,12 +224,13 @@ class Hillclimber:
                 break
 
             self.clean_up(good_bad_dict)
-
-        print(f'After state tracing: {len(self.model.moves) - 1}', end='\n\n')
+        
+        finish = time.perf_counter()
+        print(f'After state tracing: {len(self.model.moves) - 1}\nRuntime: {round(finish - random_start, 2)}', end='\n\n')
 
         ### BREADTH FIRST SHORTENING
         state_archive = self.bf_archive()
-        bf_depth = 3
+        bf_depth = 2
         self.bf_shortening(state_archive, bf_depth)
 
         ### FINAL CHECK

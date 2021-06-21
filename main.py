@@ -188,11 +188,11 @@ def main():
 
     # # output.export_to_csv(all_moves, './data/output/output.csv')
 
-    # finish = time.perf_counter()
-    # print(f'runtime iterative deepening: {round(finish - start, 2)} seconds')
-    # print()
+    # # finish = time.perf_counter()
+    # # print(f'runtime iterative deepening: {round(finish - start, 2)} seconds')
+    # # print()
 
-    ######################## Breadth First #####################
+    # ######################## Breadth First #####################
 
     # bf_start = time.perf_counter()
 
@@ -206,7 +206,7 @@ def main():
     # print()
 
     ######################## Hillclimber #####################
-    hc_random_nr = 10
+    hc_random_nr = 50
 
     hc_start = time.perf_counter()
 
