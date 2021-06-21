@@ -348,22 +348,7 @@ class Hillclimber:
         ### A*
         start = time.perf_counter()
 
-<<<<<<< HEAD
-        max_score = 16
-        start_board = self.model.copy()
-        start_board.moves = [('car', 'move')]
-        state_archive = self.bf_archive()
-        count = 0
-        
-        while True:
-            if count % 5 == 0:
-                print(count)
-            count += 1
-            # get the best goal state
-            goal_model = self.find_good_goal(start_board, max_score, state_archive)
-=======
         max_score = 20
->>>>>>> 3b0876c3e16f4549fd8655d2d40965ff0b20ba3b
 
             
         finish = time.perf_counter()
