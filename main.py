@@ -19,18 +19,40 @@ import time
 
 
 def main():
-    # get board title from the terminal
-    if len(argv) not in [1, 2, 3]:
-        print("Usage: python3 main.py [filename (example: <6x6_1>)]")
-        exit(1)
+    # # get board title from the terminal
+    # if len(argv) not in [1, 2, 3]:
+    #     print("Usage: python3 main.py [filename (example: <6x6_1>)]")
+    #     exit(1)
+    
+    good_boards = ['6x6_1', '6x6_2', '6x6_3', '9x9_4', '9x9_5', '9x9_6', '12x12_7']
+    good_input = False
+    
+    print('Welcome to RusHourOnAutoPilot!\n\nAvailable Boards:\n6x6: 1, 2, 3\n9x9: 4, 5, 6\n12x12: 7', end='\n\n')
+    while not good_input:
+        print('Type "<size>_<number>" for the board you want to solve (e.g. "6x6_1"), or type "new" to generate a random new board', end='\n\n')
+        board = input('Which board would you like to solve? ')
 
-    if len(argv) == 2:
-        board_title = f"./data/input/Rushhour{argv[1]}.csv"
-    else:
-        board_title = './data/input/Rushhour6x6_1.csv'
+        if board in good_boards:
+            board_title = f"./data/input/Rushhour{board}.csv"
+            good_input = True
+        elif board == "new":
+            pass
 
-    # init the board
     rushHourBoard = Model(board_title)
+
+
+
+
+
+
+#=====================================================================================================================#
+    # if len(argv) == 2:
+    #     board_title = f"./data/input/Rushhour{argv[1]}.csv"
+    # else:
+    #     board_title = './data/input/Rushhour6x6_1.csv'
+
+    # # init the board
+    # rushHourBoard = Model(board_title)
 
     # ########################### Randomise ###########################
     # start = time.perf_counter()
@@ -234,6 +256,24 @@ def main():
     hc_finish = time.perf_counter()
     
     print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
+
+def random():
+    pass
+
+def depth_first():
+    pass
+
+def breadth_first():
+    pass
+
+def iterative_deepening():
+    pass
+
+def a_star():
+    pass
+
+def hillclimber():
+    pass
 
 
 if __name__ == "__main__":
