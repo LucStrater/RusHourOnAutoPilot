@@ -194,7 +194,43 @@ class Hillclimber:
             return True
         
         return False
+    
 
+    # def is_finishable(self):
+    #     """
+
+    #     """
+
+
+    def clean_finish(self):
+        """
+
+        """
+        tracer = self.model.copy()
+        tracer.moves = [('car','move')]
+        count = 1
+        red_car = self.model.board.cars['X']
+        win_col = self.model.board.board_len - 1
+
+        while not tracer.is_solution():
+            possibilities = tracer.get_possibilities(red_car)
+
+            for move in possibilities:
+                red_car_col = tracer.get_car_pos(red_car)[1]
+                
+                if red_car_col + move == win_col:
+                    tracer.update_matrix(red_car, move)
+                    tracer.add_move(red_car.cid, move)
+                    continue
+            
+            given_move = self.model.moves[count]
+            car = tracer.board.cars[given_move[0]]
+            tracer.update_matrix(car, given_move[1])
+            tracer.add_move(car.cid, given_move[1])
+            count += 1
+        
+        self.model.moves = tracer.moves
+            
 
     def heuristic(self, model, goal_model):
         """   
@@ -243,7 +279,7 @@ class Hillclimber:
         # furthest removed state with acceptable heuristic score
         counter = 0
         #hier ook het eind bord meenemen!
-        score = self.heuristic(start_board, tracer)
+        score = self.heuristic_2(start_board, tracer)
         if score <= max_score:
             new_moves = tracer.moves[:len(tracer.moves) - counter]
             tracer.moves = new_moves
@@ -254,7 +290,7 @@ class Hillclimber:
             move = tracer.moves[i]
             tracer.update_matrix(tracer.board.cars[move[0]], move[1] * -1)
             
-            score = self.heuristic(start_board, tracer)
+            score = self.heuristic_2(start_board, tracer)
             if score <= max_score:
                 # print('max found')
                 # print(counter)
@@ -266,7 +302,7 @@ class Hillclimber:
         return tracer
 
 
-    def run_a_star(self):
+    def run_a_star(self, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus):
         """
 
         """
@@ -276,6 +312,7 @@ class Hillclimber:
 
         max_score = 20
         count = 0
+        
         
         while True:
             # if count % 5 == 0:
@@ -289,14 +326,14 @@ class Hillclimber:
 
             # run A* from start to goal
             a_star_io = asio.A_star(start_board, goal_model)
-            a_star_board = a_star_io.run_hillclimber()
+            a_star_board = a_star_io.run_hillclimber(max_val)
 
             # no solution was found
             if a_star_board == None:
                 # print('None found')
 
                 # adjust max allowed heuristic score
-                max_score = 8
+                max_score = low_max_score
 
                 # move the board one step along the established path
                 old_position = state_archive[start_board.get_tuple()] + 1
@@ -319,7 +356,7 @@ class Hillclimber:
         self.model.moves = a_star_board.moves
 
 
-    def run(self, random_nr):
+    def run(self, random_nr, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus):
         """
         Run hillclimber state trace
         """
@@ -356,11 +393,15 @@ class Hillclimber:
         ### A*
         start = time.perf_counter()
 
+
         count = 1
         while True:
             start_len = len(self.model.moves)
-            self.run_a_star()
+            self.run_a_star(max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus)
             finish_len = len(self.model.moves)
+            max_score += max_plus
+            max_val += max_val_plus
+
 
             if finish_len == start_len:
                 break
@@ -371,11 +412,11 @@ class Hillclimber:
         finish = time.perf_counter()
         print(f'Runtime A*: {round(finish - start, 2)}', end='\n\n')
     
+        ### CLEAN FINISH
+        self.clean_finish()
 
-        ### BREADTH FIRST SHORTENING
-        # state_archive = self.bf_archive()
-        # bf_depth = 3
-        # self.bf_shortening(state_archive, bf_depth)
+        for move in self.model.moves:
+            print(move)
 
         ### FINAL CHECK
         if not self.check_solution():

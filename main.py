@@ -1,5 +1,6 @@
 from code.classes.model import Model
 # from code.classes.board import Board
+# from code.visualisation.pygame_viz import Game
 # from code.algorithms import randomise, greedy
 from sys import argv
 # from code.algorithms import depth_first as df
@@ -19,10 +20,7 @@ import time
 
 
 def main():
-    # # get board title from the terminal
-    # if len(argv) not in [1, 2, 3]:
-    #     print("Usage: python3 main.py [filename (example: <6x6_1>)]")
-    #     exit(1)
+
     
     good_boards = ['6x6_1', '6x6_2', '6x6_3', '9x9_4', '9x9_5', '9x9_6', '12x12_7']
     good_input = False
@@ -46,6 +44,12 @@ def main():
 
 
 #=====================================================================================================================#
+# def main():
+    # # get board title from the terminal
+    # if len(argv) not in [1, 2, 3]:
+    #     print("Usage: python3 main.py [filename (example: <6x6_1>)]")
+    #     exit(1)
+
     # if len(argv) == 2:
     #     board_title = f"./data/input/Rushhour{argv[1]}.csv"
     # else:
@@ -186,7 +190,7 @@ def main():
     # print(f'runtime: {round(finish - start, 2)} seconds')
     # print()
 
-      ########################### A* IO #############################
+    #   ########################### A* IO #############################
     # state.print()
     # board = Model(board_title)
 
@@ -245,36 +249,34 @@ def main():
     # print()
 
     # ######################## Hillclimber #####################
-    hc_random_nr = 10
+    # hc_random_nr = 20
 
-    hc_start = time.perf_counter()
+    # hc_start = time.perf_counter()
 
-    hillclimber = hc.Hillclimber(rushHourBoard)
-    hc_moves = hillclimber.run(hc_random_nr)
-    print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
+    # max_score = 25
+    # low_max_score = 9
+    # max_val = 6000
+    # max_plus = 8
+    # low_max_plus = 1
+    # max_val_plus = 1200
+    # hillclimber = hc.Hillclimber(rushHourBoard)
+    # hc_moves = hillclimber.run(hc_random_nr, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus)
+    # print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
 
-    hc_finish = time.perf_counter()
+    # hc_finish = time.perf_counter()
     
-    print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
+    # print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
+    # print(f'max_score = {max_score} low_max_score = {low_max_score} max_val = {max_val} max_plus = {max_plus} low_max_plus = {low_max_plus} max_val_plus = {max_val_plus}')
 
-def random():
-    pass
+    # output.export_to_csv(hc_moves, './data/output/output.csv')
 
-def depth_first():
-    pass
+    ######################## Visualisation #####################
 
-def breadth_first():
-    pass
-
-def iterative_deepening():
-    pass
-
-def a_star():
-    pass
-
-def hillclimber():
-    pass
-
+    # vizBoard = Model(board_title)
+    # vizBoard.moves = hc_moves[1:]
+    
+    # viz = Game(vizBoard)
+    # viz.run()
 
 if __name__ == "__main__":
 
