@@ -155,15 +155,15 @@ def main():
 
     ########################### A* #############################
 
-    # start = time.perf_counter()
+    start = time.perf_counter()
 
-    # a_star = ast.A_star(rushHourBoard)
-    # moves = a_star.run()
-    # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
+    a_star = ast.A_star(rushHourBoard)
+    moves = a_star.run()
+    print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
 
-    # finish = time.perf_counter()
-    # print(f'runtime: {round(finish - start, 2)} seconds')
-    # print()
+    finish = time.perf_counter()
+    print(f'runtime: {round(finish - start, 2)} seconds')
+    print()
 
       ########################### A* IO #############################
     # state.print()
@@ -212,16 +212,16 @@ def main():
 
     ######################## Breadth First #####################
 
-    bf_start = time.perf_counter()
+    # bf_start = time.perf_counter()
 
-    breadth_first = bf.Breadth_first(rushHourBoard)
-    bf_moves = breadth_first.run()
-    print(f'Breadth First found a solution in {len(bf_moves) - 1} moves.')
+    # breadth_first = bf.Breadth_first(rushHourBoard)
+    # bf_moves = breadth_first.run()
+    # print(f'Breadth First found a solution in {len(bf_moves) - 1} moves.')
 
-    bf_finish = time.perf_counter()
+    # bf_finish = time.perf_counter()
     
-    print(f'runtime V2: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
-    print()
+    # print(f'runtime V2: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
+    # print()
 
     # ######################## Hillclimber #####################
     # hc_random_nr = 20
@@ -248,7 +248,7 @@ def main():
     ######################## Visualisation #####################
 
     vizBoard = Model(board_title)
-    vizBoard.moves = bf_moves[1:]
+    vizBoard.moves = moves[1:]
     
     viz = Game(vizBoard)
     viz.run()
