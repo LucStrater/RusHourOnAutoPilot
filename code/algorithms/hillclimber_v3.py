@@ -194,12 +194,6 @@ class Hillclimber:
             return True
         
         return False
-    
-
-    # def is_finishable(self):
-    #     """
-
-    #     """
 
 
     def clean_finish(self):
@@ -414,9 +408,6 @@ class Hillclimber:
     
         ### CLEAN FINISH
         self.clean_finish()
-
-        for move in self.model.moves:
-            print(move)
 
         ### FINAL CHECK
         if not self.check_solution():

@@ -7,7 +7,7 @@ from sys import argv
 # from code.algorithms import iterative_deepening as id
 from code.algorithms import depth_first_v3 as df
 from code.algorithms import breadth_first_v3 as bf
-from code.algorithms import iterative_deepening_v3 as id
+from code.algorithms import iterative_deepening_v3 as itd
 from code.algorithms import randomise_v3 as rd
 from code.algorithms import hillclimber_v3 as hc
 from code.algorithms import a_star_v3 as ast
@@ -21,28 +21,206 @@ import time
 
 def main():
 
+    rushHourBoard = get_board()
+
+    algorithm = get_algorithm()
     
+    if algorithm == 'randomise':
+        # user input number of random runs?
+        moves = randomise(rushHourBoard)
+    elif algorithm == 'breadth first':
+        # user input maximum depth?
+        moves = breadth_first(rushHourBoard)
+    elif algorithm == 'depth first':
+        moves = depth_first(rushHourBoard)
+    elif algorithm == 'iterative deepening':
+        moves = iterative_deepening(rushHourBoard)
+    elif algorithm == 'a*':
+        moves = a_star(rushHourBoard)
+    elif algorithm == 'hill climber':
+        moves = hillclimber(rushHourBoard)
+
+    output.export_to_csv(moves, './data/output/output.csv')
+
+def get_board():
+    """
+    Gets the board from the user
+    """
     good_boards = ['6x6_1', '6x6_2', '6x6_3', '9x9_4', '9x9_5', '9x9_6', '12x12_7']
     good_input = False
     
     print('Welcome to RusHourOnAutoPilot!\n\nAvailable Boards:\n6x6: 1, 2, 3\n9x9: 4, 5, 6\n12x12: 7', end='\n\n')
+
     while not good_input:
-        print('Type "<size>_<number>" for the board you want to solve (e.g. "6x6_1"), or type "new" to generate a random new board', end='\n\n')
-        board = input('Which board would you like to solve? ')
+        board = input('Type "<size>_<number>" for the board you want to solve (e.g. "6x6_1"),\n or type "new" to generate a random new board.\n')
 
         if board in good_boards:
-            board_title = f"./data/input/Rushhour{board}.csv"
+            board_title = f'./data/input/Rushhour{board}.csv'
+            rushHourBoard = Model(board_title)
             good_input = True
-        elif board == "new":
+        elif board == 'new':
+            pass
+        else:
+            continue
+    
+    return rushHourBoard
+
+
+def get_algorithm():
+    """
+    Gets the algorithm from the user
+    """
+    good_algorithms = ['randomise', 'breadth first', 'depth first', 'iterative deepening', 'a*', 'hill climber']
+    good_input = False
+
+    print('\nAvailable algorithms:\n\nRandomise\nBreadth First\nDepth First\nIterative Deepening\nA*\nHill Climber\n')
+
+    while not good_input:
+        algorithm = input('Type the name of the algorithm you want to use: ')
+
+        if algorithm.lower() in good_algorithms:
+            return algorithm.lower()
+        
+        print('Error: invalid name. Please make sure the name is spelled correctly, including any spaces.', end='\n\n')
+
+
+def randomise(rushHourBoard):
+    """
+    Solve the board using the Randomise algorithm (see randomise.py for details)
+    """
+    print('\nRandomise start', end='\n\n')
+    start = time.perf_counter()
+
+    randomise = rd.Randomise(rushHourBoard)
+    moves = randomise.run()
+
+    finish = time.perf_counter()
+    print(f'Randomise found a solution in {len(moves) - 1} moves. See data.output.output.csv')
+    print(f'Run time: {round(finish - start, 2)} seconds', end = '\n\n')
+
+    return moves
+
+
+def breadth_first(rushHourBoard):
+    """
+    Solve the board using the Breadth First algorithm (see breadth_first.py for details)
+    """
+    print('\nBreadth First start', end='\n\n')
+    start = time.perf_counter()
+
+    breadth = bf.Breadth_first(rushHourBoard)
+    moves = breadth.run()
+
+    finish = time.perf_counter()
+    print(f'Breadth First found a solution in {len(moves) - 1} moves. See data.output.output.csv')
+    print(f'Run time: {round(finish - start, 2)} seconds', end = '\n\n')
+
+    return moves
+
+
+def depth_first(rushHourBoard):
+    """
+    Solve the board using the Depth First algorithm (see depth_first.py for details)
+    """
+    good_input = False
+    while not good_input:
+        try:
+            max_depth = int(input('Maximum depth: '))
+            if max_depth > 0:
+                good_input = True
+                continue
+        except ValueError:
             pass
 
-    rushHourBoard = Model(board_title)
+        print('\nPlease type a positive number.\n')
+
+    print('\nDepth First start', end='\n\n')
+    start = time.perf_counter()
+
+    depth = df.DepthFirst(rushHourBoard)
+    moves = depth.run(max_depth)
+
+    finish = time.perf_counter()
+    print(f'Depth First found a solution in {len(moves) - 1} moves. See data.output.output.csv')
+    print(f'Run time: {round(finish - start, 2)} seconds', end = '\n\n')
+
+    return moves
 
 
+def iterative_deepening(rushHourBoard):
+    """
+    Solve the board using the Iterative Deepening algorithm (see iterative_deepening.py for details)
+    """
+    print('\nIterative Deepening start', end='\n\n')    
+    start = time.perf_counter()
+
+    it_deep = itd.Iterative_deepening(rushHourBoard)
+    moves = it_deep.run()
+
+    finish = time.perf_counter()
+    print(f'Iterative Deepening found a solution in {len(all_moves) - 1} moves. See data.output.output.csv')
+    print(f'Run time: {round(finish - start, 2)} seconds', end = '\n\n')
+
+    return moves
 
 
+def a_star(rushHourBoard):
+    """
+    Solve the board using the A* algorithm (see a_star.py for details)
+    """
+    print('\nA* start', end='\n\n')  
+    start = time.perf_counter()
+
+    a_star = ast.A_star(rushHourBoard)
+    moves = a_star.run()
+
+    finish = time.perf_counter()
+    print(f'A* found a solution in {len(moves) - 1} moves. See data.output.output.csv')
+    print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
+
+    return moves
 
 
+def hillclimber(rushHourBoard):
+    """
+    Solve the board using the Hill Climber algorithm (see hill_climber.py for details)
+    """
+    good_input = False
+    while not good_input:
+        try:
+            random_nr = int(input('Number of random runs: '))
+            max_score = int(input('Maximum allowed heuristic score: '))
+            low_max_score = int(input('Maximum allowed heuristic score after failed A* search: '))
+
+            if random_nr > 0 and max_score > 0 and low_max_score > 0:
+                good_input = True
+                continue
+        except ValueError:
+            pass
+        
+        print('\nPlease type positive numbers.\n')
+
+    ### dit ook inputten?
+    max_val = 6000
+    max_plus = 8
+    low_max_plus = 1
+    max_val_plus = 1200
+
+    print('\nHill climber start', end='\n\n') 
+    start = time.perf_counter()
+
+    hillclimber = hc.Hillclimber(rushHourBoard)
+    moves = hillclimber.run(random_nr, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus)
+
+    finish = time.perf_counter()
+    print(f'Hillclimber found solution in {len(moves) - 1} moves. See data.output.output.csv')
+    print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
+
+    return moves
+
+
+if __name__ == "__main__":
+    main()
 #=====================================================================================================================#
 # def main():
     # # get board title from the terminal
@@ -278,6 +456,4 @@ def main():
     # viz = Game(vizBoard)
     # viz.run()
 
-if __name__ == "__main__":
 
-    main()

@@ -46,12 +46,12 @@ class DepthFirst():
                     self.stack.append(new_model)
 
 
-    def run(self):
+    def run(self, depth):
         # repeat untill the stack is empty
         while len(self.stack) > 0:
             # take the board at the top of the stack
             state = self.get_next_state()
-            depth = 16
+            # depth = 16
 
             # if the current board is a solution save it
             if state.is_solution():
