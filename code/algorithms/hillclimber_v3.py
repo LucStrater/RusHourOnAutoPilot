@@ -266,7 +266,7 @@ class Hillclimber:
         return tracer
 
 
-    def run_a_star(self):
+    def run_a_star(self, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus):
         """
 
         """
@@ -276,6 +276,7 @@ class Hillclimber:
 
         max_score = 20
         count = 0
+        
         
         while True:
             # if count % 5 == 0:
@@ -289,14 +290,14 @@ class Hillclimber:
 
             # run A* from start to goal
             a_star_io = asio.A_star(start_board, goal_model)
-            a_star_board = a_star_io.run_hillclimber()
+            a_star_board = a_star_io.run_hillclimber(max_val)
 
             # no solution was found
             if a_star_board == None:
                 # print('None found')
 
                 # adjust max allowed heuristic score
-                max_score = 8
+                max_score = low_max_score
 
                 # move the board one step along the established path
                 old_position = state_archive[start_board.get_tuple()] + 1
@@ -319,7 +320,7 @@ class Hillclimber:
         self.model.moves = a_star_board.moves
 
 
-    def run(self, random_nr):
+    def run(self, random_nr, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus):
         """
         Run hillclimber state trace
         """
@@ -356,11 +357,15 @@ class Hillclimber:
         ### A*
         start = time.perf_counter()
 
+
         count = 1
         while True:
             start_len = len(self.model.moves)
-            self.run_a_star()
+            self.run_a_star(max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus)
             finish_len = len(self.model.moves)
+            max_score += max_plus
+            max_val += max_val_plus
+
 
             if finish_len == start_len:
                 break
@@ -370,6 +375,9 @@ class Hillclimber:
 
         finish = time.perf_counter()
         print(f'Runtime A*: {round(finish - start, 2)}', end='\n\n')
+
+        for move in self.model.moves:
+            print(move)
     
 
         ### BREADTH FIRST SHORTENING

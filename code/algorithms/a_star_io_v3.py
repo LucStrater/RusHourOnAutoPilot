@@ -88,7 +88,7 @@ class A_star:
         return state.moves
 
 
-    def run_hillclimber(self):
+    def run_hillclimber(self, max_val):
         counter = 0
         while True:
             state = self.get_next_state()
@@ -98,7 +98,7 @@ class A_star:
                 # print(counter)
                 return state
             
-            if counter > 400:
+            if counter > max_val:
                 return None
 
             # save states to archive
