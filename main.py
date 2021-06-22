@@ -1,4 +1,5 @@
 from code.classes.model import Model
+from code.classes.generate_v3 import Generate
 # from code.classes.board import Board
 # from code.algorithms import randomise, greedy
 from sys import argv
@@ -31,6 +32,7 @@ def main():
 
     # init the board
     rushHourBoard = Model(board_title)
+    # board = Generate(12)
 
     # ########################### Randomise ###########################
     # start = time.perf_counter()
@@ -152,7 +154,7 @@ def main():
     # print(f'runtime depth first: {round(finish - start, 2)} seconds')
     # print()
 
-    ########################### A* #############################
+    # ########################## A* #############################
 
     # start = time.perf_counter()
 
@@ -164,15 +166,25 @@ def main():
     # print(f'runtime: {round(finish - start, 2)} seconds')
     # print()
 
-      ########################### A* IO #############################
-    # state.print()
-    # board = Model(board_title)
+     ########################## A* IO#############################
 
     # start = time.perf_counter()
 
-    # a_star_io = asio.A_star(board, state)
-    # moves = a_star_io.run()
-    # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
+    # a_star = ast.A_star(rushHourBoard)
+    # board2 = a_star.run()
+    # print(f"best solution for A*: {board2.moves}. This takes {len(board2.moves) - 1} moves.")
+
+    # finish = time.perf_counter()
+    # print(f'runtime: {round(finish - start, 2)} seconds')
+    # print()
+   
+    # board1 = Model(board_title)
+
+    # start = time.perf_counter()
+
+    # a_star_io = asio.A_star(board1, board2)
+    # moves = a_star_io.run(50000).moves
+    # print(f"best solution for A* IO: {moves}. This takes {len(moves) - 1} moves.")
 
     # finish = time.perf_counter()
     # print(f'runtime: {round(finish - start, 2)} seconds')
@@ -222,27 +234,27 @@ def main():
     # print(f'runtime V2: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
     # print()
 
-    # ######################## Hillclimber #####################
-    hc_random_nr = 10
+    # # ######################## Hillclimber #####################
+    # hc_random_nr = 100
 
-    hc_start = time.perf_counter()
+    # hc_start = time.perf_counter()
 
-    max_score = 24
-    low_max_score = 9
-    max_val = 5000
-    max_plus = 8
-    low_max_plus = 1
-    max_val_plus = 900
-    hillclimber = hc.Hillclimber(rushHourBoard)
-    hc_moves = hillclimber.run(hc_random_nr, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus)
-    print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
+    # max_score = 20
+    # low_max_score = 7
+    # max_val = 500
+    # max_plus = 8
+    # low_max_plus = 1
+    # max_val_plus = 900
+    # hillclimber = hc.Hillclimber(rushHourBoard)
+    # hc_moves = hillclimber.run(hc_random_nr, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus)
+    # print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
 
-    hc_finish = time.perf_counter()
+    # hc_finish = time.perf_counter()
     
-    print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
-    print(f'max_score = {max_score} low_max_score = {low_max_score} max_val = {max_val} max_plus = {max_plus} low_max_plus = {low_max_plus} max_val_plus = {max_val_plus}')
+    # print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
+    # print(f'max_score = {max_score} low_max_score = {low_max_score} max_val = {max_val} max_plus = {max_plus} low_max_plus = {low_max_plus} max_val_plus = {max_val_plus}')
 
-    output.export_to_csv(hc_moves, './data/output/output.csv')
+    # output.export_to_csv(hc_moves, './data/output/output.csv')
 
 if __name__ == "__main__":
 

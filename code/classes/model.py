@@ -12,6 +12,7 @@ class Model:
         self.load_matrix(source_file)
         self.moves = [('car', 'move')]
         self.score = 1000
+        self.fifo_score = 1
 
 
     def load_matrix(self, source_file):
@@ -203,4 +204,28 @@ class Model:
         Get the tuple of the matrix.
         """
         return tuple([tuple(i) for i in self.matrix])
+
+    def __lt__(self, obj):
+        """self < obj."""
+        return self.score < obj.score or (self.score == obj.score and self.fifo_score < obj.fifo_score)
+
+    def __le__(self, obj):
+        """self <= obj."""
+        return self.score <= obj.score or (self.score == obj.score and self.fifo_score <= obj.fifo_score)
+
+    def __eq__(self, obj):
+        """self == obj."""
+        return self.score == obj.score and self.fifo_score == obj.fifo_score
+
+    def __ne__(self, obj):
+        """self != obj."""
+        return self.score != obj.score and self.fifo_score != obj.fifo_score
+
+    def __gt__(self, obj):
+        """self > obj."""
+        return self.score > obj.score or (self.score == obj.score and self.fifo_score > obj.fifo_score)
+
+    def __ge__(self, obj):
+        """self >= obj."""
+        return self.score >= obj.score or (self.score == obj.score and self.fifo_score >= obj.fifo_score)
         

@@ -1,4 +1,3 @@
-from code.algorithms import randomise_a_star as ras
 from queue import PriorityQueue
 import itertools
 
@@ -8,23 +7,23 @@ class A_star:
     """
 
     def __init__(self, model):
-        self.model = model
+        # save the start model
+        self.model = model.copy()
+
+        # initialise the priority queue 
+        self.open = PriorityQueue()
+        self.open.put(self.model)
         self.counter = itertools.count(0, -1)
 
-        # initialise the open / closed list
-        self.open = PriorityQueue()
-        self.open.put((1000, 1000, self.model))
-
+        # initialise archives
         self.closed = set()
         self.open_set = set()
-        self.open_set.add(self.model)
 
     def get_next_state(self):
         """
-        Method that gets the board with the lowest score from open
+        Method that gets the board with the lowest score from open.
         """
-
-        return self.open.get()[2]
+        return self.open.get()
 
     def calculate_h1_score(self, model):
         """
@@ -34,7 +33,7 @@ class A_star:
 
     def calculate_h2_score(self, model):
         """
-        Blockers: Heuristic based on the number of cars in the row of the winning car
+        Blockers: Heuristic based on the number of cars in the row of the winning car.
         """
         filled_spots = 0
     
@@ -46,7 +45,7 @@ class A_star:
 
     def calculate_h3_score(self, model):
         """
-        BlockersLowerBound: Heuristic based on heuristic 2 plus the minimum number of cars that block these cars
+        BlockersLowerBound: Heuristic based on heuristic 2 plus the minimum number of cars that block these cars.
         """
         score = 0
 
@@ -78,7 +77,7 @@ class A_star:
 
     def create_children(self, model):
         """
-        Create the children of the current model
+        Create the children of the current model.
         """
         # get current possibilities of all cars on board
         for car in self.model.get_cars():
@@ -98,21 +97,25 @@ class A_star:
                 # For matrix form, turn list of lists into tuple of tuples, such that matrix is hashable
                 matrix_tuple = new_model.get_tuple()
 
-                # if this model has not been reached put it on the stack
+                # if this model has not been reached put it in the priority queque 
                 if (matrix_tuple not in self.closed) and (matrix_tuple not in self.open_set):
-                    score = len(new_model.moves) + self.calculate_h3_score(new_model)
-                    self.open.put((score, next(self.counter), new_model))
+                    new_model.score = len(new_model.moves) + self.calculate_h3_score(new_model)
+                    new_model.fifo_score = next(self.counter)
+                    self.open.put(new_model)
                     self.open_set.add(matrix_tuple)
 
 
     def run(self):
-        counter = 0
+        """
+        Run the A* algoritm.
+        """
+        # do-while loop which stops if a solution is found
         while True:
+            # get the state with the lowest score
             state = self.get_next_state()
-            counter += 1
+            
             # stop loop if a solution is found
             if state.is_solution():
-                print(counter)
                 break
 
             # save states to archive
