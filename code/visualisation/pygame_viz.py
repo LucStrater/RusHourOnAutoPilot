@@ -17,11 +17,11 @@ class Game:
         self.screen = pygame.display.set_mode((self.boardSide,self.boardSide))
         self.colors = {}
 
-        self.red = 255,0,0
+        self.red = 222,0,0
         self.green = 0,255,0
-        self.blue = 0,0,255
+        self.blue = 32,0,237
         self.black = 0,0,0
-        self.yellow = 255,255,0
+        self.yellow = 237,229,0
 
             
     def setup(self):
@@ -30,7 +30,7 @@ class Game:
         """
         pygame.init()
         screen = self.screen
-        screen.fill((255,255,255)) # make background white
+        screen.fill((240,240,240)) # make background white
         count = 0
         inter_car_gap = 10
         
@@ -75,6 +75,7 @@ class Game:
 
         """
         for move in self.model.moves:
+            pygame.event.get()
             car = self.model.board.cars[move[0]]
             self.model.update_matrix(car, move[1])
             self.setup()

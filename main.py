@@ -155,17 +155,17 @@ def main():
 
     ########################### A* #############################
 
-    start = time.perf_counter()
+    # start = time.perf_counter()
 
-    a_star = ast.A_star(rushHourBoard)
-    moves = a_star.run()
-    print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
+    # a_star = ast.A_star(rushHourBoard)
+    # moves = a_star.run()
+    # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
 
-    finish = time.perf_counter()
-    print(f'runtime: {round(finish - start, 2)} seconds')
-    print()
+    # finish = time.perf_counter()
+    # print(f'runtime: {round(finish - start, 2)} seconds')
+    # print()
 
-      ########################### A* IO #############################
+    #   ########################### A* IO #############################
     # state.print()
     # board = Model(board_title)
 
@@ -224,31 +224,31 @@ def main():
     # print()
 
     # ######################## Hillclimber #####################
-    # hc_random_nr = 20
+    hc_random_nr = 20
 
-    # hc_start = time.perf_counter()
+    hc_start = time.perf_counter()
 
-    # max_score = 25
-    # low_max_score = 9
-    # max_val = 6000
-    # max_plus = 8
-    # low_max_plus = 1
-    # max_val_plus = 1200
-    # hillclimber = hc.Hillclimber(rushHourBoard)
-    # hc_moves = hillclimber.run(hc_random_nr, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus)
-    # print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
+    max_score = 25
+    low_max_score = 9
+    max_val = 6000
+    max_plus = 8
+    low_max_plus = 1
+    max_val_plus = 1200
+    hillclimber = hc.Hillclimber(rushHourBoard)
+    hc_moves = hillclimber.run(hc_random_nr, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus)
+    print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
 
-    # hc_finish = time.perf_counter()
+    hc_finish = time.perf_counter()
     
-    # print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
-    # print(f'max_score = {max_score} low_max_score = {low_max_score} max_val = {max_val} max_plus = {max_plus} low_max_plus = {low_max_plus} max_val_plus = {max_val_plus}')
+    print(f'runtime: {round(hc_finish - hc_start, 2)} seconds', end = '\n\n')
+    print(f'max_score = {max_score} low_max_score = {low_max_score} max_val = {max_val} max_plus = {max_plus} low_max_plus = {low_max_plus} max_val_plus = {max_val_plus}')
 
-    # output.export_to_csv(hc_moves, './data/output/output.csv')
+    output.export_to_csv(hc_moves, './data/output/output.csv')
 
     ######################## Visualisation #####################
 
     vizBoard = Model(board_title)
-    vizBoard.moves = moves[1:]
+    vizBoard.moves = hc_moves[1:]
     
     viz = Game(vizBoard)
     viz.run()

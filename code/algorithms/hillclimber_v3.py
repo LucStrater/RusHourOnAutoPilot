@@ -194,7 +194,43 @@ class Hillclimber:
             return True
         
         return False
+    
 
+    # def is_finishable(self):
+    #     """
+
+    #     """
+
+
+    def clean_finish(self):
+        """
+
+        """
+        tracer = self.model.copy()
+        tracer.moves = [('car','move')]
+        count = 1
+        red_car = self.model.board.cars['X']
+        win_col = self.model.board.board_len - 1
+
+        while not tracer.is_solution():
+            possibilities = tracer.get_possibilities(red_car)
+
+            for move in possibilities:
+                red_car_col = tracer.get_car_pos(red_car)[1]
+                
+                if red_car_col + move == win_col:
+                    tracer.update_matrix(red_car, move)
+                    tracer.add_move(red_car.cid, move)
+                    continue
+            
+            given_move = self.model.moves[count]
+            car = tracer.board.cars[given_move[0]]
+            tracer.update_matrix(car, given_move[1])
+            tracer.add_move(car.cid, given_move[1])
+            count += 1
+        
+        self.model.moves = tracer.moves
+            
 
     def heuristic(self, model, goal_model):
         """   
@@ -243,7 +279,7 @@ class Hillclimber:
         # furthest removed state with acceptable heuristic score
         counter = 0
         #hier ook het eind bord meenemen!
-        score = self.heuristic(start_board, tracer)
+        score = self.heuristic_2(start_board, tracer)
         if score <= max_score:
             new_moves = tracer.moves[:len(tracer.moves) - counter]
             tracer.moves = new_moves
@@ -254,7 +290,7 @@ class Hillclimber:
             move = tracer.moves[i]
             tracer.update_matrix(tracer.board.cars[move[0]], move[1] * -1)
             
-            score = self.heuristic(start_board, tracer)
+            score = self.heuristic_2(start_board, tracer)
             if score <= max_score:
                 # print('max found')
                 # print(counter)
@@ -375,15 +411,12 @@ class Hillclimber:
 
         finish = time.perf_counter()
         print(f'Runtime A*: {round(finish - start, 2)}', end='\n\n')
+    
+        ### CLEAN FINISH
+        self.clean_finish()
 
         for move in self.model.moves:
             print(move)
-    
-
-        ### BREADTH FIRST SHORTENING
-        # state_archive = self.bf_archive()
-        # bf_depth = 3
-        # self.bf_shortening(state_archive, bf_depth)
 
         ### FINAL CHECK
         if not self.check_solution():
