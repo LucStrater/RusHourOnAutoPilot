@@ -39,7 +39,7 @@ class Randomise():
 
         return self.model.moves
 
-    def legal_check(self):
+    def legal_check(self, max_counter):
         """
         Make random moves until the board is solved for generating boards.
         """
@@ -48,7 +48,7 @@ class Randomise():
         while not self.model.is_solution():
             self.random_move()
 
-            if counter > 50000:
+            if counter > max_counter:
                 return False
 
             counter += 1

@@ -1,11 +1,7 @@
 from code.classes.model import Model
 from code.classes.generate_v3 import Generate
-# from code.classes.board import Board
 from code.visualisation.pygame_viz import Game
-# from code.algorithms import randomise, greedy
 from sys import argv
-# from code.algorithms import depth_first as df
-# from code.algorithms import iterative_deepening as id
 from code.algorithms import depth_first_v3 as df
 from code.algorithms import breadth_first_v3 as bf
 from code.algorithms import iterative_deepening_v3 as id
@@ -13,9 +9,6 @@ from code.algorithms import randomise_v3 as rd
 from code.algorithms import hillclimber_v3 as hc
 from code.algorithms import a_star_v3 as ast
 from code.algorithms import a_star_io_v3 as asio
-# from code.algorithms import pruned_a_star as pas
-# from code.algorithms import breadth as bf
-# from code.algorithms import randomise_a_star as ras
 from code.output import output
 import time
 

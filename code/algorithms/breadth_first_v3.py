@@ -3,7 +3,9 @@ from code.classes.car_v3 import Car
 import queue
 
 class Breadth_first:
-
+    """
+    A breath first approach to solving a rush hour game.
+    """
     def __init__(self, model):
         self.start = model
         self.q = queue.Queue()
@@ -72,9 +74,6 @@ class Breadth_first_hillclimber(Breadth_first):
         self.archive = {}
         self.archive[self.start.get_tuple()] = len(self.start.moves)
         self.found = {}
-
-        # self.prior_length = len(self.start.moves)
-        # self.start.moves = []
     
 
     def log_children(self, children):
@@ -102,11 +101,7 @@ class Breadth_first_hillclimber(Breadth_first):
         """
         matrix = child.get_tuple()
 
-        # total_moves = self.prior_length + len(child.moves)
-
         if matrix in self.finish_boards and len(child.moves) < self.finish_boards[matrix]:
-
-            # print(f'{self.finish_boards[matrix]} to {len(child.moves)}')
             
             return self.finish_boards[matrix]
         return None
@@ -127,8 +122,6 @@ class Breadth_first_hillclimber(Breadth_first):
             children = self.make_children(state)
             self.log_children(children)
 
-        # print(self.found)
-        # input()
         min_depth = 0
         winner = None
         for contender in self.found.values():

@@ -2,10 +2,13 @@ from .depth_first_v3 import DepthFirst
 import copy
 
 class Iterative_deepening(DepthFirst):
-
+    """
+    Iterative deepening algorithm for solving rush hour boards.
+    """
     def run(self):
         depth = 1
 
+        # run till a solution is found
         while not self.solutions:
             self.stack = [self.model.copy()]
             self.archive = {}
@@ -27,7 +30,6 @@ class Iterative_deepening(DepthFirst):
                     # save states to archive
                     self.archive[state.get_tuple()] = len(state.moves)
             
-            # print(f"Depth {depth} is done")
             depth += 1
 
         # return the best solution found

@@ -194,17 +194,11 @@ class Hillclimber:
             return True
         
         return False
-    
-
-    # def is_finishable(self):
-    #     """
-
-    #     """
 
 
     def clean_finish(self):
         """
-
+        Take the solution and implement a greedy for the last step of moving the red car to the exit if it can.
         """
         tracer = self.model.copy()
         tracer.moves = [('car','move')]
@@ -230,23 +224,9 @@ class Hillclimber:
             count += 1
         
         self.model.moves = tracer.moves
-            
+
 
     def heuristic(self, model, goal_model):
-        """   
-        Distance to goal: with a given solution from a random algorithm determine the distance of every car to its final position
-        """ 
-        score = 0
-
-        for car in self.cars:
-            row_model, column_model = model.get_car_pos(car)
-            row_goal, column_goal = goal_model.get_car_pos(car)
-            score += abs(row_model - row_goal) + abs(column_model - column_goal)
-
-        return score
-
-
-    def heuristic_2(self, model, goal_model):
         """   
         Distance to goal: with a given solution from a random algorithm determine the distance of every car to its final position
         """ 
@@ -292,13 +272,10 @@ class Hillclimber:
             
             score = self.heuristic_2(start_board, tracer)
             if score <= max_score:
-                # print('max found')
-                # print(counter)
                 new_moves = tracer.moves[:len(tracer.moves) - counter]
                 tracer.moves = new_moves
                 break
 
-        # print(f'goal - {state_archive[tracer.get_tuple()]}')
         return tracer
 
 
@@ -315,14 +292,9 @@ class Hillclimber:
         
         
         while True:
-            # if count % 5 == 0:
-            #     print(f'--- {count} A* ---')
             count += 1
             # get the best goal state
             goal_model = self.find_good_goal(start_board, max_score, state_archive)
-            # start_board.print()
-            # goal_model.print()
-            # input()
 
             # run A* from start to goal
             a_star_io = asio.A_star(start_board, goal_model)
@@ -330,7 +302,6 @@ class Hillclimber:
 
             # no solution was found
             if a_star_board == None:
-                # print('None found')
 
                 # adjust max allowed heuristic score
                 max_score = low_max_score
@@ -345,7 +316,6 @@ class Hillclimber:
             
             # reset max allowed heuristic score after A* found
             max_score = 20
-            # print(len(a_star_board.moves))
             
             # stop when solution has been found
             if a_star_board.is_solution():
