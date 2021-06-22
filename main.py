@@ -1,6 +1,7 @@
 from code.classes.model import Model
 from code.classes.generate_v3 import Generate
 # from code.classes.board import Board
+from code.visualisation.pygame_viz import Game
 # from code.algorithms import randomise, greedy
 from sys import argv
 # from code.algorithms import depth_first as df
@@ -255,6 +256,14 @@ def main():
     # print(f'max_score = {max_score} low_max_score = {low_max_score} max_val = {max_val} max_plus = {max_plus} low_max_plus = {low_max_plus} max_val_plus = {max_val_plus}')
 
     # output.export_to_csv(hc_moves, './data/output/output.csv')
+
+    ######################## Visualisation #####################
+
+    vizBoard = Model(board_title)
+    vizBoard.moves = hc_moves[1:]
+    
+    viz = Game(vizBoard)
+    viz.run()
 
 if __name__ == "__main__":
 
