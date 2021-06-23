@@ -4,6 +4,9 @@ import itertools
 class A_star:
     """
     An A* algorithm that finds the shortest path between two given rush hour configurations.
+    This algorithm makes all possible children of a state and calculates a score for each
+    using a heuristic. Based on these scores it chooses the best move to make. This process
+    is repeated until the goal state is found. It is guaranteed to give the optimal solution.
     """
 
     def __init__(self, start, goal):
@@ -23,17 +26,20 @@ class A_star:
         # load the list of cars
         self.cars = self.start.get_cars()
 
+
     def get_next_state(self):
         """
         Method that gets the board with the lowest score from open
         """
         return self.open.get()
 
+
     def heuristic(self, model):
         """   
         Distance to goal: with a given goal board determine how many cars are not on its final position.
         """ 
         score = 0
+
 
         # check if car is in goal position: if not, increment heuristic score by 1
         for car in self.cars:
@@ -43,6 +49,7 @@ class A_star:
                 score += 1
 
         return score
+
 
     def create_children(self, model):
         """
@@ -65,6 +72,7 @@ class A_star:
                     new_model.fifo_score = next(self.counter)
                     self.open.put(new_model)
                     self.open_set.add(matrix_tuple)
+
 
     def run(self, max_val):
         """

@@ -4,8 +4,22 @@ import copy
 class Iterative_deepening(DepthFirst):
     """
     Iterative deepening algorithm for solving rush hour boards.
+    This algorithm goes depth first through the entire state space below a certain depth. This depth starts at 0
+    and increments by one after each DF run. It is guaranteed to find the best solution. 
+    It may take a lot of time for larger state spaces.
     """
+
+    def __init__(self, model):
+        self.model = model.copy()
+        self.stack = [self.model]
+        self.archive = {}
+        self.solutions = []
+
+
     def run(self):
+        """
+        Goes depth first through all possible moves until a solution was found or the maximum depth has been reached.
+        """
         depth = 1
 
         while not self.solutions:

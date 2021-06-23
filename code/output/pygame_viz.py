@@ -1,4 +1,5 @@
 # ACKNOWLEDGEMENT
+# The code for Game class is based on the code as written by Noah-Giustini. Link: https://github.com/Noah-Giustini/RushHour
 
 # hide pygame standard welcome message
 from os import environ
@@ -7,9 +8,9 @@ environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 import time
 
-class Game:
+class Visualizer:
     """
-    The Game class simulates the steps found by one of the algorithms. 
+    The Visualizer class simulates the steps found by one of the algorithms. 
     """
     def __init__(self, model):
         self.model = model
