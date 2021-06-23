@@ -85,9 +85,7 @@ class A_star:
 
             for move in car_possibilities:
                 new_model = model.copy()
-
                 new_model.update_matrix(car, move)
-
                 new_model.add_move(car.cid, move)
 
                 # Make matrix hashable

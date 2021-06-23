@@ -35,6 +35,7 @@ class A_star:
         """ 
         score = 0
 
+        # check if car is in goal position: if not, increment heuristic score by 1
         for car in self.cars:
             row_model, column_model = model.get_car_pos(car)
             row_goal, column_goal = self.goal.get_car_pos(car)
@@ -50,19 +51,12 @@ class A_star:
         # get current possibilities of all cars on board
         for car in self.start.get_cars():
             car_possibilities = model.get_possibilities(car)
-
-            # for every car loop over its possible moves
             for move in car_possibilities:
-                # copy the board of the previous board
                 new_model = model.copy()
-
-                # update new model with chosen move
                 new_model.update_matrix(car, move)
-
-                # append move made to list of moves to get to incumbent (new) model
                 new_model.add_move(car.cid, move)
 
-                # For matrix form, turn list of lists into tuple of tuples, such that matrix is hashable
+                # Make matrix hashable
                 matrix_tuple = new_model.get_tuple()
 
                 # if this model has not been reached put it in the priority queue
@@ -76,29 +70,27 @@ class A_star:
         """
         Run the A* IO till a path from the start board to the goal board is found.
         """
-        # initialise the counter
         counter = 0
 
+        solution_found = False
+
         # do-while loop that runs untill the the goal board is found
-        while True:
-            # get the state with the lowest score
+        while not solution_found:
             state = self.get_next_state()
             
-            # stop loop if the current state is equal to the goal board
             if self.heuristic(state) == 0:
-                break
+                solution_found = True
+                continue
             
-            # limit the amount of states the A star may evaluate
+            # limit the amount of states the A* may evaluate (otherwise can run out of memory)
             if counter > max_val:
                 return (False, None)
 
             # save states to archive
             self.closed.add(state.get_tuple())
-
-            # create children from current state 
+ 
             self.create_children(state)  
 
-            # increase counter
             counter += 1  
 
         return (True, state)
