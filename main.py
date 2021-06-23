@@ -122,7 +122,7 @@ def randomise(rushHourBoard):
             best = len(random_moves)
     
     finish = time.perf_counter()
-    print(f'Randomise found a solution in {len(moves) - 1} moves. See data.output.output.csv')
+    print(f'Randomise found a solution in {len(moves) - 1} moves. See output.csv file in data/output folder.')
     print(f'Run time: {round(finish - start, 2)} seconds', end = '\n\n')
 
     return moves
@@ -139,7 +139,7 @@ def breadth_first(rushHourBoard):
     moves = breadth.run()
 
     finish = time.perf_counter()
-    print(f'Breadth First found a solution in {len(moves) - 1} moves. See data.output.output.csv')
+    print(f'Breadth First found a solution in {len(moves) - 1} moves. See output.csv file in data/output folder.')
     print(f'Run time: {round(finish - start, 2)} seconds', end = '\n\n')
 
     return moves
@@ -171,7 +171,7 @@ def depth_first(rushHourBoard):
     if len(moves) == 0: 
         pass
     else:
-        print(f'Depth First found a solution in {len(moves) - 1} moves. See data.output.output.csv')
+        print(f'Depth First found a solution in {len(moves) - 1} moves. See output.csv file in data/output folder.')
         
     print(f'Run time: {round(finish - start, 2)} seconds', end = '\n\n')
 
@@ -189,7 +189,7 @@ def iterative_deepening(rushHourBoard):
     moves = it_deep.run()
 
     finish = time.perf_counter()
-    print(f'Iterative Deepening found a solution in {len(moves) - 1} moves. See data.output.output.csv')
+    print(f'Iterative Deepening found a solution in {len(moves) - 1} moves. See output.csv file in data/output folder.')
     print(f'Run time: {round(finish - start, 2)} seconds', end = '\n\n')
 
     return moves
@@ -206,7 +206,7 @@ def a_star(rushHourBoard):
     moves = a_star.run()
 
     finish = time.perf_counter()
-    print(f'A* found a solution in {len(moves) - 1} moves. See data.output.output.csv')
+    print(f'A* found a solution in {len(moves) - 1} moves.See output.csv file in data/output folder.')
     print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
 
     return moves
@@ -218,16 +218,16 @@ def hillclimber(rushHourBoard):
     """
 
     # ask if user want to choose the parameters
-    parameters = input('Do you want input custom parameters? (yes/no)')
+    parameters = input('Do you want input custom parameters? (yes/no): ')
 
     if parameters.lower() == 'yes':
         good_input = False
         while not good_input:
             try:
                 random_nr = int(input('\nNumber of random algorithm runs, (recommended 1 - 1000): '))
-                max_score = int(input('\nMaximum allowed heuristic score, (recommended 10 - 30): '))
-                low_max_score = int(input('\nMaximum allowed heuristic score after failed A* search, (recommended 5 - 10): '))
-                max_plus = int(input('\nIncrementation of the max. heuristic score after an A* iteration over the whole move set, (recommended 2 - 10): '))
+                max_score = int(input('\nMaximum allowed heuristic score, (recommended 5 - 15): '))
+                low_max_score = int(input('\nMaximum allowed heuristic score after failed A* search, (recommended 2 - 5): '))
+                max_plus = int(input('\nIncrementation of the max. heuristic score after an A* iteration over the whole move set, (recommended 1 - 5): '))
                 max_val = int(input('\nMaximum number of states one A* search is about to search, (recommended 500 - 10000): '))
                 max_val_plus = int(input('\nIncrementation of the max. nr. of states to be searched after an A* iteration over the whole move set, (recommended 500 - 1500): '))
 
@@ -240,12 +240,12 @@ def hillclimber(rushHourBoard):
             print('\nPlease enter positive numbers.\n')
     else:
         # inputs for hill climber to find good solution, "emprically tested"
-        random_nr = 50
-        max_score = 6
+        random_nr = 200
+        max_score = 8
         low_max_score = 3
-        max_plus = 1
-        max_val = 1000
-        max_val_plus = 300   
+        max_plus = 3
+        max_val = 5000
+        max_val_plus = 900  
 
     # ask how many runs they want to do
     print('\nThe best result of the Hill Climber runs will be exported to the output.csv file.')
@@ -278,7 +278,7 @@ def hillclimber(rushHourBoard):
         if run_number == 0 or len(moveset) < len(moves):
             moves = moveset
     
-    print(f"Hill Climber's best solution found was {len(moves) - 1} moves. See data.output.output.csv")        
+    print(f"Hill Climber's best solution found was {len(moves) - 1} moves. See output.csv file in data/output folder.")        
     finish = time.perf_counter()
     print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
 

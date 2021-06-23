@@ -1,5 +1,5 @@
 # ACKNOWLEDGEMENT
-# The code for Game class is based on the code as written by Noah-Giustini. Link: https://github.com/Noah-Giustini/RushHour
+# The code for Visualizer class is based on the code as written by Noah Giustini. Source: https://github.com/Noah-Giustini/RushHour
 
 # hide pygame standard welcome message
 from os import environ
