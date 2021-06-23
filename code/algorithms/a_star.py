@@ -27,13 +27,13 @@ class A_star:
 
     def calculate_h1_score(self, model):
         """
-        Zero Heuristic
+        Zero Heuristic.
         """
         return 0
 
     def calculate_h2_score(self, model):
         """
-        Blockers: Heuristic based on the number of cars in the row of the winning car.
+        "Blockers": heuristic based on the number of cars blocking the way of the red car.
         """
         filled_spots = 0
     
@@ -45,7 +45,7 @@ class A_star:
 
     def calculate_h3_score(self, model):
         """
-        BlockersLowerBound: Heuristic based on heuristic 2 plus the minimum number of cars that block these cars.
+        "BlockersLowerBound": heuristic based on heuristic 2 ("Blockers") plus the minimum number of cars that block these cars.
         """
         score = 0
 
@@ -77,7 +77,7 @@ class A_star:
 
     def create_children(self, model):
         """
-        Create the children of the current model.
+        Create the children models of the current model.
         """
         # get current possibilities of all cars on board
         for car in self.model.get_cars():
@@ -85,9 +85,7 @@ class A_star:
 
             for move in car_possibilities:
                 new_model = model.copy()
-
                 new_model.update_matrix(car, move)
-
                 new_model.add_move(car.cid, move)
 
                 # Make matrix hashable
@@ -106,18 +104,17 @@ class A_star:
         Run the A* algoritm.
         """
         # do-while loop which stops if a solution is found
-        while True:
-            # get the state with the lowest score
+        solution_found = False
+        while not solution_found:
             state = self.get_next_state()
             
-            # stop loop if a solution is found
             if state.is_solution():
-                break
+                solution_found = True
+                continue
 
             # save states to archive
             self.closed.add(state.get_tuple())
 
-            # create children
             self.create_children(state)      
 
         return state.moves

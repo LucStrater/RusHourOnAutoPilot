@@ -207,7 +207,7 @@ class Hillclimber:
         return tracer
 
 
-    def run_a_star(self, max_score, max_plus, low_max_score, max_val, max_val_plus):
+    def run_a_star(self, max_score, low_max_score, max_val):
         """
         Iterates over all states in the solution path. Finds a good goal and runs A* algorithm between the start and goal.
         When a shorter path was found, the goal becomes the start for the next iteration. 
@@ -347,7 +347,7 @@ class Hillclimber:
         improving = True
         while improving:
             start_len = len(self.model.moves)
-            self.run_a_star(max_score, max_plus, low_max_score, max_val, max_val_plus)
+            self.run_a_star(max_score, low_max_score, max_val)
             finish_len = len(self.model.moves)
 
             max_score += max_plus
