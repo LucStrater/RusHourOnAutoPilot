@@ -1,6 +1,6 @@
 from code.classes.model import Model
 from code.classes.generate import Generate
-# from code.visualisation.pygame_viz import Game
+from code.output.pygame_viz import Game
 from sys import argv
 from code.algorithms import depth_first as df
 from code.algorithms import breadth_first as bf
@@ -21,7 +21,6 @@ def main():
     algorithm = get_algorithm()
     
     if algorithm == 'randomise':
-        # user input number of random runs?
         moves = randomise(rushHourBoard)
     elif algorithm == 'breadth first':
         # user input maximum depth?
@@ -33,16 +32,16 @@ def main():
     elif algorithm == 'a*':
         moves = a_star(rushHourBoard)
     elif algorithm == 'hill climber':
-        run_optimal = input('Do you want to run hillclimber optimal solution? (yes/no || warning: optimal takes very long): ')
+        run_optimal = input('Do you want to construct custom hillclimber inputs? (yes/no - warning: choosing "no" leads to good but slow solution): ')
         run_optimal = run_optimal.lower()
         if run_optimal.lower() == 'yes':
             moves = hillclimber(rushHourBoard, True)
-        moves = hillclimber(rushHourBoard, False)
-
-    run_visualisation(vizBoard, moves)
+        else:
+            moves = hillclimber(rushHourBoard, False)
 
     output.export_to_csv(moves, './data/output/output.csv')
 
+    run_visualisation(vizBoard, moves)
 
 def get_board():
     """
@@ -88,14 +87,34 @@ def get_algorithm():
 
 def randomise(rushHourBoard):
     """
-    Solve the board using the Randomise algorithm (see randomise.py for details)
+    Saves the best solution out of an inputted number of runs of the Randomise algorithm (see randomise.py for details)
     """
+    print('\nRandomise gives the best result of a number of random runs.')
+    good_input = False
+    while not good_input:
+        try:
+            nr_runs = int(input('Number of random runs: '))
+            if nr_runs > 0:
+                good_input = True
+                continue
+        except ValueError:
+            pass
+
     print('\nRandomise start', end='\n\n')
     start = time.perf_counter()
 
-    randomise = rd.Randomise(rushHourBoard)
-    moves = randomise.run()
+    best = float('inf')
 
+    for i in range(nr_runs):
+        print(i)
+        new_model = rushHourBoard.copy()
+        randomise = rd.Randomise(new_model)
+        random_moves = randomise.run()
+
+        if len(random_moves) < best:
+            moves = random_moves
+            best = len(random_moves)
+    
     finish = time.perf_counter()
     print(f'Randomise found a solution in {len(moves) - 1} moves. See data.output.output.csv')
     print(f'Run time: {round(finish - start, 2)} seconds', end = '\n\n')
@@ -183,12 +202,11 @@ def a_star(rushHourBoard):
     return moves
 
 
-def hillclimber(rushHourBoard, find_optimal):
+def hillclimber(rushHourBoard, run_custom):
     """
     Solve the board using the Hill Climber algorithm (see hill_climber.py for details)
     """
-
-    if find_optimal == False:
+    if run_custom:
         good_input = False
         while not good_input:
             try:
@@ -217,14 +235,29 @@ def hillclimber(rushHourBoard, find_optimal):
         print(f'Hillclimber found solution in {len(moves) - 1} moves. See data.output.output.csv')
         print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
     else:
-        random_nr = 100
-        max_score = 25
-        low_max_score = 8
-        max_plus = 5
-        max_val = 2000
-        max_val_plus = 900
-        hillclimber = hc.Hillclimber(rushHourBoard)
-        moves = hillclimber.run(random_nr, max_score, max_plus, low_max_score, max_val, max_val_plus)
+        random_nr = 50
+        max_score = 6
+        low_max_score = 3
+        max_plus = 1
+        max_val = 1000
+        max_val_plus = 300
+        total_runs = 3
+        moves = []
+        for i in range(total_runs):
+            board = rushHourBoard.copy()
+
+            print('\nHill climber start', end='\n\n') 
+            start = time.perf_counter()
+
+            hillclimber = hc.Hillclimber(board)
+            moveset = hillclimber.run(random_nr, max_score, max_plus, low_max_score, max_val, max_val_plus)
+            if i == 0 or len(moveset) < len(moves):
+                print(f'Hillclimber found solution in {len(moveset) - 1} moves. See data.output.output.csv')
+                moves = moveset
+            
+            finish = time.perf_counter()
+            print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
+
 
     return moves
 

@@ -130,6 +130,5 @@ dmypy.json
 
 # don't update the gameboards in git
 data/
-data/output/output.csv
 
 *.prof
