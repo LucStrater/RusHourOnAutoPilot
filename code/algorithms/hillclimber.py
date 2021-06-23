@@ -1,8 +1,7 @@
-from .randomise_v3 import Randomise as rd
-from .breadth_first_v3 import Breadth_first_hillclimber as bf
+from .randomise import Randomise as rd
 import time
 import copy
-from code.algorithms import a_star_io_v3 as asio
+from code.algorithms import a_star_io as asio
 
 class Hillclimber:
 
@@ -132,52 +131,52 @@ class Hillclimber:
         return archive
     
 
-    def bf_shortening(self, state_archive, depth):
-        """
-        Performs BFS up to given depth to search for shorter paths to states in archive
-        """
-        model = self.model.copy()
-        model.moves = []
-        count = 0
+    # def bf_shortening(self, state_archive, depth):
+    #     """
+    #     Performs BFS up to given depth to search for shorter paths to states in archive
+    #     """
+    #     model = self.model.copy()
+    #     model.moves = []
+    #     count = 0
 
-        while True:
-            # perform BFS on model
-            breadth = bf(model, state_archive)
-            good_moves = breadth.run(depth)
+    #     while True:
+    #         # perform BFS on model
+    #         breadth = bf(model, state_archive)
+    #         good_moves = breadth.run(depth)
             
-            # if no better path was found
-            if good_moves == None:
-                # perform moves from the known path
-                start = state_archive[model.get_tuple()] + 1
-                finish = start + depth + 2
+    #         # if no better path was found
+    #         if good_moves == None:
+    #             # perform moves from the known path
+    #             start = state_archive[model.get_tuple()] + 1
+    #             finish = start + depth + 2
 
-                for move in self.model.moves[start:finish]:
-                    car = model.board.cars[move[0]]
-                    model.update_matrix(car, move[1])
-                    model.moves.append(move)
+    #             for move in self.model.moves[start:finish]:
+    #                 car = model.board.cars[move[0]]
+    #                 model.update_matrix(car, move[1])
+    #                 model.moves.append(move)
 
-                    if model.is_solution():
-                        break
-            # if a better path was found            
-            else:
-                # perform good moves on board
-                for move in good_moves:
-                    car = model.board.cars[move[0]]
-                    model.update_matrix(car, move[1])
-                    model.moves.append(move)
+    #                 if model.is_solution():
+    #                     break
+    #         # if a better path was found            
+    #         else:
+    #             # perform good moves on board
+    #             for move in good_moves:
+    #                 car = model.board.cars[move[0]]
+    #                 model.update_matrix(car, move[1])
+    #                 model.moves.append(move)
 
-            if model.is_solution():
-                break
+    #         if model.is_solution():
+    #             break
             
-            count += 1
-            if count % 20 == 0:
-                print(f'bf {count}')
-                print(len(model.moves))
-                print()
+    #         count += 1
+    #         if count % 20 == 0:
+    #             print(f'bf {count}')
+    #             print(len(model.moves))
+    #             print()
 
-        # point the overarching model to the new move set
-        model.moves.insert(0, ('Move', 'Car'))
-        self.model.moves = model.moves
+    #     # point the overarching model to the new move set
+    #     model.moves.insert(0, ('Move', 'Car'))
+    #     self.model.moves = model.moves
             
  
     def check_solution(self):

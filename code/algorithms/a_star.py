@@ -83,18 +83,14 @@ class A_star:
         for car in self.model.get_cars():
             car_possibilities = model.get_possibilities(car)
 
-            # for every car loop over its possible moves
             for move in car_possibilities:
-                # copy the board of the previous board
                 new_model = model.copy()
 
-                # update new model with chosen move
                 new_model.update_matrix(car, move)
 
-                # append move made to list of moves to get to incumbent (new) model
                 new_model.add_move(car.cid, move)
 
-                # For matrix form, turn list of lists into tuple of tuples, such that matrix is hashable
+                # Make matrix hashable
                 matrix_tuple = new_model.get_tuple()
 
                 # if this model has not been reached put it in the priority queque 

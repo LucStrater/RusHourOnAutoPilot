@@ -1,5 +1,4 @@
-from code.algorithms.a_star_io_v3 import A_star
-from code.algorithms.a_star_io_v3 import A_star
+from code.algorithms.a_star_io import A_star
 
 class Best_first(A_star):
     """

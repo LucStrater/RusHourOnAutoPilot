@@ -1,4 +1,4 @@
-from .board_v3 import Board
+from .board import Board
 import copy
 import csv
 
@@ -208,11 +208,13 @@ class Model:
         """
         return tuple([tuple(i) for i in self.matrix])
 
+
     def __lt__(self, obj):
         """
         Function evaluating less than (<) for the priority queue.
         """
         return self.score < obj.score or (self.score == obj.score and self.fifo_score < obj.fifo_score)
+
 
     def __le__(self, obj):
         """
@@ -220,11 +222,13 @@ class Model:
         """
         return self.score <= obj.score or (self.score == obj.score and self.fifo_score <= obj.fifo_score)
 
+
     def __eq__(self, obj):
         """
         Function evaluating equal (==) for the priority queue.
         """
         return self.score == obj.score and self.fifo_score == obj.fifo_score
+
 
     def __ne__(self, obj):
         """
@@ -232,11 +236,13 @@ class Model:
         """
         return self.score != obj.score and self.fifo_score != obj.fifo_score
 
+
     def __gt__(self, obj):
         """
         Function evaluating greater than (>) for the priority queue.
         """
         return self.score > obj.score or (self.score == obj.score and self.fifo_score > obj.fifo_score)
+
 
     def __ge__(self, obj):
         """

@@ -1,6 +1,6 @@
 from .model import Model
-from .board_v3 import Board
-import code.algorithms.randomise_v3 as rd
+from .board import Board
+import code.algorithms.randomise as rd
 import random
 
 class Generate(Model):

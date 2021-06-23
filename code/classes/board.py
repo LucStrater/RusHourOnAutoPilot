@@ -1,4 +1,4 @@
-from .car_v3 import Car
+from .car import Car
 
 class Board:
     """

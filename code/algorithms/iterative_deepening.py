@@ -1,4 +1,4 @@
-from .depth_first_v3 import DepthFirst
+from .depth_first import DepthFirst
 import copy
 
 class Iterative_deepening(DepthFirst):
