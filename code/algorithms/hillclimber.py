@@ -302,7 +302,7 @@ class Hillclimber:
 #================================================== RUN ==================================================#
     def run(self, random_nr, max_score, max_plus, low_max_score, max_val, max_val_plus):
         """
-        Rusn hillclimber with inputted variables.
+        Runs hillclimber with inputted variables.
         """
         ### 1. RANDOM
         random_start = time.perf_counter()

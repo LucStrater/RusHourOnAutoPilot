@@ -21,7 +21,6 @@ def main():
     algorithm = get_algorithm()
     
     if algorithm == 'randomise':
-        # user input number of random runs?
         moves = randomise(rushHourBoard)
     elif algorithm == 'breadth first':
         # user input maximum depth?
@@ -84,14 +83,34 @@ def get_algorithm():
 
 def randomise(rushHourBoard):
     """
-    Solve the board using the Randomise algorithm (see randomise.py for details)
+    Saves the best solution out of an inputted number of runs of the Randomise algorithm (see randomise.py for details)
     """
+    print('\nRandomise gives the best result of a number of random runs.')
+    good_input = False
+    while not good_input:
+        try:
+            nr_runs = int(input('Number of random runs: '))
+            if nr_runs > 0:
+                good_input = True
+                continue
+        except ValueError:
+            pass
+
     print('\nRandomise start', end='\n\n')
     start = time.perf_counter()
 
-    randomise = rd.Randomise(rushHourBoard)
-    moves = randomise.run()
+    best = float('inf')
 
+    for i in range(nr_runs):
+        print(i)
+        new_model = rushHourBoard.copy()
+        randomise = rd.Randomise(new_model)
+        random_moves = randomise.run()
+
+        if len(random_moves) < best:
+            moves = random_moves
+            best = len(random_moves)
+    
     finish = time.perf_counter()
     print(f'Randomise found a solution in {len(moves) - 1} moves. See data.output.output.csv')
     print(f'Run time: {round(finish - start, 2)} seconds', end = '\n\n')
