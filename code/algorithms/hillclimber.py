@@ -258,7 +258,7 @@ class Hillclimber:
         # furthest removed state with acceptable heuristic score
         counter = 0
         #hier ook het eind bord meenemen!
-        score = self.heuristic_2(start_board, tracer)
+        score = self.heuristic(start_board, tracer)
         if score <= max_score:
             new_moves = tracer.moves[:len(tracer.moves) - counter]
             tracer.moves = new_moves
@@ -269,7 +269,7 @@ class Hillclimber:
             move = tracer.moves[i]
             tracer.update_matrix(tracer.board.cars[move[0]], move[1] * -1)
             
-            score = self.heuristic_2(start_board, tracer)
+            score = self.heuristic(start_board, tracer)
             if score <= max_score:
                 new_moves = tracer.moves[:len(tracer.moves) - counter]
                 tracer.moves = new_moves
@@ -278,7 +278,7 @@ class Hillclimber:
         return tracer
 
 
-    def run_a_star(self, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus):
+    def run_a_star(self, max_score, max_plus, low_max_score, max_val, max_val_plus):
         """
 
         """
@@ -286,9 +286,8 @@ class Hillclimber:
         start_board.moves = [('car', 'move')]
         state_archive = self.bf_archive()
 
-        max_score = 20
         count = 0
-        
+        input_max_score = max_score
         
         while True:
             count += 1
@@ -297,10 +296,9 @@ class Hillclimber:
 
             # run A* from start to goal
             a_star_io = asio.A_star(start_board, goal_model)
-            a_star_board = a_star_io.run_hillclimber(max_val)
-
+            state_found, a_star_board = a_star_io.run(max_val)
             # no solution was found
-            if a_star_board == None:
+            if not state_found:
 
                 # adjust max allowed heuristic score
                 max_score = low_max_score
@@ -314,7 +312,7 @@ class Hillclimber:
                 continue
             
             # reset max allowed heuristic score after A* found
-            max_score = 20
+            max_score = input_max_score
             
             # stop when solution has been found
             if a_star_board.is_solution():
@@ -325,7 +323,7 @@ class Hillclimber:
         self.model.moves = a_star_board.moves
 
 
-    def run(self, random_nr, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus):
+    def run(self, random_nr, max_score, max_plus, low_max_score, max_val, max_val_plus):
         """
         Run hillclimber state trace
         """
@@ -366,7 +364,7 @@ class Hillclimber:
         count = 1
         while True:
             start_len = len(self.model.moves)
-            self.run_a_star(max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus)
+            self.run_a_star(max_score, max_plus, low_max_score, max_val, max_val_plus)
             finish_len = len(self.model.moves)
             max_score += max_plus
             max_val += max_val_plus

@@ -126,7 +126,7 @@ def depth_first(rushHourBoard):
         except ValueError:
             pass
 
-        print('\nPlease type a positive number.\n')
+        print('\nPlease enter a positive number.\n')
 
     print('\nDepth First start', end='\n\n')
     start = time.perf_counter()
@@ -195,7 +195,7 @@ def hillclimber(rushHourBoard):
         except ValueError:
             pass
         
-        print('\nPlease type positive numbers.\n')
+        print('\nPlease enter positive numbers.\n')
 
     print('\nHill climber start', end='\n\n') 
     start = time.perf_counter()
