@@ -1,6 +1,6 @@
 from code.classes.model import Model
 from code.classes.generate import Generate
-from code.output.pygame_viz import Game
+# from code.output.pygame_viz import Game
 from sys import argv
 from code.algorithms import depth_first as df
 from code.algorithms import breadth_first as bf
@@ -23,7 +23,6 @@ def main():
     if algorithm == 'randomise':
         moves = randomise(rushHourBoard)
     elif algorithm == 'breadth first':
-        # user input maximum depth?
         moves = breadth_first(rushHourBoard)
     elif algorithm == 'depth first':
         moves = depth_first(rushHourBoard)
@@ -43,6 +42,7 @@ def main():
 
     run_visualisation(vizBoard, moves)
 
+    
 def get_board():
     """
     Gets the board from the user
@@ -60,7 +60,19 @@ def get_board():
             rushHourBoard = Model(board_title)
             good_input = True
         elif board == 'new':
-            pass
+            good_input = False
+            while not good_input:
+                try:
+                    board_len = int(input('Type the board length (e.g. "6"): '))
+                    if board_len > 4 and board_len <= 12:
+                        good_input = True
+                        continue
+                except ValueError:
+                    pass
+
+                print('\nPlease enter an integer in the range 4 - 12.\n')
+
+            rushHourBoard = Generate(board_len)
         else:
             continue
     
