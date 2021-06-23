@@ -22,7 +22,7 @@ Run the following command in your terminal:
 python3 main.py 
 ```
 
-Next follow the steps printed in the terminal. First you will be asked which board you want to solve. Subsequently, you can pick the algorithm to solve it with. **It is strongly advised to solely use the hill climber algorithm on boards 5, 6 and 7** as the other algorithms are very slow and might in some case crash due to a lack of memory. 
+Next follow the steps printed in the terminal. First you will be asked which board you want to solve. Subsequently, you can pick the algorithm to solve it with. **It is strongly advised to solely use the Hill Climber algorithm on boards 5, 6 and 7** as the other algorithms are very slow and might in some case crash due to a lack of memory. 
 
 #### Hill Climber usage
 With regards to the Hill Climber the user is prompted to input several values. These are as follows:
