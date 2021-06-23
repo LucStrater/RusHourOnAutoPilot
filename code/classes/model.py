@@ -12,6 +12,7 @@ class Model:
         self.load_matrix(source_file)
         self.moves = [('car', 'move')]
         self.score = 1000
+        self.fifo_score = 1
 
 
     def load_matrix(self, source_file):
@@ -195,6 +196,9 @@ class Model:
 
 
     def get_cars(self):
+        """
+        Returns a list of all cars on the board.
+        """
         return list(self.board.cars.values())
 
 
@@ -203,4 +207,40 @@ class Model:
         Get the tuple of the matrix.
         """
         return tuple([tuple(i) for i in self.matrix])
+
+    def __lt__(self, obj):
+        """
+        Function evaluating less than (<) for the priority queue.
+        """
+        return self.score < obj.score or (self.score == obj.score and self.fifo_score < obj.fifo_score)
+
+    def __le__(self, obj):
+        """
+        Function evaluating less than or equal (<=) for the priority queue.
+        """
+        return self.score <= obj.score or (self.score == obj.score and self.fifo_score <= obj.fifo_score)
+
+    def __eq__(self, obj):
+        """
+        Function evaluating equal (==) for the priority queue.
+        """
+        return self.score == obj.score and self.fifo_score == obj.fifo_score
+
+    def __ne__(self, obj):
+        """
+        Function evaluating not equal (!=) for the priority queue.
+        """
+        return self.score != obj.score and self.fifo_score != obj.fifo_score
+
+    def __gt__(self, obj):
+        """
+        Function evaluating greater than (>) for the priority queue.
+        """
+        return self.score > obj.score or (self.score == obj.score and self.fifo_score > obj.fifo_score)
+
+    def __ge__(self, obj):
+        """
+        Function evaluating greater than or equal (>=) for the priority queue.
+        """
+        return self.score >= obj.score or (self.score == obj.score and self.fifo_score >= obj.fifo_score)
         

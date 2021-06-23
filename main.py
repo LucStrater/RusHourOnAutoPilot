@@ -1,10 +1,13 @@
 from code.classes.model import Model
+<<<<<<< HEAD
 # from code.classes.board import Board
 # from code.visualisation.pygame_viz import Game
 # from code.algorithms import randomise, greedy
+=======
+from code.classes.generate_v3 import Generate
+from code.visualisation.pygame_viz import Game
+>>>>>>> c691b3e39ede52d038c8b42c1041e2400a93b301
 from sys import argv
-# from code.algorithms import depth_first as df
-# from code.algorithms import iterative_deepening as id
 from code.algorithms import depth_first_v3 as df
 from code.algorithms import breadth_first_v3 as bf
 from code.algorithms import iterative_deepening_v3 as itd
@@ -12,9 +15,6 @@ from code.algorithms import randomise_v3 as rd
 from code.algorithms import hillclimber_v3 as hc
 from code.algorithms import a_star_v3 as ast
 from code.algorithms import a_star_io_v3 as asio
-# from code.algorithms import pruned_a_star as pas
-# from code.algorithms import breadth as bf
-# from code.algorithms import randomise_a_star as ras
 from code.output import output
 import time
 
@@ -163,6 +163,7 @@ def iterative_deepening(rushHourBoard):
 
     return moves
 
+<<<<<<< HEAD
 
 def a_star(rushHourBoard):
     """
@@ -235,6 +236,11 @@ if __name__ == "__main__":
 
     # # init the board
     # rushHourBoard = Model(board_title)
+=======
+    # init the board
+    rushHourBoard = Model(board_title)
+    # board = Generate(12)
+>>>>>>> c691b3e39ede52d038c8b42c1041e2400a93b301
 
     # ########################### Randomise ###########################
     # start = time.perf_counter()
@@ -356,7 +362,7 @@ if __name__ == "__main__":
     # print(f'runtime depth first: {round(finish - start, 2)} seconds')
     # print()
 
-    ########################### A* #############################
+    # ########################## A* #############################
 
     # start = time.perf_counter()
 
@@ -368,15 +374,25 @@ if __name__ == "__main__":
     # print(f'runtime: {round(finish - start, 2)} seconds')
     # print()
 
-    #   ########################### A* IO #############################
-    # state.print()
-    # board = Model(board_title)
+     ########################## A* IO#############################
 
     # start = time.perf_counter()
 
-    # a_star_io = asio.A_star(board, state)
-    # moves = a_star_io.run()
-    # print(f"best solution for A*: {moves}. This takes {len(moves) - 1} moves.")
+    # a_star = ast.A_star(rushHourBoard)
+    # board2 = a_star.run()
+    # print(f"best solution for A*: {board2.moves}. This takes {len(board2.moves) - 1} moves.")
+
+    # finish = time.perf_counter()
+    # print(f'runtime: {round(finish - start, 2)} seconds')
+    # print()
+   
+    # board1 = Model(board_title)
+
+    # start = time.perf_counter()
+
+    # a_star_io = asio.A_star(board1, board2)
+    # moves = a_star_io.run(50000).moves
+    # print(f"best solution for A* IO: {moves}. This takes {len(moves) - 1} moves.")
 
     # finish = time.perf_counter()
     # print(f'runtime: {round(finish - start, 2)} seconds')
@@ -426,6 +442,7 @@ if __name__ == "__main__":
     # print(f'runtime V2: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
     # print()
 
+<<<<<<< HEAD
     # ######################## Hillclimber #####################
     # hc_random_nr = 20
 
@@ -437,6 +454,19 @@ if __name__ == "__main__":
     # max_plus = 8
     # low_max_plus = 1
     # max_val_plus = 1200
+=======
+    # # ######################## Hillclimber #####################
+    # hc_random_nr = 100
+
+    # hc_start = time.perf_counter()
+
+    # max_score = 20
+    # low_max_score = 7
+    # max_val = 500
+    # max_plus = 8
+    # low_max_plus = 1
+    # max_val_plus = 900
+>>>>>>> c691b3e39ede52d038c8b42c1041e2400a93b301
     # hillclimber = hc.Hillclimber(rushHourBoard)
     # hc_moves = hillclimber.run(hc_random_nr, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus)
     # print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')

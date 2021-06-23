@@ -5,7 +5,7 @@ class Randomise():
     A random algorithm to solve rush hour boards
     """
     def __init__(self, model): 
-        self.model = model
+        self.model = model.copy()
 
     def random_move(self):
         """
@@ -38,3 +38,19 @@ class Randomise():
             self.random_move()
 
         return self.model.moves
+
+    def legal_check(self, max_counter):
+        """
+        Make random moves until the board is solved for generating boards.
+        """
+        counter = 0
+
+        while not self.model.is_solution():
+            self.random_move()
+
+            if counter > max_counter:
+                return False
+
+            counter += 1
+
+        return True
