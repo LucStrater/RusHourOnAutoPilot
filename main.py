@@ -66,7 +66,7 @@ def get_board():
 
 def get_algorithm():
     """
-    Gets the algorithm from the user
+    Gets the algorithm from the user.
     """
     good_algorithms = ['randomise', 'breadth first', 'depth first', 'iterative deepening', 'a*', 'hill climber']
     good_input = False
@@ -82,10 +82,13 @@ def get_algorithm():
         print('Error: invalid name. Please make sure the name is spelled correctly, including any spaces.', end='\n\n')
 
 def run_visualisation(vizBoard, moves):
-    # still need to note that its only for windows
-
+    """
+    Runs a visualisation in pygame.
+    """
     good_input = False
+
     print('NOTE: Visualisation only possible when running on Windows (not on Linux/WSL).')
+
     while not good_input:
         visualise = input(' Do you want to visualise your solution? (yes/no): ')
         visualise = visualise.lower()
