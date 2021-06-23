@@ -6,6 +6,7 @@ class Model:
     """
     This is a model for a rush hour game following the environment model agent approach.
     """
+#======================================= Methods for initializing a model =======================================#    
     def __init__(self, source_file): 
         self.board = Board()
         self.matrix = []
@@ -17,9 +18,8 @@ class Model:
 
     def load_matrix(self, source_file):
         """
-        Initialize the board by loading all vehicles from source file.
+        Initializes the board by loading all vehicles from source file.
         """
-        # get board length
         self.board.load_length(source_file)
 
         # fill matrix with None
@@ -30,7 +30,6 @@ class Model:
             reader = csv.reader(file)
             file.readline()
 
-            # loop over all the cars in the source file
             for row in reader:
                 car_id = row[0]
                 car_orientation = row[1]
@@ -41,18 +40,18 @@ class Model:
                 # initialize winning row
                 if car_id == 'X':
                     self.board.load_win_row(car_row)
-                
+
                 # fill matrix with cars
                 self.matrix[car_row][car_column] = car_id
                 if car_orientation == "H":
-                    # initialize car
+                    # initialize car with constant row
                     self.board.load_car(car_id, car_orientation, car_length, car_row)
 
                     self.matrix[car_row][car_column + 1] = car_id
                     if car_length == 3:
                         self.matrix[car_row][car_column + 2] = car_id
                 else:
-                    # initialize car
+                    # initialize car with constant column
                     self.board.load_car(car_id, car_orientation, car_length, car_column)
 
                     self.matrix[car_row + 1][car_column] = car_id
@@ -60,9 +59,10 @@ class Model:
                         self.matrix[car_row + 2][car_column] = car_id
 
 
+#================================== Methods that get information from a model ==================================#
     def get_car_pos(self, car):
         """
-        Return the position of the car in (row, column) format.
+        Returns the position of the car in (row, column) format.
         """
         if car.orientation == "H":
             for column in range(self.board.board_len):
@@ -76,7 +76,7 @@ class Model:
 
     def get_possibilities(self, car):
         """
-        Return a list with all legal moves for a car.
+        Returns a list with all legal moves for a car.
         """
         possibilities = []
 
@@ -117,82 +117,6 @@ class Model:
                     break
 
         return possibilities
-        
-
-    def update_matrix(self, car, move):
-        """
-        Update the matrix according to a given move.
-        """
-        position = self.get_car_pos(car)
-        row = position[0]
-        column = position[1]
-
-        if car.orientation == 'H':
-            # remove car from board
-            for i in range(car.length):
-                self.matrix[row][column + i] = None
-            # place car back on board
-            for i in range(car.length):
-                self.matrix[row][column + move + i] = car.cid
-        else:
-            # remove car from board
-            for i in range(car.length):
-                self.matrix[row + i][column] = None
-            # place car back on board
-            for i in range(car.length):
-                self.matrix[row + move + i][column] = car.cid
-
-
-    def print(self):
-        """
-        Print board. 
-        """ 
-        for row in self.matrix:
-            print(row)
-        print()
-
-
-    def add_move(self, cid, move):
-        """
-        Add a move to the board.
-        """
-        self.moves.append((cid, move))
-
-
-    def copy(self):
-        """
-        Copies a the board to a child and creates deepcopies of only the matrix and the moves.
-        """
-        # Shallow copy with references to board and methods
-        child = copy.copy(self)
-
-        # Create new matrix and moves list for child
-        child.matrix = []
-        child.moves = []
-        
-        # Fill matrix with None
-        child.matrix = [[None for i in range(self.board.board_len)] for j in range(self.board.board_len)]
-
-        # Recreate parent matrix
-        for i in range(self.board.board_len):
-            for j in range(self.board.board_len):
-                child.matrix[i][j] = self.matrix[i][j]
-        
-        # Recreate parent moves
-        for move in self.moves:
-            child.moves.append(move)
-        
-        return child
-
-
-    def is_solution(self):
-        """
-        Check if the current configuration is a solution. 
-        """
-        if self.matrix[self.board.win_row][self.board.board_len - 1] == 'X':
-            return True
-        
-        return False        
 
 
     def get_cars(self):
@@ -204,11 +128,89 @@ class Model:
 
     def get_tuple(self):
         """
-        Get the tuple of the matrix.
+        Gets the tuple of the matrix.
         """
         return tuple([tuple(i) for i in self.matrix])
 
 
+    def is_solution(self):
+        """
+        Checks if the current configuration is a solution. 
+        """
+        if self.matrix[self.board.win_row][self.board.board_len - 1] == 'X':
+            return True
+        
+        return False        
+
+
+#================================== Methods that alter attributes of a model ==================================#
+    def update_matrix(self, car, move):
+        """
+        Updates the matrix according to a given move.
+        """
+        position = self.get_car_pos(car)
+        row = position[0]
+        column = position[1]
+
+        if car.orientation == 'H':
+            # remove car from board
+            for i in range(car.length):
+                self.matrix[row][column + i] = None
+
+            # place car back on board
+            for i in range(car.length):
+                self.matrix[row][column + move + i] = car.cid
+        else:
+            # remove car from board
+            for i in range(car.length):
+                self.matrix[row + i][column] = None
+
+            # place car back on board
+            for i in range(car.length):
+                self.matrix[row + move + i][column] = car.cid
+
+
+    def add_move(self, cid, move):
+        """
+        Adds a move to the board.
+        """
+        self.moves.append((cid, move))
+
+
+#===================================== Methods that print and copy a model =====================================#
+    def print(self):
+        """
+        Prints board. 
+        """ 
+        for row in self.matrix:
+            print(row)
+        print()
+
+
+    def copy(self):
+        """
+        Copies a the board to a child and creates deepcopies of only the matrix and the moves.
+        """
+        child = copy.copy(self)
+        child.matrix = []
+        child.moves = []
+        
+        # fill matrix with None
+        child.matrix = [[None for i in range(self.board.board_len)] for j in range(self.board.board_len)]
+
+        # recreate parent matrix
+        for i in range(self.board.board_len):
+            for j in range(self.board.board_len):
+                child.matrix[i][j] = self.matrix[i][j]
+        
+        # recreate parent moves
+        for move in self.moves:
+            child.moves.append(move)
+        
+        return child
+
+
+#======================================= Methods for comparing two models =======================================#
     def __lt__(self, obj):
         """
         Function evaluating less than (<) for the priority queue.

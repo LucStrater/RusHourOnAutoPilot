@@ -81,27 +81,6 @@ def get_algorithm():
         
         print('Error: invalid name. Please make sure the name is spelled correctly, including any spaces.', end='\n\n')
 
-def run_visualisation(vizBoard, moves):
-    """
-    Runs a visualisation in pygame.
-    """
-    print(moves)
-    good_input = False
-
-    print('NOTE: Visualisation only possible when running on Windows (not on Linux/WSL).')
-
-    while not good_input:
-        visualise = input(' Do you want to visualise your solution? (yes/no): ')
-        visualise = visualise.lower()
-        if visualise == 'yes' or visualise == 'no':
-            good_input = True
-    
-    if visualise == 'yes':
-        print('NOTE: for visualisation, see pop-up pygame window')
-        vizBoard.moves = moves[1:]
-        viz = Game(vizBoard)
-        viz.run()
-
 
 def randomise(rushHourBoard):
     """
@@ -233,6 +212,27 @@ def hillclimber(rushHourBoard):
     print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
 
     return moves
+
+
+def run_visualisation(vizBoard, moves):
+    """
+    Runs a visualisation in pygame.
+    """
+    good_input = False
+
+    print('NOTE: Visualisation only possible when running on Windows (not on Linux/WSL).')
+
+    while not good_input:
+        visualise = input(' Do you want to visualise your solution? (yes/no): ')
+        visualise = visualise.lower()
+        if visualise == 'yes' or visualise == 'no':
+            good_input = True
+    
+    if visualise == 'yes':
+        print('NOTE: for visualisation, see pop-up pygame window')
+        vizBoard.moves = moves[1:]
+        viz = Game(vizBoard)
+        viz.run()
 
 
 if __name__ == "__main__":
