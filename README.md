@@ -2,29 +2,15 @@
 
 Rush Hour is een ogenschijnlijk eenvoudig puzzeltje met een verrassend uitdagend karakter. In een veld van 6 hoog en 6 breed staat een rode auto, de jouwe, en die moet naar de uitgang, die recht voor je ligt. Maar andere voertuigen versperren de weg; auto’s van twee eenheden lang en trucks van drie eenheden lang, die alleen in hun rijrichting bewogen mogen worden. Ze mogen niet draaien. De opdracht is simpel: beweeg je auto naar buiten, of beter: schrijf een computerprogramma om dat voor je te doen.
 
-## Status
-
-Dit project is op dit moment nog een "work-in-progress" en dit valt soms te zien aan de geschreven code. 
-
-### To-Do's (optional)
-
-- Visualisation (matplotlib / js?)
-- Make game playable
 
 ## Uitleg
 
 ### Vereisten
 
-Deze codebase is deels geschreven in Python 3.7 en deels in JavaScript. Voor de python code zijn de packages in requirements.txt nodig. Deze kan je installeren via pip dmv. de volgende instructie:
+Deze codebase is geschreven in Python 3.7. Voor de python code zijn de packages in requirements.txt nodig. Deze kan je installeren via pip dmv. de volgende instructie:
 
 ```
 pip install -r requirements.txt
-```
-
-Of via conda:
-
-```
-conda install --file requirements.txt
 ```
 
 ### Gebruik
