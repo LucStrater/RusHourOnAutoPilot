@@ -1,6 +1,6 @@
 from code.classes.model import Model
 from code.classes.generate import Generate
-# from code.visualisation.pygame_viz import Game
+from code.visualisation.pygame_viz import Game
 from sys import argv
 from code.algorithms import depth_first as df
 from code.algorithms import breadth_first as bf
@@ -15,6 +15,8 @@ import time
 def main():
 
     rushHourBoard = get_board()
+
+    vizBoard = rushHourBoard
 
     algorithm = get_algorithm()
     
@@ -32,6 +34,8 @@ def main():
         moves = a_star(rushHourBoard)
     elif algorithm == 'hill climber':
         moves = hillclimber(rushHourBoard)
+
+    run_visualisation(vizBoard, moves)
 
     output.export_to_csv(moves, './data/output/output.csv')
 
@@ -62,7 +66,7 @@ def get_board():
 
 def get_algorithm():
     """
-    Gets the algorithm from the user
+    Gets the algorithm from the user.
     """
     good_algorithms = ['randomise', 'breadth first', 'depth first', 'iterative deepening', 'a*', 'hill climber']
     good_input = False
@@ -76,6 +80,26 @@ def get_algorithm():
             return algorithm.lower()
         
         print('Error: invalid name. Please make sure the name is spelled correctly, including any spaces.', end='\n\n')
+
+def run_visualisation(vizBoard, moves):
+    """
+    Runs a visualisation in pygame.
+    """
+    good_input = False
+
+    print('NOTE: Visualisation only possible when running on Windows (not on Linux/WSL).')
+
+    while not good_input:
+        visualise = input(' Do you want to visualise your solution? (yes/no): ')
+        visualise = visualise.lower()
+        if visualise == 'yes' or visualise == 'no':
+            good_input = True
+    
+    if visualise == 'yes':
+        print('NOTE: for visualisation, see pop-up pygame window')
+        vizBoard.moves = moves[1:]
+        viz = Game(vizBoard)
+        viz.run()
 
 
 def randomise(rushHourBoard):
@@ -213,14 +237,5 @@ def hillclimber(rushHourBoard):
 if __name__ == "__main__":
     main()
 
-
-
-    ######################## Visualisation #####################
-
-    # vizBoard = Model(board_title)
-    # vizBoard.moves = hc_moves[1:]
-    
-    # viz = Game(vizBoard)
-    # viz.run()
 
 

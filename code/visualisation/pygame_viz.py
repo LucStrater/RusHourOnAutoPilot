@@ -1,7 +1,11 @@
 # ACKNOWLEDGEMENT
 
-
 from code.classes.model import Model
+
+# hide pygame standard welcome message
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+
 import pygame
 import sys
 import math
