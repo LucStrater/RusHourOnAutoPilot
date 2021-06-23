@@ -23,7 +23,6 @@ def main():
     if algorithm == 'randomise':
         moves = randomise(rushHourBoard)
     elif algorithm == 'breadth first':
-        # user input maximum depth?
         moves = breadth_first(rushHourBoard)
     elif algorithm == 'depth first':
         moves = depth_first(rushHourBoard)
