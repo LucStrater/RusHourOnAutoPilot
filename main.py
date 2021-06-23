@@ -33,7 +33,11 @@ def main():
     elif algorithm == 'a*':
         moves = a_star(rushHourBoard)
     elif algorithm == 'hill climber':
-        moves = hillclimber(rushHourBoard)
+        run_optimal = input('Do you want to run hillclimber optimal solution? (yes/no || warning: optimal takes very long): ')
+        run_optimal = run_optimal.lower()
+        if run_optimal.lower() == 'yes':
+            moves = hillclimber(rushHourBoard, True)
+        moves = hillclimber(rushHourBoard, False)
 
     run_visualisation(vizBoard, moves)
 
@@ -179,37 +183,48 @@ def a_star(rushHourBoard):
     return moves
 
 
-def hillclimber(rushHourBoard):
+def hillclimber(rushHourBoard, find_optimal):
     """
     Solve the board using the Hill Climber algorithm (see hill_climber.py for details)
     """
-    good_input = False
-    while not good_input:
-        try:
-            random_nr = int(input('\nNumber of random algorithm runs, (recommended 1 - 1000): '))
-            max_score = int(input('\nMaximum allowed heuristic score, (recommended 10 - 30): '))
-            low_max_score = int(input('\nMaximum allowed heuristic score after failed A* search, (recommended 5 - 10): '))
-            max_plus = int(input('\nIncrementation of the max. heuristic score after an A* iteration over the whole move set, (recommended 2 - 10): '))
-            max_val = int(input('\nMaximum number of states one A* search is about to search, (recommended 500 - 10000): '))
-            max_val_plus = int(input('\nIcrementation of the max. nr. of states to be searched after an A* iteration over the whole move set, (recommended 500 - 1500): '))
 
-            if random_nr > 0 and max_score > 0 and low_max_score > 0:
-                good_input = True
-                continue
-        except ValueError:
-            pass
-        
-        print('\nPlease enter positive numbers.\n')
+    if find_optimal == False:
+        good_input = False
+        while not good_input:
+            try:
+                random_nr = int(input('\nNumber of random algorithm runs, (recommended 1 - 1000): '))
+                max_score = int(input('\nMaximum allowed heuristic score, (recommended 10 - 30): '))
+                low_max_score = int(input('\nMaximum allowed heuristic score after failed A* search, (recommended 5 - 10): '))
+                max_plus = int(input('\nIncrementation of the max. heuristic score after an A* iteration over the whole move set, (recommended 2 - 10): '))
+                max_val = int(input('\nMaximum number of states one A* search is about to search, (recommended 500 - 10000): '))
+                max_val_plus = int(input('\nIcrementation of the max. nr. of states to be searched after an A* iteration over the whole move set, (recommended 500 - 1500): '))
 
-    print('\nHill climber start', end='\n\n') 
-    start = time.perf_counter()
+                if random_nr > 0 and max_score > 0 and low_max_score > 0:
+                    good_input = True
+                    continue
+            except ValueError:
+                pass
+            
+            print('\nPlease enter positive numbers.\n')
 
-    hillclimber = hc.Hillclimber(rushHourBoard)
-    moves = hillclimber.run(random_nr, max_score, max_plus, low_max_score, max_val, max_val_plus)
+        print('\nHill climber start', end='\n\n') 
+        start = time.perf_counter()
 
-    finish = time.perf_counter()
-    print(f'Hillclimber found solution in {len(moves) - 1} moves. See data.output.output.csv')
-    print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
+        hillclimber = hc.Hillclimber(rushHourBoard)
+        moves = hillclimber.run(random_nr, max_score, max_plus, low_max_score, max_val, max_val_plus)
+
+        finish = time.perf_counter()
+        print(f'Hillclimber found solution in {len(moves) - 1} moves. See data.output.output.csv')
+        print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
+    else:
+        random_nr = 100
+        max_score = 25
+        low_max_score = 8
+        max_plus = 5
+        max_val = 2000
+        max_val_plus = 900
+        hillclimber = hc.Hillclimber(rushHourBoard)
+        moves = hillclimber.run(random_nr, max_score, max_plus, low_max_score, max_val, max_val_plus)
 
     return moves
 
