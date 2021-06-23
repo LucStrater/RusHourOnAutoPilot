@@ -19,7 +19,6 @@ class Board:
         """
         Load the data from the source file for a given board.
         """
-        
         self.cars[cid] = Car(cid, orientation, length, const_pos)
         
     def load_win_row(self, row):
