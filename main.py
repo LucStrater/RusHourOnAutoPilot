@@ -16,7 +16,7 @@ def main():
 
     rushHourBoard = get_board()
 
-    vizBoard = rushHourBoard
+    vizBoard = rushHourBoard.copy()
 
     algorithm = get_algorithm()
     
@@ -85,6 +85,7 @@ def run_visualisation(vizBoard, moves):
     """
     Runs a visualisation in pygame.
     """
+    print(moves)
     good_input = False
 
     print('NOTE: Visualisation only possible when running on Windows (not on Linux/WSL).')
@@ -209,7 +210,7 @@ def hillclimber(rushHourBoard):
             random_nr = int(input('\nNumber of random algorithm runs, (recommended 1 - 1000): '))
             max_score = int(input('\nMaximum allowed heuristic score, (recommended 10 - 30): '))
             low_max_score = int(input('\nMaximum allowed heuristic score after failed A* search, (recommended 5 - 10): '))
-            max_plus = int(input('\nIcrementation of the max. heuristic score after an A* iteration over the whole move set, (recommended 2 - 10): '))
+            max_plus = int(input('\nIncrementation of the max. heuristic score after an A* iteration over the whole move set, (recommended 2 - 10): '))
             max_val = int(input('\nMaximum number of states one A* search is about to search, (recommended 500 - 10000): '))
             max_val_plus = int(input('\nIcrementation of the max. nr. of states to be searched after an A* iteration over the whole move set, (recommended 500 - 1500): '))
 
