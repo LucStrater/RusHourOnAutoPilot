@@ -2,10 +2,13 @@ import queue
 
 class Breadth_first:
     """
-    A breath first approach to solving a rush hour game.
+    A breath first approach to solving a rush hour game. 
+    This algorithm goes breadth first through the entire state space by using a queue, checking each state for the solution.
+    It is guaranteed to find the best solution, but may take a lot of time for larger state spaces.
     """
+
     def __init__(self, model):
-        self.start = model
+        self.start = model.copy()
         self.q = queue.Queue()
         self.q.put(self.start)
         self.archive = set()
@@ -14,12 +17,11 @@ class Breadth_first:
 
     def make_children(self, state):
         """
-        Makes all possible children of a board.
+        Creates all possible children of a board.
         """
         children = []
-        cars = state.get_cars()
 
-        for car in cars:
+        for car in state.get_cars():
             for move in state.get_possibilities(car):
                 child = state.copy()
                 child.update_matrix(car, move)
@@ -50,7 +52,7 @@ class Breadth_first:
 
     def run(self):
         """
-        Goes breadth first through all possible moves until a solution was found or the maximum depth was reached.
+        Goes breadth first through all possible moves until a solution was found.
         """
         while not self.q.empty():
             state = self.q.get()
