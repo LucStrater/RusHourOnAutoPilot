@@ -90,7 +90,7 @@ class A_star:
             
             # limit the amount of states the A star may evaluate
             if counter > max_val:
-                return None
+                return (False, None)
 
             # save states to archive
             self.closed.add(state.get_tuple())
@@ -101,4 +101,4 @@ class A_star:
             # increase counter
             counter += 1  
 
-        return state
+        return (True, state)
