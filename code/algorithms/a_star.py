@@ -4,6 +4,9 @@ import itertools
 class A_star:
     """
     An A* algorithm that finds the optimal solution of a rush hour board.
+    This algorithm makes all possible children of a state and calculates a score for each
+    using a heuristic. Based on these scores it chooses the best move to make. This process
+    is repeated until the solution is found. It is guaranteed to give the optimal solution.
     """
 
     def __init__(self, model):
@@ -19,17 +22,20 @@ class A_star:
         self.closed = set()
         self.open_set = set()
 
+
     def get_next_state(self):
         """
         Method that gets the board with the lowest score from open.
         """
         return self.open.get()
 
+
     def calculate_h1_score(self, model):
         """
         Zero Heuristic.
         """
         return 0
+
 
     def calculate_h2_score(self, model):
         """
@@ -42,6 +48,7 @@ class A_star:
                 filled_spots += 1
 
         return filled_spots
+
 
     def calculate_h3_score(self, model):
         """
@@ -74,6 +81,7 @@ class A_star:
                 score += min(up_score, down_score)
 
         return score
+
 
     def create_children(self, model):
         """

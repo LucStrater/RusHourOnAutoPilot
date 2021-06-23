@@ -4,6 +4,10 @@ import code.algorithms.randomise as rd
 import random
 
 class Generate(Model):
+    """
+    This class generates a random model with the dimensions input by the user.
+    """
+
     def __init__(self, board_len): 
         self.board = Board()
         self.matrix = []

@@ -61,5 +61,5 @@ class DepthFirst():
         if self.solutions:
             return self.solutions[0]
 
-        print("This depth is not sufficient")
+        print("This depth is not sufficient.")
         return []

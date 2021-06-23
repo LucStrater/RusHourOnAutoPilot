@@ -1,7 +1,6 @@
 from code.classes.model import Model
 from code.classes.generate import Generate
-from code.output.pygame_viz import Game
-from sys import argv
+from code.output.pygame_viz import Visualizer
 from code.algorithms import depth_first as df
 from code.algorithms import breadth_first as bf
 from code.algorithms import iterative_deepening as itd
@@ -16,6 +15,7 @@ def main():
 
     rushHourBoard = get_board()
 
+    # copy board for visualization purposes
     vizBoard = rushHourBoard.copy()
 
     algorithm = get_algorithm()
@@ -31,12 +31,7 @@ def main():
     elif algorithm == 'a*':
         moves = a_star(rushHourBoard)
     elif algorithm == 'hill climber':
-        run_optimal = input('Do you want to construct custom hillclimber inputs? (yes/no - warning: choosing "no" leads to good but slow solution): ')
-        run_optimal = run_optimal.lower()
-        if run_optimal.lower() == 'yes':
-            moves = hillclimber(rushHourBoard, True)
-        else:
-            moves = hillclimber(rushHourBoard, False)
+        moves = hillclimber(rushHourBoard)
 
     output.export_to_csv(moves, './data/output/output.csv')
 
@@ -118,7 +113,6 @@ def randomise(rushHourBoard):
     best = float('inf')
 
     for i in range(nr_runs):
-        print(i)
         new_model = rushHourBoard.copy()
         randomise = rd.Randomise(new_model)
         random_moves = randomise.run()
@@ -174,7 +168,11 @@ def depth_first(rushHourBoard):
     moves = depth.run(max_depth)
 
     finish = time.perf_counter()
-    print(f'Depth First found a solution in {len(moves) - 1} moves. See data.output.output.csv')
+    if len(moves) == 0: 
+        pass
+    else:
+        print(f'Depth First found a solution in {len(moves) - 1} moves. See data.output.output.csv')
+        
     print(f'Run time: {round(finish - start, 2)} seconds', end = '\n\n')
 
     return moves
@@ -214,11 +212,15 @@ def a_star(rushHourBoard):
     return moves
 
 
-def hillclimber(rushHourBoard, run_custom):
+def hillclimber(rushHourBoard):
     """
     Solve the board using the Hill Climber algorithm (see hill_climber.py for details)
     """
-    if run_custom:
+
+    # ask if user want to choose the parameters
+    parameters = input('Do you want input custom parameters? (yes/no)')
+
+    if parameters.lower() == 'yes':
         good_input = False
         while not good_input:
             try:
@@ -227,7 +229,7 @@ def hillclimber(rushHourBoard, run_custom):
                 low_max_score = int(input('\nMaximum allowed heuristic score after failed A* search, (recommended 5 - 10): '))
                 max_plus = int(input('\nIncrementation of the max. heuristic score after an A* iteration over the whole move set, (recommended 2 - 10): '))
                 max_val = int(input('\nMaximum number of states one A* search is about to search, (recommended 500 - 10000): '))
-                max_val_plus = int(input('\nIcrementation of the max. nr. of states to be searched after an A* iteration over the whole move set, (recommended 500 - 1500): '))
+                max_val_plus = int(input('\nIncrementation of the max. nr. of states to be searched after an A* iteration over the whole move set, (recommended 500 - 1500): '))
 
                 if random_nr > 0 and max_score > 0 and low_max_score > 0:
                     good_input = True
@@ -236,40 +238,49 @@ def hillclimber(rushHourBoard, run_custom):
                 pass
             
             print('\nPlease enter positive numbers.\n')
-
-        print('\nHill climber start', end='\n\n') 
-        start = time.perf_counter()
-
-        hillclimber = hc.Hillclimber(rushHourBoard)
-        moves = hillclimber.run(random_nr, max_score, max_plus, low_max_score, max_val, max_val_plus)
-
-        finish = time.perf_counter()
-        print(f'Hillclimber found solution in {len(moves) - 1} moves. See data.output.output.csv')
-        print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
     else:
+        # inputs for hill climber to find good solution, "emprically tested"
         random_nr = 50
         max_score = 6
         low_max_score = 3
         max_plus = 1
         max_val = 1000
-        max_val_plus = 300
-        total_runs = 3
-        moves = []
-        for i in range(total_runs):
-            board = rushHourBoard.copy()
+        max_val_plus = 300   
 
-            print('\nHill climber start', end='\n\n') 
-            start = time.perf_counter()
+    # ask how many runs they want to do
+    print('\nThe best result of the Hill Climber runs will be exported to the output.csv file.')
+    good_input = False
+    while not good_input:
+        try:
+            nr_runs = int(input('Number of runs for the entire Hill climber: '))
+            if nr_runs > 0:
+                good_input = True
+                continue
+        except ValueError:
+            pass
+        
+        print('Please input a positive number.')
 
-            hillclimber = hc.Hillclimber(board)
-            moveset = hillclimber.run(random_nr, max_score, max_plus, low_max_score, max_val, max_val_plus)
-            if i == 0 or len(moveset) < len(moves):
-                print(f'Hillclimber found solution in {len(moveset) - 1} moves. See data.output.output.csv')
-                moves = moveset
-            
-            finish = time.perf_counter()
-            print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
+    start = time.perf_counter()
+    for run_number in range(nr_runs):
+        board = rushHourBoard.copy()
 
+        print(f'\nHill Climber start run {run_number + 1}') 
+        start_hc = time.perf_counter()
+
+        hillclimber = hc.Hillclimber(board)
+        moveset = hillclimber.run(random_nr, max_score, max_plus, low_max_score, max_val, max_val_plus)
+
+        finish_hc = time.perf_counter()
+        print(f'Hill Climber run {run_number + 1} found solution in {len(moveset) - 1} moves.')
+        print(f'runtime: {round(finish_hc - start_hc, 2)} seconds', end = '\n\n')
+
+        if run_number == 0 or len(moveset) < len(moves):
+            moves = moveset
+    
+    print(f"Hill Climber's best solution found was {len(moves) - 1} moves. See data.output.output.csv")        
+    finish = time.perf_counter()
+    print(f'runtime: {round(finish - start, 2)} seconds', end = '\n\n')
 
     return moves
 
@@ -291,7 +302,7 @@ def run_visualisation(vizBoard, moves):
     if visualise == 'yes':
         print('NOTE: for visualisation, see pop-up pygame window')
         vizBoard.moves = moves[1:]
-        viz = Game(vizBoard)
+        viz = Visualizer(vizBoard)
         viz.run()
 
 
