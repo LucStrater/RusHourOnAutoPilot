@@ -1,6 +1,6 @@
 from code.classes.model import Model
 from code.classes.generate import Generate
-from code.visualisation.pygame_viz import Game
+# from code.visualisation.pygame_viz import Game
 from sys import argv
 from code.algorithms import depth_first as df
 from code.algorithms import breadth_first as bf

@@ -4,15 +4,30 @@ import copy
 from code.algorithms import a_star_io as asio
 
 class Hillclimber:
+    """
+    A hill climbing approach to solving a rush hour game.
+    It aims to obtain and improve a solution in the following steps:
+    1.  RANDOM: It obtains the best solution out of an inputted amount of random runs.
+    2.  BACK-FORWARD TRIMMING: It takes out all moves where a car was moved back and forward consecutively.
+    3.  STATE TRACING: It checks the solution path for doubly visited states and deletes moves between the first and second visit.
+    4.  A* SHORTENING:
+      4a.  It compares different states in the solution path using a heuristic to find boards that look alike.
+           The maximum allowed heuristic score is inputted by the user.
+      4b.  It runs an A* algorithm to find a shorter path between boards that look alike.
+           To limit computation time, the maximum number of states an A* searches is inputted by the user
+    5.  CLEAN FINISH: It checks the solution path to see if the finishing move could have been made sooner.
+    Steps 1, 2, 3 and 4 each run until no improvement has been found.
+    """
 
     def __init__(self, model):
         self.model = model
         self.cars = self.model.get_cars()
 
 
+#================================================ Step 1. ================================================#
     def get_random_solution(self, amount):
         """
-        Selects the best solution out of amount number of random runs. Saves moves on board.
+        Selects the best solution out of inputted number of random runs. Saves moves on board.
         """
         best = float('inf')
 
@@ -25,32 +40,38 @@ class Hillclimber:
                 self.model.moves = random_moves
                 best = len(random_moves)
 
-        
+
+#================================================ Step 2. ================================================#       
     def remove_back_forward(self):
         """
-        Removes two consecutive moves if they did not alter the board.
+        Removes two consecutive moves if they move a car back and forward.
         """
-        for i in range(len(self.model.moves)):
+        # move set without the header strings
+        moves = self.model.moves[1:]
 
-            if i == len(self.model.moves) - 2:
+        for i in range(len(moves)):
+
+            if i == len(moves) - 1:
                 break
-            elif self.model.moves[i + 1] == None:
+            elif moves[i] == None:
                 continue
 
-            move_1 = self.model.moves[i + 1]
-            move_2 = self.model.moves[i + 2]
+            move_1 = moves[i]
+            move_2 = moves[i + 1]
 
+            # if the cars are equal and the moves are opposite
             if move_1[0] == move_2[0] and move_1[1] == -move_2[1]:
-                self.model.moves[i + 1] = None
-                self.model.moves[i + 2] = None
+                moves[i] = None
+                moves[i + 1] = None
         
-        filtered_moves = [move for move in self.model.moves if move != None]
-        self.model.moves = filtered_moves
+        filtered_moves = [move for move in moves if move != None]
+        self.model.moves[1:] = filtered_moves
 
 
+#================================================ Step 3. ================================================# 
     def state_tracer(self):
         """
-        Makes moves and looks for doubly visited states
+        Makes moves on a tracer (copied) board and looks for doubly visited states.
         """
         tracer = self.model.copy()
         tracer.moves.pop(0)
@@ -64,8 +85,9 @@ class Hillclimber:
             car = tracer.board.cars[car_move[0]]
             tracer.update_matrix(car, car_move[1])
 
-            # check archive for tracer matrix
             matrix = tracer.get_tuple()
+
+            # if doubly visited state was found
             if matrix in archive:
                 # log the moves in move archive
                 arch_index = archive[matrix]
@@ -79,14 +101,14 @@ class Hillclimber:
 
     def clean_up(self, move_archive):
         """
-        Go through dict and delete subset of moves in order of size, starting with biggest.
+        Go through dict and delete subsets of moves in order of size, starting with biggest.
         """
-        while True:
-            # quit when dict is empty
-            if len(move_archive) == 0:
-                break
+        # move set without the header strings
+        moves = self.model.moves[1:]
 
-            # find the biggest difference pair
+        while len(move_archive) != 0:
+
+            # find the key-value pair with biggest difference
             best = 0
             for key in move_archive:
                 diff = move_archive[key] - key
@@ -96,22 +118,24 @@ class Hillclimber:
                     bad_move = move_archive[key]
             
             # check if moves don't partially fall into recently removed chunk
-            if self.model.moves[good_move + 2] != None and self.model.moves[bad_move + 1] != None:
-                for i in range(good_move + 2, bad_move + 2):
-                    self.model.moves[i] = None
+            if moves[good_move + 1] != None and moves[bad_move] != None:
+                for i in range(good_move + 1, bad_move + 1):
+                    moves[i] = None
                 move_archive.pop(good_move)
             else:
                 move_archive.pop(good_move)
         
         # delete moves from moves list
-        filtered_moves = [move for move in self.model.moves if move != None]
-        self.model.moves = filtered_moves
+        filtered_moves = [move for move in moves if move != None]
+        self.model.moves[1:] = filtered_moves
 
 
-    def bf_archive(self):
+#================================================ Step 4. ================================================# 
+    def make_archive(self):
         """
-        Makes moves on tracer board and returns dict with matrix as key and number of moves as value
+        Makes all moves on tracer board and returns dict with matrix tuple as key and number of moves as value.
         """
+        # copied model with move set without the header strings
         model = self.model.copy()
         model.moves.pop(0)
         archive = {}
@@ -129,101 +153,7 @@ class Hillclimber:
             archive[matrix] = arch_move_count
         
         return archive
-    
-
-    # def bf_shortening(self, state_archive, depth):
-    #     """
-    #     Performs BFS up to given depth to search for shorter paths to states in archive
-    #     """
-    #     model = self.model.copy()
-    #     model.moves = []
-    #     count = 0
-
-    #     while True:
-    #         # perform BFS on model
-    #         breadth = bf(model, state_archive)
-    #         good_moves = breadth.run(depth)
             
-    #         # if no better path was found
-    #         if good_moves == None:
-    #             # perform moves from the known path
-    #             start = state_archive[model.get_tuple()] + 1
-    #             finish = start + depth + 2
-
-    #             for move in self.model.moves[start:finish]:
-    #                 car = model.board.cars[move[0]]
-    #                 model.update_matrix(car, move[1])
-    #                 model.moves.append(move)
-
-    #                 if model.is_solution():
-    #                     break
-    #         # if a better path was found            
-    #         else:
-    #             # perform good moves on board
-    #             for move in good_moves:
-    #                 car = model.board.cars[move[0]]
-    #                 model.update_matrix(car, move[1])
-    #                 model.moves.append(move)
-
-    #         if model.is_solution():
-    #             break
-            
-    #         count += 1
-    #         if count % 20 == 0:
-    #             print(f'bf {count}')
-    #             print(len(model.moves))
-    #             print()
-
-    #     # point the overarching model to the new move set
-    #     model.moves.insert(0, ('Move', 'Car'))
-    #     self.model.moves = model.moves
-            
- 
-    def check_solution(self):
-        """
-        Checks if the move set obtained leads to a solution.
-        """
-        for i in range(len(self.model.moves) - 1):
-            car_move = self.model.moves[i + 1]
-            car = self.model.board.cars[car_move[0]]
-            move = car_move[1]
-            self.model.update_matrix(car, move)
-        
-        if self.model.is_solution():
-            return True
-        
-        return False
-
-
-    def clean_finish(self):
-        """
-        Take the solution and implement a greedy for the last step of moving the red car to the exit if it can.
-        """
-        tracer = self.model.copy()
-        tracer.moves = [('car','move')]
-        count = 1
-        red_car = self.model.board.cars['X']
-        win_col = self.model.board.board_len - 1
-
-        while not tracer.is_solution():
-            possibilities = tracer.get_possibilities(red_car)
-
-            for move in possibilities:
-                red_car_col = tracer.get_car_pos(red_car)[1]
-                
-                if red_car_col + move == win_col:
-                    tracer.update_matrix(red_car, move)
-                    tracer.add_move(red_car.cid, move)
-                    continue
-            
-            given_move = self.model.moves[count]
-            car = tracer.board.cars[given_move[0]]
-            tracer.update_matrix(car, given_move[1])
-            tracer.add_move(car.cid, given_move[1])
-            count += 1
-        
-        self.model.moves = tracer.moves
-
 
     def heuristic(self, model, goal_model):
         """   
@@ -242,7 +172,8 @@ class Hillclimber:
 
     def find_good_goal(self, start_board, max_score, state_archive):
         """
-        Finds the furthest removed state with the maximum heuristic score.
+        Compares all boards on the solution path to a start board, starting at the end of the paths.
+        Returns the first board with a score lesser or equal to the inputted maximum.
         """
         tracer = start_board.copy()
         tracer.moves = [('car', 'move')]
@@ -254,23 +185,21 @@ class Hillclimber:
             tracer.update_matrix(car, move[1])
             tracer.add_move(car.cid, move[1])
 
-        # Make moves back from solution state to find the 
-        # furthest removed state with acceptable heuristic score
-        counter = 0
-        #hier ook het eind bord meenemen!
+        # check solution state
         score = self.heuristic(start_board, tracer)
         if score <= max_score:
-            new_moves = tracer.moves[:len(tracer.moves) - counter]
-            tracer.moves = new_moves
             return tracer
 
+        counter = 0
         for i in reversed(range(len(tracer.moves))):
+            # make moves back from solution state
             counter += 1
             move = tracer.moves[i]
             tracer.update_matrix(tracer.board.cars[move[0]], move[1] * -1)
             
             score = self.heuristic(start_board, tracer)
             if score <= max_score:
+                # delete moves between tracers current config and solution state
                 new_moves = tracer.moves[:len(tracer.moves) - counter]
                 tracer.moves = new_moves
                 break
@@ -280,16 +209,17 @@ class Hillclimber:
 
     def run_a_star(self, max_score, max_plus, low_max_score, max_val, max_val_plus):
         """
-
+        Iterates over all states in the solution path. Finds a good goal and runs A* algorithm between the start and goal.
+        When a shorter path was found, the goal becomes the start for the next iteration. 
         """
         start_board = self.model.copy()
         start_board.moves = [('car', 'move')]
-        state_archive = self.bf_archive()
+        state_archive = self.make_archive()
 
         count = 0
         input_max_score = max_score
         
-        while True:
+        while not start_board.is_solution():
             count += 1
             # get the best goal state
             goal_model = self.find_good_goal(start_board, max_score, state_archive)
@@ -297,13 +227,14 @@ class Hillclimber:
             # run A* from start to goal
             a_star_io = asio.A_star(start_board, goal_model)
             state_found, a_star_board = a_star_io.run(max_val)
+
             # no solution was found
             if not state_found:
 
-                # adjust max allowed heuristic score
+                # adjust max allowed heuristic score for next iteration
                 max_score = low_max_score
 
-                # move the board one step along the established path
+                # move the board one step along the solution path
                 old_position = state_archive[start_board.get_tuple()] + 1
                 move = self.model.moves[old_position]
                 car = self.model.board.cars[move[0]]
@@ -311,23 +242,69 @@ class Hillclimber:
                 start_board.add_move(car.cid, move[1])
                 continue
             
-            # reset max allowed heuristic score after A* found
+            # reset max allowed heuristic score after A* found a path
             max_score = input_max_score
-            
-            # stop when solution has been found
-            if a_star_board.is_solution():
-                break
             
             start_board = a_star_board
         
         self.model.moves = a_star_board.moves
 
 
+#================================================ Step 5. ================================================# 
+    def clean_finish(self):
+        """
+        Makes all moves from the solution on a tracer board and checks if the winning move can be made befor each move.
+        """
+        tracer = self.model.copy()
+        tracer.moves = [('car','move')]
+        count = 1
+        red_car = self.model.board.cars['X']
+        win_col = self.model.board.board_len - 1
+
+        while not tracer.is_solution():
+
+            for move in tracer.get_possibilities(red_car):
+                red_car_col = tracer.get_car_pos(red_car)[1]
+                
+                # if winning move can be made
+                if red_car_col + move == win_col:
+                    tracer.update_matrix(red_car, move)
+                    tracer.add_move(red_car.cid, move)
+                    continue
+            
+            # perform next move in path
+            given_move = self.model.moves[count]
+            car = tracer.board.cars[given_move[0]]
+            tracer.update_matrix(car, given_move[1])
+            tracer.add_move(car.cid, given_move[1])
+            count += 1
+        
+        self.model.moves = tracer.moves
+
+
+#============================================== FINAL CHECK ==============================================# 
+    def check_solution(self):
+        """
+        Checks if the move set obtained leads to a solution.
+        """
+        for i in range(len(self.model.moves) - 1):
+            car_move = self.model.moves[i + 1]
+            car = self.model.board.cars[car_move[0]]
+            move = car_move[1]
+            self.model.update_matrix(car, move)
+        
+        if self.model.is_solution():
+            return True
+        
+        return False
+
+
+#================================================== RUN ==================================================#
     def run(self, random_nr, max_score, max_plus, low_max_score, max_val, max_val_plus):
         """
-        Run hillclimber state trace
+        Rusn hillclimber with inputted variables.
         """
-        ### RANDOM
+        ### 1. RANDOM
         random_start = time.perf_counter()
         print(f'\n{random_nr} random runs')
         self.get_random_solution(random_nr)
@@ -335,43 +312,50 @@ class Hillclimber:
 
         print(f'Finished: {len(self.model.moves) - 1} moves\nRuntime: {round(random_finish - random_start, 2)}', end='\n\n')
         
-        ### BACK-FORWARD TRIMMING
-        while True:
+        ### 2. BACK-FORWARD TRIMMING
+        improving = True
+        while improving:
             start_len = len(self.model.moves)
             self.remove_back_forward()
             new_len = len(self.model.moves)
 
             if new_len == start_len:
-                break
+                improving = False
+                continue
             
         print(f'after back-forward trimming: {len(self.model.moves) - 1}', end='\n\n')
 
-        ### STATE TRACING
+        ### 3. STATE TRACING
         count = 0
-        while True:
+
+        improving = True
+        while improving:
             good_bad_dict = self.state_tracer()
+
             if len(good_bad_dict) == 0:
-                break
+                improving = False
+                continue
 
             self.clean_up(good_bad_dict)
 
         print(f'After state tracing: {len(self.model.moves) - 1}', end='\n\n')
 
-        ### A*
+        ### 4. A* SHORTENING
         start = time.perf_counter()
 
-
         count = 1
-        while True:
+        improving = True
+        while improving:
             start_len = len(self.model.moves)
             self.run_a_star(max_score, max_plus, low_max_score, max_val, max_val_plus)
             finish_len = len(self.model.moves)
+
             max_score += max_plus
             max_val += max_val_plus
 
-
             if finish_len == start_len:
-                break
+                improving = False
+                continue
 
             print(f'A* iteration {count}: {len(self.model.moves) - 1}')
             count += 1
@@ -379,7 +363,7 @@ class Hillclimber:
         finish = time.perf_counter()
         print(f'Runtime A*: {round(finish - start, 2)}', end='\n\n')
     
-        ### CLEAN FINISH
+        ### 5. CLEAN FINISH
         self.clean_finish()
 
         ### FINAL CHECK
