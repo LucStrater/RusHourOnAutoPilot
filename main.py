@@ -1,12 +1,6 @@
 from code.classes.model import Model
-<<<<<<< HEAD
-# from code.classes.board import Board
-# from code.visualisation.pygame_viz import Game
-# from code.algorithms import randomise, greedy
-=======
 from code.classes.generate_v3 import Generate
 from code.visualisation.pygame_viz import Game
->>>>>>> c691b3e39ede52d038c8b42c1041e2400a93b301
 from sys import argv
 from code.algorithms import depth_first_v3 as df
 from code.algorithms import breadth_first_v3 as bf
@@ -163,7 +157,6 @@ def iterative_deepening(rushHourBoard):
 
     return moves
 
-<<<<<<< HEAD
 
 def a_star(rushHourBoard):
     """
@@ -236,11 +229,6 @@ if __name__ == "__main__":
 
     # # init the board
     # rushHourBoard = Model(board_title)
-=======
-    # init the board
-    rushHourBoard = Model(board_title)
-    # board = Generate(12)
->>>>>>> c691b3e39ede52d038c8b42c1041e2400a93b301
 
     # ########################### Randomise ###########################
     # start = time.perf_counter()
@@ -442,7 +430,6 @@ if __name__ == "__main__":
     # print(f'runtime V2: {round(bf_finish - bf_start, 2)} seconds', end = '\n\n')
     # print()
 
-<<<<<<< HEAD
     # ######################## Hillclimber #####################
     # hc_random_nr = 20
 
@@ -454,19 +441,6 @@ if __name__ == "__main__":
     # max_plus = 8
     # low_max_plus = 1
     # max_val_plus = 1200
-=======
-    # # ######################## Hillclimber #####################
-    # hc_random_nr = 100
-
-    # hc_start = time.perf_counter()
-
-    # max_score = 20
-    # low_max_score = 7
-    # max_val = 500
-    # max_plus = 8
-    # low_max_plus = 1
-    # max_val_plus = 900
->>>>>>> c691b3e39ede52d038c8b42c1041e2400a93b301
     # hillclimber = hc.Hillclimber(rushHourBoard)
     # hc_moves = hillclimber.run(hc_random_nr, max_score, max_plus, low_max_score, low_max_plus, max_val, max_val_plus)
     # print(f'Hillclimber found solution in {len(hc_moves) - 1} moves.')
